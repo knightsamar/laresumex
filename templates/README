@@ -1,0 +1,5 @@
+resume_format should be a SYMBOLIC LINK towards the DIRECTORY of resume format that we wanna use.
+THAT DIRECTORY should contain a file called template.tex which is what is actually used by us.
+
+Symbolic links do NOT get preserved inside HG repositories
+

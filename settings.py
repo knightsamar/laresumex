@@ -1,7 +1,11 @@
 # Django settings for laresumex project.
 
-FULL_PATH = "/learn/laresumex"
+#CUSTOM VARS
+FULL_PATH = "/learn/laresumex";
+RESUME_STORE = "%s/STORE/" % (FULL_PATH);
+RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 
+#DEFAUT VARS
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -98,4 +102,5 @@ INSTALLED_APPS = (
     #Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'laresumex.student_info',
+    'laresumex.generate_resume',
 )
