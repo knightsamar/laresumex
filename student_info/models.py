@@ -8,3 +8,6 @@ class student(models.Model):
     father_name = models.CharField("Father's Name", max_length=30,blank=True);
     mother_name = models.CharField("Mother's Name", max_length=30,blank=True);
 
+    def __str__(self):
+        return "%s(%s)" % (self.fullname, self.prn);
+
