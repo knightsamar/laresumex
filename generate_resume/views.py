@@ -64,11 +64,13 @@ def pdf(request,prn):
     
     #generate it's pdf
         pdf_file = "/tmp/%s.pdf" % (prn);
+        return_status = False;
         #find the tex file
         try:
           #generate the pdf 
-          pdf_generation_command = "cd %s; pdflatex -output-directory=/tmp %s.tex" % (RESUME_STORE,prn);
-          return_status = get_done(pdf_generation_command)
+          pdf_generation_command = "pdflatex -output-directory=/tmp %s%s.tex" % (RESUME_STORE,prn);
+          print str(pdf_generation_command).split();
+          return_status = call(pdf_generation_command.split())
         except Exception as e:
           print 'Exception was ', e;
         finally:
@@ -87,8 +89,9 @@ def get_done(cmd):
     cmds = cmd.split(';'); #split multiple commands
     for c in cmds:
         try:
-           print 'Executing ',c
-           r = call(c);
+           cmd_with_arguments=c.split();
+           print 'Executing ',cmd_with_arguments
+           r = call(cmd_with_arguments);
            if r is not 0:
                return False;    #no need of executing further commands
         except Exception as e:
