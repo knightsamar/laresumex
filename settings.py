@@ -1,7 +1,7 @@
 # Django settings for laresumex project.
 
 #CUSTOM VARS
-FULL_PATH = "/home/sdrc/laresumex";
+FULL_PATH = "/Users/apoorva/laresumex";
 RESUME_STORE = "%s/STORE/" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 
@@ -52,7 +52,7 @@ USE_L10N = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = FULL_PATH + "/media";
+#MEDIA_ROOT = FULL_PATH + "/media";
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -62,7 +62,7 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '~media/'
+#ADMIN_MEDIA_PREFIX = '~media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '9jf+y@qgarz#yev+g$x(^oo=7cv2^-@v$62@#3*iz9q6*4#!fo'

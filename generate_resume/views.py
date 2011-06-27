@@ -18,7 +18,7 @@ from subprocess import call #avail from python 2.6
 
 def latex(request,prn):
     '''generates the resume and puts it into the resume store for version control'''
-    user = 'laresumex' #the current user from session;
+    user = '10030142056' #the current user from session;
     if prn is not None:
         s = student.objects.get(pk=prn);
         if s is not None:
@@ -50,7 +50,7 @@ def latex(request,prn):
     else:
        output = "<h3>Hey, pass me a PRN man!</h3>";
    
-    return response;
+    return HttpResponse("hi");
 
 def pdf(request,prn):
     if prn is not None:

@@ -9,3 +9,5 @@ class resume(models.Model):
 
     def __str__(self):
         return "resume record of %s " % (self.prn);
+
+
