@@ -8,7 +8,6 @@ class student(models.Model):
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
-    age=models.PositiveSmallIntegerField();
     email=models.EmailField(max_length=75);
     phone_number=models.PositiveIntegerField(max_length=10);
     career_objective=models.TextField(blank=False);
