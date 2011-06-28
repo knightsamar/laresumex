@@ -1,3 +1,8 @@
 Please read the README inside all directories.
 They are VITAL for the program to work and you to understand how it works.
 
+
+REQUIREMENTS:
+    1. LaTeX - tetex with lmodern and etoolbox
+    2. latex2html ?
+    3. 

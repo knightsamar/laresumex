@@ -50,7 +50,7 @@ def latex(request,prn):
     else:
        output = "<h3>Hey, pass me a PRN man!</h3>";
    
-    return HttpResponse("hi");
+    return response;
 
 def pdf(request,prn):
     if prn is not None:
