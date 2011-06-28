@@ -1,7 +1,7 @@
 # Django settings for laresumex project.
 
 #CUSTOM VARS
-FULL_PATH = "/home/sdrc/laresumex";
+FULL_PATH = "/learn/laresumex";
 RESUME_STORE = "%s/STORE/" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 
@@ -65,7 +65,7 @@ MEDIA_URL = ''
 #ADMIN_MEDIA_PREFIX = '~media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '9jf+y@qgarz#yev+g$x(^oo=7cv2^-@v$62@#3*iz9q6*4#!fo'
+SECRET_KEY = '9jf+y@qgarz#yev+g$x(^oo=7cv2^-@v$62@#3*iz9q6*4#!asdu123fo'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

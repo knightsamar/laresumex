@@ -35,6 +35,7 @@ class personal(models.Model):
      mother_name=models.CharField(max_length=20);
      father_name=models.CharField(max_length=20);
      mother_occupation=models.CharField(max_length=20);
+
      father_occupation=models.CharField(max_length=20);
      languages=models.CharField(max_length=100);
      hobbies=models.CharField(max_length=100);

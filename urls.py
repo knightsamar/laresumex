@@ -18,5 +18,6 @@ urlpatterns = patterns('',
     (r'generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
     (r'generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
     (r'student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
-
+    (r'student_info/form',"student_info.views.showform"),
+    (r'student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
 )
