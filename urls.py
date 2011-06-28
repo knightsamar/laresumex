@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
     # actually our urls START FROM NOW
     (r'generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
+    (r'home',"generate_resume.views.index"),
     (r'generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
-
+    (r'form',"generate_resume.views.form"),
 )
