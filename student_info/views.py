@@ -65,7 +65,7 @@ def edit(request,prn):
 
 def submit(request):
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
-    pass;
+    return HttpResponse('submitted.. yeye');
 
 def ajaxRequest(request):
     '''for processing any ajax request for a field data'''

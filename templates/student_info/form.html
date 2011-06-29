@@ -1,11 +1,11 @@
 <!-- Form for the resume -->
-
-<html>
+{% extends 'base.html' %}
+<html>n
 <head>
-<style type="text/css">
-
-</style>
-    <title> Build your own resume..!!! </title>
+{% block title %}
+    Form for the resume
+{% endblock %}
+{% block content %}
     <script language = "javascript">
     function fillOptions(o)
     {
@@ -46,7 +46,13 @@
            } 
         else  if (o.name == 'course')
         {
-            var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'FO');
+            id=c.id.split('_');
+            switch(id[2])
+            {
+                case "X": {var course=new Array('X','SSC');break;}
+                 case "XII": {var course=new Array('XII','HSC');break;}
+                 default: {var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'MBA', 'MSc(CA)');break;}
+             }  
           
             for (var i =0;i<course.length;i++)
             //o.innerHTML += "<option>"+months[i]+"</option>";
@@ -163,7 +169,9 @@
 
     </script>
 </head>
+
 <body>
+
 <h3 align='center'>Resume</h3>
 <hr>
 <br/><br/>
@@ -196,13 +204,13 @@
       <th>Year</th>
   </tr>
   <tr>
-    <td>X<sup>th</sup></td>
+    <td><select name='course' id="marks_course_X" onFocus="fillOptions(this);"></select></td>
     <td><input type ='text' id="marks_uni_X" ></td>
     <td><input type='text' size = 5 maxlength=5 "marks_percentage_X">%
     <td><select name = "year" id="marks_year_X"  onFocus="fillOptions(this);"> </select></td>
   </tr>
   <tr>
-      <td>XII<sup>th</sup></td>
+      <td><select name = "course" id="marks_course_XII" onFocus="fillOptions(this)"></select></td>
       <td><input type ='text' id="marks_uni_XII" ></td>
       <td><input type='text' size =5 maxlength=5 id-"marks_percentage_XII">%</td>
       <td><select name = "year" id="marks_year_XII"  onFocus="fillOptions(this);"> </select> </td>
@@ -402,8 +410,9 @@
   <input type = 'file'>
 
   <br><Br><BR>
-  <input type='submit'><input type='reset'>
+  <input type='submit' value='get ur resume' onclick="javascript:location.href='/student_info/10030142031/submit'><input type='reset'>
 </form>
+{% endblock %}
 </body>
 </html>
 
