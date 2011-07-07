@@ -10,4 +10,5 @@ templates/*.log
 templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
-
+*.sqlite*
+__init__.py
