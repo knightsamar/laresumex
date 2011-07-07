@@ -3,10 +3,9 @@
 
 '''import data models '''
 from student_info.models import student;
-from generate_resume.models import resume; 
-
+from generate_resume.models import resume;
 ''' import generator helpers '''
-from django.template import Context, loader
+from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from django.shortcuts import render_to_response;
 
@@ -15,6 +14,25 @@ from laresumex.settings import RESUME_STORE,RESUME_FORMAT
 
 ''' import process helpers '''
 from subprocess import call #avail from python 2.6
+
+def index(request):
+    # see whether user has logged in....
+    # if yes, see whether the user has already filled resume, then remove the create button.
+    # if no.. then remove the edit and the viw resume button.
+    '''
+    s=student.objects.filter(pk=prn);
+    if len(s) is 0:
+        it means there is no entry
+        create_form=True;
+    else:
+        Form already exists
+        create_form=False
+    c=Context({'create_form':create_form})
+    '''
+    t=loader.get_template('index.html')
+    c=Context();
+    return HttpResponse(t.render(c));
+
 
 def latex(request,prn):
     '''generates the resume and puts it into the resume store for version control'''
@@ -51,6 +69,7 @@ def latex(request,prn):
        output = "<h3>Hey, pass me a PRN man!</h3>";
    
     return response;
+
 
 def pdf(request,prn):
     if prn is not None:
@@ -98,6 +117,7 @@ def pdf(request,prn):
     
     return response;
 
+
 def get_done(cmd):
     '''handles all panga of executing a command on linux shell'''
     print "Got total --> ", cmd
@@ -114,3 +134,4 @@ def get_done(cmd):
           return False;
 
     return True;
+
