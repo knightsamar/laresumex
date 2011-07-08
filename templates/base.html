@@ -1,0 +1,19 @@
+{% load some_tags %}
+<html>
+<head>
+<title>La-Resume-x ::{% block title %}{% endblock %}</title>
+</head>
+<body>
+LA-Resumex.. Resume in Latex ..:):D
+<hr>
+{% block content %}
+{% endblock %}
+<hr>
+This software is designed by:
+{% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
+    Samar and Apoorva
+{% else %}
+    Apoorva and Samar
+{% endif %}
+</body>
+</html>

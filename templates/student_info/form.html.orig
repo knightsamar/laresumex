@@ -1,0 +1,418 @@
+<!-- Form for the resume -->
+{% extends 'base.html' %}
+<html>n
+<head>
+{% block title %}
+    Form for the resume
+{% endblock %}
+{% block content %}
+    <script language = "javascript">
+    function fillOptions(o)
+    {
+        //o=document.getElementById('month');
+        if (o.name == 'month')
+        {
+            var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
+          
+            for (var i =0;i<12;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=months[i];
+                 o.add(option,null)
+
+            }
+        }
+        else if(o.name == 'date')
+        {
+             for (var i =1;i<=31;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=i;
+                 o.add(option,null)
+
+            }
+        }
+        else if(o.name == 'year')
+            {  for (var i =1950;i<2012;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=i;
+                 o.add(option,null)
+
+            }
+           } 
+        else  if (o.name == 'course')
+        {
+            id=c.id.split('_');
+            switch(id[2])
+            {
+                case "X": {var course=new Array('X','SSC');break;}
+                 case "XII": {var course=new Array('XII','HSC');break;}
+                 default: {var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'MBA', 'MSc(CA)');break;}
+             }  
+          
+            for (var i =0;i<course.length;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=course[i];
+                 o.add(option,null)
+
+            }
+        } 
+  
+ 
+    }
+     
+    function notEmpty(a)
+    {
+        if(a.value=="")
+            {
+               alert("Cant be empty");
+                a.focus();
+                return false
+            }
+         if (a.value.indexOf(' ')|| (a.value.indexOf('.')))
+         {
+             alert("It shouldnt contain any blank");
+             a.focus();
+             return false;
+         }
+    }
+
+ function addNew(elName)
+ {
+        c=document.getElementById(elName);
+        removeButton=document.createElement('input')
+        removeButton.type='button';
+        removeButton.value="remove";
+        //removeButton.onClick="alert('h')";
+        //.setAttribute('onclick','removeNode("hi")');//onclick=function() {"removeNode('hi')"};
+
+        if (c.tagName=='TR')
+            {
+                l=c.parentNode.children.length;
+                firstNode=c.parentNode.children[1]
+                lastNode=c.parentNode.children[l-1]
+                clone=firstNode.cloneNode(true);
+                 for(var i=0;i<lastNode.children.length;i++)
+                   {
+                    for (var j=0;j<lastNode.children[i].children.length;j++)
+                    {
+                        id=lastNode.children[i].children[j].id.split('_');
+                        id[2]=parseInt(id[2])+1;
+                        clone.children[i].children[j].id=id.join('_');
+                        clone.children[i].children[j].value="";
+                    }
+                   }
+                    removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
+               id[1]='remove';
+                var removeId=id.join('_');
+
+                removeButton.id=removeId;
+                clone.appendChild(removeButton);
+                c.parentNode.appendChild(clone);
+            }
+        else
+        {
+            var bacche = c.children;
+            l=bacche.length;
+            var clone=bacche[0].cloneNode(true);
+            id=bacche[l-1].children[0].id.split('_');
+            id[2]=parseInt(id[2])+1;
+            clone.children[0].id=id.join('_');
+            clone.children[0].value="";
+            removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
+            id[1]='remove';
+            var removeId=id.join('_');
+            removeButton.id=removeId;
+
+            clone.appendChild(removeButton);
+ //           clone.innerHTML+="<input type='button' value='remove' onclick='removeNode(elName);'>";
+            c.appendChild(clone);
+            
+        }
+              /*
+        if (c.tagName=="TR") 
+          {  
+            c.parentNode.appendChild(c.cloneNode(true));
+            tr=document.createElement('TR');
+            c.parentNode.parentNode.appendChild(tr);
+            for(var i=0;i<l;i++)
+                { 
+                 var clone=bacche[i].cloneNode(true);
+                 id=clone.id.split('_');
+                 id[2]=parseInt(id[2])+1
+                 clone.id=id.join('_')
+                 tr.appendChild(clone);
+                 
+                 }
+          }
+        else
+        {
+            var clone=bacche[l-1].cloneNode(true);
+            id=clone.id.split('_');
+            id[2]=parseInt(id[2])+1
+            clone.id=id.join('_')
+            c.appendChild(clone);
+        }*/
+ }
+ function removeNode()
+ {
+   alert('fo');
+   //o.parentNode.remove(o);
+ }
+
+
+    </script>
+</head>
+
+<body>
+
+<h3 align='center'>Resume</h3>
+<hr>
+<br/><br/>
+<form>
+   <label for = "Fname"> Full Name*</label>
+        <input type="text" name="fname" onblur="notEmpty(this)">
+     <br><BR>
+  <label for = "Objective"> Career Objectve *</label><br>
+      <textarea rows='3' cols = '124'> </textarea>
+  <br><BR>
+    
+  Gender <input type="radio" id="M" name="gender">Male
+		 <input type="radio" id="F" name="gender">Female<br><BR><br>
+<!- --------------------------- -- ->
+
+  Birthdate
+  <select name = "date"  onFocus="fillOptions(this);"> </select>
+  <select name = "month" onFocus="fillOptions(this);"> </select>
+  <select name = "year"  onFocus="fillOptions(this);"> </select>  
+ <br><BR>
+<!- --------------------------- -- ->
+
+  <div id='section'>Qualification:-
+    
+  <table border ='3'>
+  <tr>
+      <th>Class</th>
+      <th>Board/University</th>
+      <th>Percentage</th>
+      <th>Year</th>
+  </tr>
+  <tr>
+    <td><select name='course' id="marks_course_X" onFocus="fillOptions(this);"></select></td>
+    <td><input type ='text' id="marks_uni_X" ></td>
+    <td><input type='text' size = 5 maxlength=5 "marks_percentage_X">%
+    <td><select name = "year" id="marks_year_X"  onFocus="fillOptions(this);"> </select></td>
+  </tr>
+  <tr>
+      <td><select name = "course" id="marks_course_XII" onFocus="fillOptions(this)"></select></td>
+      <td><input type ='text' id="marks_uni_XII" ></td>
+      <td><input type='text' size =5 maxlength=5 id-"marks_percentage_XII">%</td>
+      <td><select name = "year" id="marks_year_XII"  onFocus="fillOptions(this);"> </select> </td>
+  </tr>
+  <tr id='marks'>
+      <td>
+      <select name = "course" id="marks_course_1" onFocus="fillOptions(this)"></select></td>
+      <td><input type ='text' id="marks_uni_1"></td>
+      <td><input type='text' size = 5 maxlength=5 id="marks_percentage_1">%</td>
+      <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"> </select> </td>
+  </tr>
+  </table>
+  <input type='button'  onClick="addNew('marks');" value='Add Another'>    
+
+</div>
+
+
+<!- --------------------------- -- ->
+
+  <div id='section'>
+  Strengths..!! and weaknesses
+  <div id='strengths'>
+      <li><input type="text" id="strenghts_desc_1"></li>
+  </div>   
+  <input type='button'onClick="addNew('strengths');" value='Add Another'>    
+
+</div>
+
+
+<!- --------------------------- -- ->
+
+  <div id='section'>Cetrifications
+  <table>
+  <tr><th>Name </th><th>month/year</th>
+   <tr id='certi'>
+    <td><input type='text' size='40' id='certi_desc_1'></td>
+    <td><select name = "month" id="certi_month_1" onFocus="fillOptions(this);"></select>
+        <select name = "year"  id="certi_year_1" onFocus="fillOptions(this);"> </select></td>
+    </tr>
+  </table>
+  <input type='button'  onClick="addNew('certi');" value='Add Another'>      
+</div>
+
+
+<!- --------------------------- -- ->
+  <div id='section'>Software Exposure
+        <ul>
+            <li>Programming languages
+            <ul id = 'programming'>
+                <li><input type='text' id="swExposure_programming_1">
+             </ul>   
+             <input type='button'  onClick="addNew('programming');" value='Add Another'>   
+             <li>Database
+            <ul id = 'swExposure'>
+                <li><input type='text' id="swExposure_db_1">
+             </ul>   
+             <input type='button'  onClick="addNew('swExposure');" value='Add Another'>   
+            <li>OS
+            <ul id = 'os'>
+                <li><input type='text' id="swExposure_os_1">
+             </ul>   
+             <input type='button'  onClick="addNew('os');" value='Add Another'>   
+            <li>Web Tools
+            <ul id = 'web'>
+                <li><input type='text' id="swExposure_web_1">
+             </ul>   
+             <input type='button'  onClick="addNew('web');" value='Add Another'>   
+
+         </ul>
+
+</div>
+
+<!- --------------------------- -- ->
+  <div id='section'>>Work Experience>
+<table>
+<tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
+            <tr id = 'workex'>
+                <td><input type='text' id="workex_desc_1"></td>
+             
+             <td>
+                  <select name = "month" id="workex_startmonth_1" onFocus="fillOptions(this);"> </select>
+                  <select name = "year"  id="workex_startyear_1" onFocus="fillOptions(this);"> </select>  </td>
+            <td>
+                <select name = "month" id="workex_endmonth_1" onFocus="fillOptions(this);"> </select>
+                <select name = "year"  id="workex_endyear_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+             <input type='button'  onClick="addNew('workex');" value='Add Another'>   
+
+ </div> 
+
+<!- --------------------------- -- ->
+  <div id='section'>Projects Undertaken
+  <table>
+            <tr><th>title</th><th>Description</th><th>Languages / Tools used</th><th>Start Date</th><th>End Date</th></tr>
+
+            <tr id = 'projects'>
+             <td><input type='text' id="project_title_1"></td>
+             <td><input type='text' size='100' id="project_desc_1"></td>
+             <td><input type='text' id="workex_language_1"></td>
+
+             <td>
+                  <select name = "month" id="project_startmonth_1" onFocus="fillOptions(this);"> </select>
+                  <select name = "year"  id="project_startyear_1" onFocus="fillOptions(this);"> </select>  </td>
+            <td>
+                <select name = "month" id="project_endmonth_1" onFocus="fillOptions(this);"> </select>
+                <select name = "year"  id="project_endyear_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+             <input type='button'  onClick="addNew('projects');" value='Add Another'>   
+
+</div>
+
+ <!- --------------------------- -- ->
+   <div id='section'>Academic Acheivements
+    <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+
+            <tr id = 'academic'>
+               <td><input type='text' size='100' id="academic_desc_1"></td>
+             
+            <td>
+            <select name = "year"  id="academic_year_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+             <input type='button'  onClick="addNew('academic');" value='Add Another'>   
+
+</div>
+
+<!- --------------------------- -- ->
+   <div id='section'>Extra Curricular
+        <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+
+            <tr id = 'extracurricular'>
+               <td><input type='text' size='100' id="extracurricular_desc_1"></td>
+             
+            <td>
+            <select name = "year"  id="academic_year_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+             <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
+
+</div>
+<!- --------------------------- -- ->
+   <div id='section'>Add Another Section<br><br>
+   <div id='extrafield'>
+   <li>Section Title <input type='text' id='extra_field_1'><br>
+        <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+
+            <tr id = 'extrafield_1'>
+               <td><input type='text' size='100' id="extrafield1_desc_1"></td>
+             
+            <td>
+            <select name = "year"  id="academic_year_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+        <input type='button'  onClick="addNew('extrafield_1');" value='Add Another'>  
+        <br><BR>
+ </div>       
+ </div>
+<input type='button'  onClick="addNew('extrafield');" value='Add Another Section'>  
+
+
+
+<!- --------------------------- -- ->
+
+   <div id='section'>Personal
+        <ul>
+            <li>Mother's Name
+            <ul>
+                <li><input type='text' id="personal_motherName">
+             </ul>   
+             <li>Father's Name
+            <ul>
+                <li><input type='text' id="personal_fatherName">
+             </ul>   
+            <li>Languages known
+            <ul id = 'lang'>
+                <li><input type='text' id="personal_languages_1">
+             </ul>   
+             <input type='button'  onClick="addNew('lang');" value='Add Another'>   
+            <li>Permanent Address
+            
+                <textarea rows=4 cols=10 id="personal_peradd"></textarea>
+                
+            <li>Address of Corrospondance
+                <textarea rows=4 cols=10 id="personal_corradd"></textarea>  
+
+
+         </ul>
+       <li> Hobbies    
+            <ul id = 'hobbies'>
+                <li><input type='text' id="personal_hobbies_1">
+             </ul>   
+             <input type='button'  onClick="addNew('hobbies');" value='Add Another'>   
+    </ul>
+  </div>
+  <br>
+  Upload your recent passport szed photograph
+  <input type = 'file'>
+
+  <br><Br><BR>
+  <input type='submit' value='get ur resume' onclick="javascript:location.href='/student_info/10030142031/submit'><input type='reset'>
+</form>
+{% endblock %}
+</body>
+</html>
+

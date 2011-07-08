@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}
+    Home
+{% endblock %}
+{% block content %}
+hi.. welcome to the resume biulding software.. la resumex
+<br><BR>
+<input type='button' value = 'create your resume' onclick="javascript:location.href='form'"><br>
+<input type='button' value = 'edit your resume' onclick="javascript:location.href='/student_info/10030142031/edit';"><BR>
+<input type='button' value = 'view your resume'><br>
+<input type='button' value = 'search for other resumes'>
+<input type='hidden' id = 'prn' value='PRN'>
+{% endblock %}

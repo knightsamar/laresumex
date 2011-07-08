@@ -1,0 +1,14 @@
+syntax: glob
+
+*~
+*.pyc
+.*swp
+STORE/*
+STORE/*.tex
+templates/*.zip
+templates/*.log
+templates/moderncv/*.out
+templates/moderncv/*.log
+templates/moderncv/*.aux
+*.sqlite*
+
