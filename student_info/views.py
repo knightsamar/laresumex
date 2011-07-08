@@ -71,17 +71,31 @@ def edit(request,prn):
 def submit(request, prn):
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
     #what is submitted ?
+    if "FILES" in request:
+        print "I have got files called ", request.FILES;
+        for f in request.FILES.values():
+            dest="/Users/apoorva/laresumex/STORE/photos/"+ prn+".png"
+            print "files to be saved in", dest;
+            destination = open(dest, 'wb+')
+            for chunk in f.chunks():
+                destination.write(chunk)
+            destination.close()
+    else:
+        print "No photo was uploded";
+        return HttpResponse("please upload a photo")
+    
+    
     post=request.POST;
     print "========>>>POST<<<========"
     '''for p,v in post.iteritems():
         print p,"..........",v'''
-    #print "-=======>>> POST", post
+    print "-=======>>> POST", post
     # check for the validity of the prn etc...
-    #s=student.objects.filter(pk=prn)
-    #print s, len(s)
-    #if len(s) is 1:
-    #    print " ======>>> editing original <<<<======="
-    #    s[0].delete()
+    s=student.objects.filter(pk=prn)
+    print s, len(s)
+    if len(s) is 1:
+        print " ======>>> editing original <<<<======="
+        s[0].delete()
     
     s= student.objects.create(
         pk=prn,
@@ -148,7 +162,8 @@ def submit(request, prn):
                 else:
                    mvsd[index]+=','+data
                                         
-                
+    
+       
         '''elif field_name[0] == 'swExposure':
             if field_name[1] not in sw_exposure:
                 sw_exposure[field_name[1]]=data
@@ -172,6 +187,9 @@ def submit(request, prn):
              row[field_name[1]] = data;
              row.save();'''
              
+    p.save();
+    print "P saved"
+    
     print "=========>>>> The Main list : <=============="    
     print table_dict
     #print "======> s/w Exposure====="
@@ -187,9 +205,13 @@ def submit(request, prn):
             print "FO"
 
         tablerow=table_row.split('_');
+        """if tablerow[0] == "personal":
+            table=p;
+        else:"""    
         table=eval(tablerow[0]).objects.get_or_create(primary_table=s);
         table=table[0];
         print "table-->",table;
+        print "we have a column called __%s__" % (tablerow[1]);
         print "value--->",value;
         table.__setattr__(tablerow[1], value);
         table.save();
@@ -221,8 +243,6 @@ def submit(request, prn):
         print "Saved"
     s.save();
     print "S,saved"
-    p.save();
-    print "P saved"
     return HttpResponse("submitted.. yay..!!yay..!!");
 
 

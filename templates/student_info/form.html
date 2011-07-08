@@ -15,6 +15,7 @@
 
 #section {
 	margin-top: 6%;
+    margin-left:10%
 }
 </style>
     <script language = "javascript">
@@ -315,11 +316,11 @@ function changeName()
 <h3 align='center'>Resume</h3>
 <hr>
 <br/><br/>
-<form name='f' onsubmit="return changeName();" method='post'action='/student_info/10030142031/submit'>
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data' action='/student_info/10030142007/submit'>
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
  
- <div id='section' align='center'>
+ <div id='section'>
  <label for = "Fname"> Full Name*</label>
         <input type="text" id='fullname'>
      <br><BR>    
@@ -336,16 +337,17 @@ Email ID* <input type='text' name='email'>
   <select name = "year"  id="birthdate_year" onFocus="fillOptions(this);" onBlur="concat(this);"> </select> 
  <hr>
  <br><BR>
- </div>
- <label for = "Objective"><heading> Career Objectve *</heading></label><hr><br>
+ 
+ <label for = "Objective"><heading> Career Objectve *</heading></label><br><br><BR>
       <textarea rows='3' cols = '124' name = "career_objective" id="career_objective"> </textarea>
+   </div>   
   <hr>
   <br>
 <!- --------------------------- -- ->
 
   <div id='section'>
   <heading>Qualification:-</heading>
-  <hr>
+  <br><BR>
     
   <table cellpadding=13>
   <tr>
@@ -378,32 +380,32 @@ Email ID* <input type='text' name='email'>
           <option>Result Awaiting</option>
           </select>
       </td>
-      <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);" onBlur="concat(this);"> </select> </td>
+      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this);"> </select> </td>
   </tr>
   </table>
   <input type='button'  onClick="addNew('marks');" value='Add Another'>    
 
 </div>
-
+<hR>
 
 <!- --------------------------- -- ->
 
   <div id='section'>
   <heading>Strengths..!! and weaknesses</heading>
-  <hr>
+  <br><BR><BR>
   <div id='strengths'>
       <li><input type="text" id="personal_strength_1"></li>
   </div>   
   <input type='button'onClick="addNew('strengths');" value='Add Another'>    
 
 </div>
-
+<HR>
 
 <!- --------------------------- -- ->
 
   <div id='section'>
   <heading>Cetrifications</heading>
-  <hr>
+  <br><BR><BR>
   <table cellpadding=13>
   <tr><th>Name </th><th>month/year</th>
    <tr id='certi'>
@@ -414,12 +416,12 @@ Email ID* <input type='text' name='email'>
   </table>
   <input type='button'  onClick="addNew('certi');" value='Add Another'>      
 </div>
-
+<HR>
 
 <!- --------------------------- -- ->
   <div id='section'>
-  <headng>Software Exposure<heading>
-  <hr>
+  <heading>Software Exposure</heading>
+  <BR><BR>
         <ul>
             <li>Programming languages
             <ul id = 'programming'>
@@ -445,11 +447,11 @@ Email ID* <input type='text' name='email'>
          </ul>
 
 </div>
-
+<hr>
 <!- --------------------------- -- ->
   <div id='section'>
   <heading>Work Experience</heading>
-  <hr>
+  <BR><BR><BR>
 <table>
 <tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
             <tr id = 'workex'>
@@ -465,11 +467,11 @@ Email ID* <input type='text' name='email'>
              <input type='button'  onClick="addNew('workex');" value='Add Another'>   
 
  </div> 
-
+<hr>
 <!- --------------------------- -- ->
   <div id='section'>
   <heading>Projects Undertaken</heading>
-  <hr>
+  <BR><BR><BR>
   <table>
             <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
 
@@ -487,11 +489,11 @@ Email ID* <input type='text' name='email'>
              <input type='button'  onClick="addNew('projects');" value='Add Another'>   
 
 </div>
-
+<hr>
  <!- --------------------------- -- ->
    <div id='section'>
  <heading>Academic Acheivements</heading>
- <hr>
+ <BR><BR>
     <table>
             <tr><th>Description</th><th>YEar</th></tr>
 
@@ -504,11 +506,11 @@ Email ID* <input type='text' name='email'>
              <input type='button'  onClick="addNew('academic');" value='Add Another'>   
 
 </div>
-
+<HR>
 <!- --------------------------- -- ->
    <div id='section'>
    <heading>Extra Curricular</heading>
-   <hr>
+   <BR><BR>
         <table>
             <tr><th>Description</th><th>YEar</th></tr>
 
@@ -521,6 +523,7 @@ Email ID* <input type='text' name='email'>
              <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
 
 </div>
+<HR>
 <!- --------------------------- -- ->
    <div id='section'>
    Add Another Section<br><br>
@@ -540,14 +543,14 @@ Email ID* <input type='text' name='email'>
  </div>       
  </div>
 <input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
-
+<HR>
 
 
 <!- --------------------------- -- ->
 
    <div id='section'>
    <heading>Personal</heading>
-   <hr>
+   <BR><BR><BR>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name">
              <li>Father's Name  <input type='text' id="personal_father_name">
@@ -576,8 +579,9 @@ Email ID* <input type='text' name='email'>
         </ul>
   </div>
   <br>
+  <HR>
   Upload your recent passport szed photograph
-  <input type = 'file'>
+  <input type = 'file' name='photo'>
 
   <br><Br><BR>
   <input type='submit' value='get ur resume'><input type='reset'>
