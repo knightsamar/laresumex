@@ -45,6 +45,7 @@ def edit(request,prn):
         tables['s']=s;   
         tables['p']=tables['p'][0]
         tables['sw']=tables['sw'][0];
+        
         '''        
         #for storing record objects 
         table_data = {'s' : s}
@@ -62,8 +63,9 @@ def edit(request,prn):
         
         debugger(table_data);
         debugger(table_data_status); '''
+        tables['flag']='edit'
         c = RequestContext(request,tables);
-        t = loader.get_template('student_info/edit.html');
+        t = loader.get_template('student_info/form.html');
         
         print "dsfasdfasdafsdf"
         return HttpResponse(t.render(c));
@@ -71,18 +73,14 @@ def edit(request,prn):
 def submit(request, prn):
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
     #what is submitted ?
-    if "FILES" in request:
-        print "I have got files called ", request.FILES;
-        for f in request.FILES.values():
+    print "I have got files called ", request.FILES;
+    for f in request.FILES.values():
             dest="/Users/apoorva/laresumex/STORE/photos/"+ prn+".png"
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
             for chunk in f.chunks():
                 destination.write(chunk)
             destination.close()
-    else:
-        print "No photo was uploded";
-        return HttpResponse("please upload a photo")
     
     
     post=request.POST;
@@ -255,6 +253,6 @@ def showform(request):
     #prn=request.post['prn'];
     print "sdfsd"
     t=loader.get_template('student_info/form.html')
-    c=RequestContext(request,{});
+    c=RequestContext(request,{'flag':'form'});
     
     return HttpResponse(t.render(c));
