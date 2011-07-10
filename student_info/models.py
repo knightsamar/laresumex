@@ -80,6 +80,9 @@ class academic(ExtraField):
 class extracurricular(ExtraField):
     pass;
 
+#for references inside various views
+tables = {'p':'personal','sw':'software_exposure','ex':'extraField','m':'marks'}
+
 """
 #In sabko ume actually use karna hai jab hum version treat karenge au
 

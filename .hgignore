@@ -3,6 +3,7 @@ syntax: glob
 *~
 *.pyc
 .*swp
+STORE
 STORE/*
 STORE/*.tex
 templates/*.zip
@@ -11,4 +12,3 @@ templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
 *.sqlite*
-__init__.py

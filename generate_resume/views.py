@@ -2,18 +2,21 @@
 #''' will make comments which can auto-document this whole projects
 
 '''import data models '''
-from student_info.models import student;
+from student_info.models import student, tables;
 from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response;
+from django.shortcuts import render_to_response, redirect;
 
 ''' import vars '''
-from laresumex.settings import RESUME_STORE,RESUME_FORMAT
+from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
 ''' import process helpers '''
-from subprocess import call #avail from python 2.6
+import subprocess 
+from os import mkdir,chdir #for changing directories
+
+from time import sleep
 
 def index(request):
     # see whether user has logged in....
@@ -38,26 +41,49 @@ def latex(request,prn):
     '''generates the resume and puts it into the resume store for version control'''
     user = '10030142056' #the current user from session;
     if prn is not None:
-        s = student.objects.get(pk=prn);
+    	try:
+	        s = student.objects.get(pk=prn)
+        except Exception as e:
+            output = "<h3>Student details for PRN %s not found! Can't generate a LaTeX file!</h3>" % (prn);
+            return HttpResponse(output);
+        
         if s is not None:
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
+            
+            #get all related objects
+            #for t,table in tables:
+                #this is becoming a pain in a** because I can't figure out how!
             c = Context({ 's' : s });
-            
-            resume_file = '%s%s.tex' % (RESUME_STORE,prn);
-
-            #now store the person's generated resumecode
-            f = file(resume_file,'w'); #if the file exists, overwrite it ELSE  create it.
-            f.write(t.render(c));
-            f.close();
-            
-            #now add this file to version control
+             
             try:
-                hg_command = "cd %s; hg add %s; hg commit -u laresumex -m 'updated by %s' " % (RESUME_STORE,resume_file,user);
+                #every latex file goes into that prn's directory
+                destination_dir = '%s/%s/' % (RESUME_STORE, prn)
+
+                try:
+                    chdir(destination_dir) #if we can't change into it, create it!
+                except OSError:
+                    mkdir(destination_dir);
+                finally:
+                    chdir(FULL_PATH);
+                 
+                resume_file = '%s/%s.tex' % (destination_dir, prn)
+                #now store the person's generated resume-latex-code
+                f = file(resume_file,'w'); #if the file exists, overwrite it ELSE  create it.
+               
+                f.write(t.render(c));
+                f.close();
+              
+                """#for now postponed to next release
+                #now add this file to version control
+
+                hg_command = "hg add %s; hg commit -u laresumex -m 'updated by %s' " % (resume_file,user);
                 return_status = get_done(hg_command);
+                """
+                return_status = True;
             except Exception as e:
-                print 'Exception was ', e;
-                response = HttpResponse("Some problem!");
+               print 'Exception was ', e;
+               return_status = False;
             finally:
                 if return_status is False:
                     output = "<h3>Couldn't generate your .TEX file! Return code was %d </h3>" % return_status;
@@ -67,16 +93,18 @@ def latex(request,prn):
             output = "<h3>Student details for PRN %s not found!</h3>" % (prn);
     else:
        output = "<h3>Hey, pass me a PRN man!</h3>";
-   
-    return response;
+    
+    return HttpResponse(output);
 
 
 def pdf(request,prn):
     if prn is not None:
-        s = student.objects.get(pk=prn);
-        if s is None:
-            output = "<h3>Student details for PRN %s not found!</h3>" % (prn);
-            response = HttpResponse(output);
+        try:
+           s = student.objects.get(pk=prn);
+        except:
+           output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
+           return HttpResponse(output);
+
         #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
         #is it fresher ?
             #oh no! it isn't. generate it again!
@@ -93,8 +121,7 @@ def pdf(request,prn):
         try:
           #generate the pdf 
           pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s%s.tex" % (RESUME_STORE,prn);
-          print str(pdf_generation_command).split();
-          return_status = call(pdf_generation_command.split())
+          return_status = get_done(pdf_generation_command)
           print "Return status is ",return_status;
           pdffile = "/tmp/%s.pdf" % prn;
           resume_pdf = open(pdffile);
@@ -117,20 +144,55 @@ def pdf(request,prn):
     
     return response;
 
+def html(request,prn):
+    if prn is not None:
+        try:
+           s = student.objects.get(pk=prn);
+        except:
+           output = "<h3>Student details for PRN %s not found! Can't give you HTML</h3>" % (prn);
+           return HttpResponse(output);
 
-def get_done(cmd):
+    #is the html file current and updated?
+    html_file = 'STORE/%s/%s.html' % (prn, prn);
+
+    #if yes, just show it 
+
+    #otherwise generate again and show it
+
+    try:
+        cmd = "yes Q | htlatex %s.tex" % (prn);
+        done = get_done(cmd,"%s/%s/" % (RESUME_STORE,prn));
+    
+        return redirect('%s/%s' % (MEDIA_URL, html_file));
+    except Exception as e:
+        #tell them can't do it.
+        return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
+        
+def get_done(cmd,path=RESUME_STORE):
     '''handles all panga of executing a command on linux shell'''
+    #where do we want to execute this ?
+    print "changing path to %s", path
+    chdir(path);
+
     print "Got total --> ", cmd
     cmds = cmd.split(';'); #split multiple commands
+    print 'total ',len(cmds);
     for c in cmds:
         try:
-           cmd_with_arguments=c.split();
-           print 'Executing ',cmd_with_arguments
-           r = call(cmd_with_arguments);
+           #cmd_with_arguments=c.split();
+           print 'Executing ',c
+
+           #connect the pipes in the processes and make the stdin and stdout flow through them properly
+           #because Popen doesn't handle pipes properly itself
+
+           sleep(3);
+           r = subprocess.Popen(c,shell=True,stdout=None);
            if r is not 0:
+               chdir(FULL_PATH); #so that no stupid problem are caused
                return False;    #no need of executing further commands
         except Exception as e:
           print 'Exception was ', e
+          chdir(FULL_PATH);
           return False;
 
     return True;

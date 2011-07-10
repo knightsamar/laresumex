@@ -21,5 +21,6 @@ urlpatterns = patterns('',
     (r'student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'student_info/form',"student_info.views.showform"),
     (r'student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
-    (r'form',"student_info.views.showform")
+    (r'form',"student_info.views.showform"),
+    (r'generate_resume/(?P<prn>\d+)/html',"generate_resume.views.html"),
 )
