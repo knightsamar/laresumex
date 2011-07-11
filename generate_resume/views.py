@@ -120,7 +120,7 @@ def pdf(request,prn):
         #find the tex file
         try:
           #generate the pdf 
-          pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s%s.tex" % (RESUME_STORE,prn);
+          pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
           return_status = get_done(pdf_generation_command)
           print "Return status is ",return_status;
           pdffile = "/tmp/%s.pdf" % prn;
