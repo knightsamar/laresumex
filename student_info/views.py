@@ -45,6 +45,7 @@ def edit(request,prn):
         tables['s']=s;   
         tables['p']=tables['p'][0]
         tables['sw']=tables['sw'][0];
+        
         '''        
         #for storing record objects 
         table_data = {'s' : s}
@@ -62,8 +63,9 @@ def edit(request,prn):
         
         debugger(table_data);
         debugger(table_data_status); '''
+        tables['flag']='edit'
         c = RequestContext(request,tables);
-        t = loader.get_template('student_info/edit.html');
+        t = loader.get_template('student_info/form.html');
         
         print "dsfasdfasdafsdf"
         return HttpResponse(t.render(c));
@@ -71,17 +73,27 @@ def edit(request,prn):
 def submit(request, prn):
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
     #what is submitted ?
+    print "I have got files called ", request.FILES;
+    for f in request.FILES.values():
+            dest="/Users/apoorva/laresumex/STORE/photos/"+ prn+".png"
+            print "files to be saved in", dest;
+            destination = open(dest, 'wb+')
+            for chunk in f.chunks():
+                destination.write(chunk)
+            destination.close()
+    
+    
     post=request.POST;
     print "========>>>POST<<<========"
     '''for p,v in post.iteritems():
         print p,"..........",v'''
-    #print "-=======>>> POST", post
+    print "-=======>>> POST", post
     # check for the validity of the prn etc...
-    #s=student.objects.filter(pk=prn)
-    #print s, len(s)
-    #if len(s) is 1:
-    #    print " ======>>> editing original <<<<======="
-    #    s[0].delete()
+    s=student.objects.filter(pk=prn)
+    print s, len(s)
+    if len(s) is 1:
+        print " ======>>> editing original <<<<======="
+        s[0].delete()
     
     s= student.objects.create(
         pk=prn,
@@ -148,7 +160,8 @@ def submit(request, prn):
                 else:
                    mvsd[index]+=','+data
                                         
-                
+    
+       
         '''elif field_name[0] == 'swExposure':
             if field_name[1] not in sw_exposure:
                 sw_exposure[field_name[1]]=data
@@ -172,6 +185,9 @@ def submit(request, prn):
              row[field_name[1]] = data;
              row.save();'''
              
+    p.save();
+    print "P saved"
+    
     print "=========>>>> The Main list : <=============="    
     print table_dict
     #print "======> s/w Exposure====="
@@ -187,9 +203,13 @@ def submit(request, prn):
             print "FO"
 
         tablerow=table_row.split('_');
+        """if tablerow[0] == "personal":
+            table=p;
+        else:"""    
         table=eval(tablerow[0]).objects.get_or_create(primary_table=s);
         table=table[0];
         print "table-->",table;
+        print "we have a column called __%s__" % (tablerow[1]);
         print "value--->",value;
         table.__setattr__(tablerow[1], value);
         table.save();
@@ -221,6 +241,9 @@ def submit(request, prn):
         print "Saved"
     s.save();
     print "S,saved"
+<<<<<<< local
+    return HttpResponse("submitted.. yay..!!yay..!!");
+=======
     p.save();
     print "P saved"
     t=loader.get_template('student_info/submit')
@@ -230,6 +253,7 @@ def submit(request, prn):
               }    
             )
     return HttpResponse(t.render(c));
+>>>>>>> other
 
 
 def ajaxRequest(request):
@@ -241,6 +265,6 @@ def showform(request):
     #prn=request.post['prn'];
     print "sdfsd"
     t=loader.get_template('student_info/form.html')
-    c=RequestContext(request,{});
+    c=RequestContext(request,{'flag':'form'});
     
     return HttpResponse(t.render(c));
