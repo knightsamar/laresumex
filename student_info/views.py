@@ -241,9 +241,6 @@ def submit(request, prn):
         print "Saved"
     s.save();
     print "S,saved"
-<<<<<<< local
-    return HttpResponse("submitted.. yay..!!yay..!!");
-=======
     p.save();
     print "P saved"
     t=loader.get_template('student_info/submit')
@@ -253,7 +250,6 @@ def submit(request, prn):
               }    
             )
     return HttpResponse(t.render(c));
->>>>>>> other
 
 
 def ajaxRequest(request):

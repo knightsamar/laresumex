@@ -13,10 +13,15 @@ from django.shortcuts import render_to_response, redirect;
 from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
 ''' import process helpers '''
+#<<<<<<< local
+from subprocess import call #avail from python 2.6
+from os import chdir #for changing directories
+#=======
 import subprocess 
 from os import mkdir,chdir #for changing directories
 
 from time import sleep
+#>>>>>>> other
 
 def index(request):
     # see whether user has logged in....
@@ -60,6 +65,15 @@ def latex(request,prn):
                 #every latex file goes into that prn's directory
                 destination_dir = '%s/%s/' % (RESUME_STORE, prn)
 
+#<<<<<<< local
+            #now store the person's generated resume-latex-code
+            f = file(resume_file,'w'); #if the file exists, overwrite it ELSE  create it.
+            f.write(t.render(c));
+            f.close();
+                    
+            #now add this file to version control
+            try:
+#=======
                 try:
                     chdir(destination_dir) #if we can't change into it, create it!
                 except OSError:
@@ -77,13 +91,18 @@ def latex(request,prn):
                 """#for now postponed to next release
                 #now add this file to version control
 
+#>>>>>>> other
                 hg_command = "hg add %s; hg commit -u laresumex -m 'updated by %s' " % (resume_file,user);
                 return_status = get_done(hg_command);
                 """
                 return_status = True;
             except Exception as e:
+#<<<<<<< local
+                print 'Exception was ', e;
+#=======
                print 'Exception was ', e;
                return_status = False;
+#>>>>>>> other
             finally:
                 if return_status is False:
                     output = "<h3>Couldn't generate your .TEX file! Return code was %d </h3>" % return_status;
@@ -145,13 +164,25 @@ def pdf(request,prn):
     return response;
 
 def html(request,prn):
+<<<<<<< local
+    #is the text file current and updated? 
+=======
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
         except:
            output = "<h3>Student details for PRN %s not found! Can't give you HTML</h3>" % (prn);
            return HttpResponse(output);
+#>>>>>>> other
 
+#<<<<<<< local
+    cmd = "yes 'Q' | htlatex 10030142031.tex"
+    if get_done(cmd,"%s/%s/" % (RESUME_STORE,prn)):
+        #show the HTML file
+        t = loader.get_template('/STORE/10030142031/');
+        c = Context();
+        return t.render(c);
+#=======
     #is the html file current and updated?
     html_file = 'STORE/%s/%s.html' % (prn, prn);
 
@@ -167,7 +198,15 @@ def html(request,prn):
     except Exception as e:
         #tell them can't do it.
         return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
+#>>>>>>> other
         
+#<<<<<<< local
+
+
+
+
+#=======
+#>>>>>>> other
 def get_done(cmd,path=RESUME_STORE):
     '''handles all panga of executing a command on linux shell'''
     #where do we want to execute this ?
