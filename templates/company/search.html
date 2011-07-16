@@ -1,0 +1,81 @@
+<!-- {% extends 'base.html' %}
+{% block title %}
+    SEARCH
+{% endblock %}
+{% block content %} -->
+<html>
+<script language='javascript'>
+    function createText(o, what)
+    {
+        //alert(o.checked)
+        p=o.parentNode.parentNode;
+        a=o.parentNode;
+        if (o.checked==true)
+        {
+            //alert(a.nextSibling)
+            if (a.nextSibling == null)
+            {
+                text=document.createTextNode(what)
+                input=document.createElement('input');
+                input.type='text'
+                p.appendChild(text);
+                p.appendChild(input)
+            }
+
+        }
+        else
+        {
+            p.removeChild(a.nextSibling.nextSibling)
+            p.removeChild(a.nextSibling)
+
+            //p.removeChild(c)
+        }
+    }
+function aggr(o)
+{
+    createText(o,'X');
+    createText(o,'XI');
+    createText(o,"graduation")
+}
+</script>
+<hr>
+SEARCH CRITERIA
+<hr>
+<br>
+ <div id = 'content'>
+    <table>
+        <tr>
+            <td>Workex   <td>Yes<input type= 'checkbox' checked=false id='workex' onChange="createText(this,'how many years');"> 
+        </tr>
+        <tr>
+            <td> Allow Backlogs   <td>Yes<input type= 'checkbox' checked=false id='backlogs'> </td>
+        </tr>
+        <tr>
+            <td>Spoken Languages <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' minimum how many languages');"> 
+        </tr>
+        <tr>
+            <td>Programming Languages <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' minimum how many languages');"> 
+        </tr>
+        <tr>
+            <td>Min Age <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' Minimu age requred');"> 
+        </tr>
+        <tr>
+            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox' checked=false id='grad_marks' onChange="createText(this,'Marks');">
+        </tr>
+        <tr>
+            <td></td> <td>XII<input type= 'checkbox' checked=false id='XII_marks' onChange="createText(this,'Marks');">
+        </tr>
+        <tr>
+            <td><td>X<input type= 'checkbox' checked=false id='X_marks' onChange="createText(this,'Marks');">
+        </tr>
+
+
+
+
+
+
+     </table>    
+ </div>
+</html>
+{% endblock %}
+

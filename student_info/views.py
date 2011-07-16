@@ -54,7 +54,6 @@ def edit(request,prn):
              status,data = eval('%s' % t[1]).objects.get_or_create(primary_table=s); #like calling student.objects.get
              table_data = {'[%s]' % t[0]:data};
              table_status = {'%s' % t[0]:status}; #if False, was retrieved else WAS created
- 
              if status:
                  debugger('No %s found, creating a new one' % t[1] );
              else:
