@@ -58,7 +58,10 @@ def latex(request,prn):
                 tables[tbl]=eval(v).objects.filter(primary_table=s)
 
             print tables;
-
+            #add the basic info wala original object also
+            tables['s'] = s;
+            tables['p'] = tables['p'][0]; #because we hv only one personal info row.
+           
             #get all related objects
             #for t,table in tables:
                 #this is becoming a pain in a** because I can't figure out how!

@@ -3,16 +3,17 @@ syntax: glob
 *~
 *.pyc
 .*swp
-STORE
-STORE/*
-STORE/*.tex
 templates/*.zip
 templates/*.log
 templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
 *.sqlite*
-<<<<<<< local
+.DS_Store
+*.orig
 
-=======
->>>>>>> other
+syntax: regexp
+#we need the directory STORE because it is looked for when creating the subdirs 
+#but we don't need every individual's data in it :)
+^\STORE/([0-9]*)/
+
