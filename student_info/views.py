@@ -12,6 +12,10 @@ from datetime import datetime
 ''' import utility functions '''
 from student_info.utility import errorMaker, debugger;
 
+''' import vars '''
+from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+
+
 def edit(request,prn):
     '''The problem with this view :
             We(I) are doing it the old-fashioned way. 
@@ -35,7 +39,8 @@ def edit(request,prn):
         
         
         #get all the records and tell us whether they were creatd or retrieved
-        tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
+        #tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
+        #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
         for t,v in tables.iteritems():
             print "=========>>", v  ,"<<======="
             tables[t]=eval(v).objects.filter(primary_table=s)
@@ -74,7 +79,7 @@ def submit(request, prn):
     #what is submitted ?
     print "I have got files called ", request.FILES;
     for f in request.FILES.values():
-            dest="/Users/apoorva/laresumex/STORE/photos/"+ prn+".png"
+            dest= RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
             for chunk in f.chunks():

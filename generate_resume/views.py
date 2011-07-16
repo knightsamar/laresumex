@@ -2,7 +2,7 @@
 #''' will make comments which can auto-document this whole projects
 
 '''import data models '''
-from student_info.models import student, tables;
+from student_info.models import *;
 from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
@@ -50,11 +50,19 @@ def latex(request,prn):
         if s is not None:
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
-            
+ 
+            print tables;
+
+            for tbl,v in tables.iteritems():
+                print "=========>>", v  ,"<<======="
+                tables[tbl]=eval(v).objects.filter(primary_table=s)
+
+            print tables;
+
             #get all related objects
             #for t,table in tables:
                 #this is becoming a pain in a** because I can't figure out how!
-            c = Context({ 's' : s });
+            c = Context({'s' : tables});
              
             try:
                 #every latex file goes into that prn's directory

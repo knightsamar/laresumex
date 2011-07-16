@@ -81,7 +81,7 @@ class extracurricular(ExtraField):
     pass;
 
 #for references inside various views
-tables = {'p':'personal','sw':'software_exposure','ex':'extraField','m':'marks'}
+tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 
 """
 #In sabko ume actually use karna hai jab hum version treat karenge au
