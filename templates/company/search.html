@@ -1,11 +1,11 @@
-<!-- {% extends 'base.html' %}
+ {% extends 'base.html' %}
 {% block title %}
     SEARCH
 {% endblock %}
-{% block content %} -->
+{% block content %}
 <html>
 <script language='javascript'>
-    function createText(o, what)
+    function createText(o, what, fieldType)
     {
         //alert(o.checked)
         p=o.parentNode.parentNode;
@@ -16,22 +16,31 @@
             if (a.nextSibling == null)
             {
                 text=document.createTextNode(what)
-                /*
-                input=document.createElement('input');
-                input.type='text'
-                p.appendChild(text);
-                p.appendChild(input)*/
-                select=document.createElement('select')
-                p.appendChild(text)
-                p.appendChild(select)
+                if (fieldType=="text")
+                {
+                    input=document.createElement("input");
+
+                    input.type='text'
+                    p.appendChild(text)
+                    p.appendChild(input)
+
+                }
+ //               p.appendChild(fieldType)
+                else
+                {
+                    input=document.createElement(fieldType);
+
+                      p.appendChild(text)
+                p.appendChild(input)
+
                 for(var i=0;i<10;i++)
                 {
                     option=document.createElement("option")
                     option.text=i;
-                    select.add(option,null)
+                    input.add(option,null)
                 }
-               // p.appendChild(select)
-            }
+                }
+                          }
 
         }
         else
@@ -51,39 +60,45 @@ function aggr(o)
     createText(o,'XI');
     createText(o,"graduation")
 }
+function postData()
+{
+
+}
 </script>
 <hr>
 SEARCH CRITERIA 
 <hr>
 <br>
  <div id = 'content'>
+ <form onsubmit="return postData();"
     <table>
         <tr>
-            <td>Workex   <td>Yes<input type= 'checkbox'  id='workex' onChange="createText(this,'how many years');"> 
+            <td>Workex   <td>Yes<input type= 'checkbox'  id='workex' onChange="createText(this,'how many years','select');"> 
         </tr>
         <tr>
             <td> Allow Backlogs   <td>Yes<input type= 'checkbox'  id='backlogs'> </td>
         </tr>
         <tr>
-            <td>Spoken Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages');"> 
+            <td>Spoken Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','select');"> 
         </tr>
         <tr>
-            <td>Programming Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages');"> 
+            <td>Programming Languages <td>Any Specific language<input type= 'checkbox'  id='languages' onChange="createText(this,' add languages','text');"> 
+         </tr><tr><td></td>           <td>Number of languages<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','select');"> 
         </tr>
         <tr>
-            <td>Min Age <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' Minimu age requred');"> 
+            <td>Min Age <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' Minimu age requred','select');"> 
         </tr>
         <tr>
-            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox'  id='grad_marks' onChange="createText(this,'Marks');">
+            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox'  id='grad_marks' onChange="createText(this,'Marks','text');">
         </tr>
         <tr>
-            <td></td> <td>XII<input type= 'checkbox'  id='XII_marks' onChange="createText(this,'Marks');">
+            <td></td> <td>XII<input type= 'checkbox'  id='XII_marks' onChange="createText(this,'Marks','text');">
         </tr>
         <tr>
-            <td><td>X<input type= 'checkbox'  id='X_marks' onChange="createText(this,'Marks');">
+            <td><td>X<input type= 'checkbox'  id='X_marks' onChange="createText(this,'Marks','text');">
         </tr>
         <tr>
-            <td>Offered City<td><input type= 'checkbox'  id='city' onChange="createText(this,'City Name');">
+            <td>Offered City<td><input type= 'checkbox'  id='city' onChange="createText(this,'City Name','text');">
         </tr>
      </table>    
  </div>
