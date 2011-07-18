@@ -39,7 +39,7 @@ def edit(request,prn):
         
         
         #get all the records and tell us whether they were creatd or retrieved
-        #tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
+        tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
         #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
         for t,v in tables.iteritems():
             print "=========>>", v  ,"<<======="
@@ -49,7 +49,7 @@ def edit(request,prn):
                 print l
         tables['s']=s;   
         tables['p']=tables['p'][0]
-        tables['sw']=tables['sw'];
+        tables['sw']=tables['sw'][0];
         
         '''        
         #for storing record objects 
@@ -142,6 +142,8 @@ def submit(request, prn):
            column_dict=dict();
            #if field_name[0].startswith('ExtraField'):
 
+           if field_name[2] == 'X' or field_name[2] =='XII':
+               column_dict['course']=field_name[2];
            column_dict[field_name[1]]=data;
            if "title" not in column_dict:
                column_dict['title']=field_name[0]
@@ -207,9 +209,10 @@ def submit(request, prn):
         tablerow=table_row.split('_');
         if tablerow[0] == "personal":
             table=p;
-        else:    
+        else:
             table=eval(tablerow[0]).objects.get_or_create(primary_table=s);
             table=table[0];
+        
         print "table-->",table;
         print "we have a column called __%s__" % (tablerow[1]);
         print "value--->",value;
@@ -222,7 +225,7 @@ def submit(request, prn):
     for table, row_values in table_dict.iteritems():
         r=table.split('_')
         print "=======> table ", r[0];
-        t=eval(r[0])()
+        t=eval(r[0])();
         t.primary_table=s
         print "Creating new row for ", r[0];
         if "desc" in row_values and row_values["desc"] == "":

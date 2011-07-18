@@ -44,6 +44,7 @@ class personal(models.Model):
      corr_address=models.TextField(max_length=200);
      def __str__(self):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
+
 class swExposure(models.Model):
     primary_table=models.ForeignKey('student', null=False);
     programming = models.CharField(max_length=100);
@@ -73,25 +74,24 @@ class certification(ExtraField):
 class project(ExtraField):
     heading=models.CharField(max_length=40 ,blank=True);
     
-
 class academic(ExtraField):
     pass;
 
 class extracurricular(ExtraField):
     pass;
 
-'''
+"""
 class other(model.Model):
     backlogs=models.BooleanField();
     years_of_workex
     prefereable_cities
-'''
-#for references inside various views
+"""
 
+#for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 
 #In sabko ume actually use karna hai jab hum version treat karenge au
-"""
+
 class ExtraTable(models.Model):
     tables = (('p','personal'),('sw','software_exposure'),('ex','extraField'),('m','marks'),('s','student'))
     Column_Type = (('MVOLD','Multi-valued one line display'),
@@ -99,12 +99,12 @@ class ExtraTable(models.Model):
                    ('SVOLD','Single-valued one line display')
                    );
 
-    column_name = Models.CharField(max_length=50);
-    column_type = Models.CharField(max_length=5,choices=Column_Type);
-    column_length = Models.PositiveIntegerField();
-    column_title = Models.CharField(max_length=2,choices=tables);
+    column_name = models.CharField(max_length=50);
+    column_type = models.CharField(max_length=5,choices=Column_Type);
+    column_length = models.PositiveIntegerField();
+    column_title = models.CharField(max_length=2,choices=tables);
 
 class ExtraTableKaData(models.Model):
     field = models.ForeignKey('ExtraTable');
     data = models.TextField();
-"""
+

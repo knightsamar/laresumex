@@ -9,6 +9,8 @@ from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from django.shortcuts import render_to_response, redirect;
 
+from pprint import pprint
+
 ''' import vars '''
 from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -51,21 +53,26 @@ def latex(request,prn):
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
  
-            print tables;
+            pprint(tables);
+            student_data = dict();
+            pprint(tables.items());
 
-            for tbl,v in tables.iteritems():
-                print "=========>>", v  ,"<<======="
-                tables[tbl]=eval(v).objects.filter(primary_table=s)
-
-            print tables;
-            #add the basic info wala original object also
-            tables['s'] = s;
-            tables['p'] = tables['p'][0]; #because we hv only one personal info row.
-           
             #get all related objects
-            #for t,table in tables:
-                #this is becoming a pain in a** because I can't figure out how!
-            c = Context({'s' : tables});
+            for tbl,v in tables.iteritems():
+                print 'Getting for %s and %s' % (tbl,v)
+                print "=========>>", v  ,"<<======="
+                student_data[tbl]=eval(v).objects.filter(primary_table=s)
+
+            #add the basic info wala original object also
+            student_data['s'] = s;
+            student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
+            
+            #do we have the photo ? if yes, then include it.
+            student_data['photo'] = RESUME_STORE + "/photos/" + prn + ".png"  
+            #else, store None.
+
+            pprint(student_data);
+            c = Context({'s' : student_data});
              
             try:
                 #every latex file goes into that prn's directory
