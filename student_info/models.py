@@ -87,16 +87,11 @@ class other(model.Model):
     prefereable_cities
 '''
 #for references inside various views
-<<<<<<< local
 
-tables = {'p':'personal','sw':'software_exposure','ex':'extraField','m':'marks'}
-"""
-=======
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
->>>>>>> other
 
 #In sabko ume actually use karna hai jab hum version treat karenge au
-
+"""
 class ExtraTable(models.Model):
     tables = (('p','personal'),('sw','software_exposure'),('ex','extraField'),('m','marks'),('s','student'))
     Column_Type = (('MVOLD','Multi-valued one line display'),

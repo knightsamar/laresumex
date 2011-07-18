@@ -230,12 +230,22 @@
   hidden.id=hidden.name;
 
   H=document.getElementById(hidden.name);
+  if ((o.previousElementSibling) && (o.previousElementSibling.name=="month"))
+      {
+            var previousElementSiblingMonthKiValue=o.previousElementSibling.value
+        if ((o.previousElementSibling.previousElementSibling) && (o.previousElementSibling.previousElementSibling.name=="date"))
+          var previousElementSiblingKiDateValue=o.previousElementSibling.previousElementSibling.value
+        else 
+             previousElementSiblingKiValue="01"
 
-  if ((o.previousElementSibling.previousElementSibling)&&(o.previousElementSibling.previousElementSibling.name=="date"))
-      previousElementSiblingKiValue=o.previousElementSibling.previousElementSibling.value
-  else previousElementSiblingKiValue="01"
-
-  newDate= previousElementSiblingKiValue+","+(months.indexOf(o.previousElementSibling.value)+1) + "," + o.value
+      }
+  else 
+  { 
+      var previousElementSiblingMonthKiValue="Jan"
+      var previousElementSiblingDateKiValue="01"
+  }
+ 
+  newDate= previousElementSiblingDateKiValue+","+(months.indexOf(previousElementSiblingMonthKiValue)+1) + "," + o.value
   hidden.value=newDate;
   if (H)
       H.value=hidden.value
@@ -317,7 +327,7 @@ function remove(o)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
-<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/student_info/10030142007/submit'>
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/student_info/10030142031/submit'>
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
  <img src="/Users/apoorva/laresumex/STORE/photos/{{ prn }}.png" height=200 width=200>
@@ -375,21 +385,21 @@ function remove(o)
           <option>Result Awaiting</option>
           </select>
 </td>
-  <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this)"><option>{{ marks.fromDate.year }}</option> </select></td>
+  <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
   </tr>
   
   {% empty %}
   <tr>
-    <td>X<sup>th</sup></select></td>
+    <td>X<sup>th</sup><input type="hidden" id="marks_course_1" value="Xth"></td>
     <td><input type ='text' size=40 id="marks_uni_1" ></td>
     <td><input type='text' size = 5 id="marks_marks_1">%
-    <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"> </select></td>
+    <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="concat(this)">> </select></td>
   </tr>
   <tr>
-      <td>XII<sup>th</sup></td>
+      <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" value="XIIth"></td>
       <td><input type ='text' size=40 id="marks_uni_2" ></td>
       <td><input type='text' size =5 maxlength=5 id="marks_marks_2">%</td>
-      <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);"> </select> </td>
+      <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
   </tr>
   <tr id='marks'>
       <td>
@@ -403,7 +413,7 @@ function remove(o)
           <option>Result Awaiting</option>
           </select>
       </td>
-      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);"> </select> </td>
+      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
 
   </tr>
   {% endfor %}
