@@ -16,19 +16,33 @@
             if (a.nextSibling == null)
             {
                 text=document.createTextNode(what)
+                /*
                 input=document.createElement('input');
                 input.type='text'
                 p.appendChild(text);
-                p.appendChild(input)
+                p.appendChild(input)*/
+                select=document.createElement('select')
+                p.appendChild(text)
+                p.appendChild(select)
+                for(var i=0;i<10;i++)
+                {
+                    option=document.createElement("option")
+                    option.text=i;
+                    select.add(option,null)
+                }
+               // p.appendChild(select)
             }
 
         }
         else
         {
+           if (a.nextSibling != null)
+           {
             p.removeChild(a.nextSibling.nextSibling)
             p.removeChild(a.nextSibling)
 
             //p.removeChild(c)
+           } 
         }
     }
 function aggr(o)
@@ -39,43 +53,41 @@ function aggr(o)
 }
 </script>
 <hr>
-SEARCH CRITERIA
+SEARCH CRITERIA 
 <hr>
 <br>
  <div id = 'content'>
     <table>
         <tr>
-            <td>Workex   <td>Yes<input type= 'checkbox' checked=false id='workex' onChange="createText(this,'how many years');"> 
+            <td>Workex   <td>Yes<input type= 'checkbox'  id='workex' onChange="createText(this,'how many years');"> 
         </tr>
         <tr>
-            <td> Allow Backlogs   <td>Yes<input type= 'checkbox' checked=false id='backlogs'> </td>
+            <td> Allow Backlogs   <td>Yes<input type= 'checkbox'  id='backlogs'> </td>
         </tr>
         <tr>
-            <td>Spoken Languages <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' minimum how many languages');"> 
+            <td>Spoken Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages');"> 
         </tr>
         <tr>
-            <td>Programming Languages <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' minimum how many languages');"> 
+            <td>Programming Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages');"> 
         </tr>
         <tr>
-            <td>Min Age <td>Yes<input type= 'checkbox' checked=false id='languages' onChange="createText(this,' Minimu age requred');"> 
+            <td>Min Age <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' Minimu age requred');"> 
         </tr>
         <tr>
-            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox' checked=false id='grad_marks' onChange="createText(this,'Marks');">
+            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox'  id='grad_marks' onChange="createText(this,'Marks');">
         </tr>
         <tr>
-            <td></td> <td>XII<input type= 'checkbox' checked=false id='XII_marks' onChange="createText(this,'Marks');">
+            <td></td> <td>XII<input type= 'checkbox'  id='XII_marks' onChange="createText(this,'Marks');">
         </tr>
         <tr>
-            <td><td>X<input type= 'checkbox' checked=false id='X_marks' onChange="createText(this,'Marks');">
+            <td><td>X<input type= 'checkbox'  id='X_marks' onChange="createText(this,'Marks');">
         </tr>
-
-
-
-
-
-
+        <tr>
+            <td>Offered City<td><input type= 'checkbox'  id='city' onChange="createText(this,'City Name');">
+        </tr>
      </table>    
  </div>
+ <input type='button' value="search Resumes">
 </html>
 {% endblock %}
 

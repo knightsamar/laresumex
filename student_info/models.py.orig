@@ -80,10 +80,17 @@ class academic(ExtraField):
 class extracurricular(ExtraField):
     pass;
 
+'''
+class other(model.Model):
+    backlogs=models.BooleanField();
+    years_of_workex
+    prefereable_cities
+'''
 #for references inside various views
-tables = {'p':'personal','sw':'software_exposure','ex':'extraField','m':'marks'}
 
+tables = {'p':'personal','sw':'software_exposure','ex':'extraField','m':'marks'}
 """
+
 #In sabko ume actually use karna hai jab hum version treat karenge au
 
 class ExtraTable(models.Model):
