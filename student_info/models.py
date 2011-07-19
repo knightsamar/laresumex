@@ -91,7 +91,7 @@ class other(model.Model):
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 
 #In sabko ume actually use karna hai jab hum version treat karenge au
-
+"""
 class ExtraTable(models.Model):
     tables = (('p','personal'),('sw','software_exposure'),('ex','extraField'),('m','marks'),('s','student'))
     Column_Type = (('MVOLD','Multi-valued one line display'),
@@ -106,5 +106,5 @@ class ExtraTable(models.Model):
 
 class ExtraTableKaData(models.Model):
     field = models.ForeignKey('ExtraTable');
-    data = models.TextField();
+    data = models.TextField();"""
 

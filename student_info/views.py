@@ -21,6 +21,7 @@ def edit(request,prn):
             We(I) are doing it the old-fashioned way. 
             We(I) are not using the power of Models which allow automatic server-side validation -- i need to read on that.
     '''
+        
 
     #was prn passed and is it numeric really?
     if prn is not None and prn.isdigit() is True:

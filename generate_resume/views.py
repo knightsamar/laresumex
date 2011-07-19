@@ -66,7 +66,7 @@ def latex(request,prn):
             #add the basic info wala original object also
             student_data['s'] = s;
             student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
-            
+            student_data['sw']=student_data['sw'][0]
             #do we have the photo ? if yes, then include it.
             student_data['photo'] = RESUME_STORE + "/photos/" + prn + ".png"  
             #else, store None.
