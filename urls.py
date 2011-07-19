@@ -15,6 +15,7 @@ urlpatterns = patterns('',
      (r'^admin/', include(admin.site.urls)),
 
     # actually our urls START FROM NOW
+    (r'generate_resume/(?P<prn>\d+)/latex_sample',"generate_resume.views.latex_sample"),
     (r'generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
     (r'home',"generate_resume.views.index"),
     (r'generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
