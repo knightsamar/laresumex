@@ -13,7 +13,7 @@
     {% else %}
       Female, \nolinebreak
     {% endif %}
-    {{ p.birthdate }}\\
+    {{ p.birthdate|timesince }}\\
 \hline
     \\
   
@@ -143,21 +143,17 @@
       \end{tabular}
  {% endif %}
 
-  \section*{Personal Dossier}	
-  \hline
-  \hline
-  \\
-  \begin{tabular}{lll}
-  
-    \textbf{Birthdate}	&: & {{ p.birthdate }}&\\
-    \textbf{Mother's Name}	&: &{{ p.mother_name }}&\\
-    \textbf{Father's Name}	&: & {{ p.father_name }}&\\
-    \textbf{Mother's Occupation}&:&{{ p.mother_occupation }}&\\
-    \textbf{Languages Known}	&:& {{ p.languages }}&\\
-    \textbf{Permanent Address}	&: &{{ p.perr_add }}&\\
-    \textbf{Address of Corrospondance}&	: &{{ p.corr_add }}&\\
-  \end{tabular}
-  
+\section*{Personal Dossier}
+\hline
+\hline
+\textbf{Birthdate}	: \hspace{1} {{ p.birthdate }}\\
+\textbf{Mother's Name}	: \hspace{1} {{ p.mother_name }}\\
+\textbf{Father's Name}	: \hspace{1} {{ p.father_name }}\\
+\textbf{Mother's Occupation}	: \hspace{1} {{ p.mother_occupation }}\\
+\textbf{Languages Known}	: \hspace{1} {{ p.languages }}\\
+\textbf{Permanent Address}	: \hspace{1} {{ p.perr_add }}\\
+\textbf{Address of Corrospondance}	: \hspace{1} {{ p.corr_add }}\\
+
 {% if p.hobbies %}
 \section*{hobbies}
 \begin{itemize}
