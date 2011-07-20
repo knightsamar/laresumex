@@ -252,7 +252,7 @@ def submit(request, prn):
     t=loader.get_template('student_info/submit')
     c=Context(
               {
-                  'prn':prn
+                  'prn':s.prn
               }    
             )
     return HttpResponse(t.render(c));
