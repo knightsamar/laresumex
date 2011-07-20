@@ -1,0 +1,21 @@
+<<<-------Release I-------->>>
+
+==== To be done
+    * HTML preview for the latex
+    * Validation - Client and server side for the form and student info
+    * Uploading photograph
+    * Extra Field wala thngie.
+    * Changing the latex template acc to abhay sudhakaran
+    * Taking the values from the db for generating the latex
+    * Session and Ldap.
+
+====Progress Till Now.. (6th Jul 2011)
+    - user Form UI
+    - Storing user info into DB
+    - Editing
+    - generating rudimentary Tex file from it
+    - generating PDF copy of the tex File.
+
+====Bugs
+    - prn not unique wala error
+    - the edit html doesnt print the full name of the user whereas its correctly written in the db. 
