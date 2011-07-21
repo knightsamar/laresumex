@@ -13,7 +13,7 @@ def login(request):
     #are we processing login attempt ?
     message = None;
     if 'username' in request.session:
-        return redirect('/give_feedback');
+        return redirect('/home');
     if 'username' in request.POST:# and 'password' in request.POST:
         print 'processing login attempt';
         try:
@@ -82,7 +82,7 @@ def login(request):
             userexists[0].save();
 		
             #redirect to the index view!
-        return redirect('/give_feedback');
+        return redirect('/home');
        
     else:
    
@@ -119,4 +119,4 @@ def logout(request):
 			#then tell me to login first, using the message if possible 
 			#message = "Hey, you need to go in before you can go out :P :P";
 
-    return redirect('/change_agent/');	
+    return redirect('/ldap_login/');	

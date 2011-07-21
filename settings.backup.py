@@ -103,4 +103,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'laresumex.student_info',
     'laresumex.generate_resume',
+    'laresumex.company',
+    'laresumex.ldap_login',
 )

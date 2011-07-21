@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     (r'generate_resume/(?P<prn>\d+)/latex_sample',"generate_resume.views.latex_sample"),
     (r'^ldap_login/$','ldap_login.views.login'), #for authentication
     (r'generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
+    (r'^ldap_login/logout$','ldap_login.views.logout'), #for loggin out
     (r'home',"generate_resume.views.index"),
     (r'generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
     (r'search',"company.views.search"),
