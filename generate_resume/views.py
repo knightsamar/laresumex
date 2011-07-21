@@ -21,6 +21,9 @@ from os import mkdir,chdir #for changing directories
 from time import sleep
 
 def index(request):
+    if 'username' not in request.session:
+        print "from home to login as No session"
+        return redirect('/ldap_login')
     # see whether user has logged in....
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.

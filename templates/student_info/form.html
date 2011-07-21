@@ -285,6 +285,8 @@ function changeName()
         //for all eleemtns who are named 'month' OR 'year'
        if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
        {
+         if (select[i].id.indexOf('year')>=0)
+             concat(select[i])
          //thee shall deem them unsuccessfull
          select[i].name=null;
          continue;

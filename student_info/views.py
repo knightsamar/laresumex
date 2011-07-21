@@ -1,12 +1,12 @@
-# Create your views here.
-''' import data models '''
+#Create your views here.
+''' impmrt data models '''
 from student_info.models import *;
 
 ''' import generator helpers '''
 from django.template import Context, loader
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response;
+from django.shortcuts import redirect, render_to_response;
 from datetime import datetime
 
 ''' import utility functions '''
@@ -17,6 +17,9 @@ from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
 
 def edit(request,prn):
+    if "username" not in request.session:
+       print "no session found"
+       return redirect("/ldap_login")
     '''The problem with this view :
             We(I) are doing it the old-fashioned way. 
             We(I) are not using the power of Models which allow automatic server-side validation -- i need to read on that.
@@ -76,6 +79,9 @@ def edit(request,prn):
         return HttpResponse(t.render(c));
 
 def submit(request, prn):
+    if 'username' not in request.session:
+        print "no session found"
+        return redirect('/ldap_login')
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
     #what is submitted ?
     print "I have got files called ", request.FILES;
@@ -264,8 +270,13 @@ def ajaxRequest(request):
     pass;
 
 def showform(request):
-    #prn=request.post['prn'];
+    if 'username' not in request.session:
+        print "No session"
+        return redirect('/ldap_login')
+        
+    prn=request.session['username'];
     print "sdfsd"
+    
     t=loader.get_template('student_info/form.html')
     c=RequestContext(request,{'flag':'form'});
     

@@ -12,19 +12,27 @@ from django.core.mail import send_mail
 def login(request):
     #are we processing login attempt ?
     message = None;
+    print request.POST
     if 'username' in request.session:
         return redirect('/home');
-    if 'username' in request.POST:# and 'password' in request.POST:
-        print 'processing login attempt';
-        try:
-            #comment this line when you ARE OUTSIDE SICSR!
-        	#status = authenticate(request.POST['username'],request.POST['password']);
-            #UNCOMMENT this lin when you are outside SICSR!
-            status = True;
-            print status;
-            print 'auth process completed'
-        except e as Exception:
-            return HttpResponse('Error!!! %s' %  e.message());
+    elif 'username' in request.POST:# and 'password' in request.POST:
+        print "== Got username..!!!!"
+        if request.POST['username'] == "":
+            print"but its empty"
+            status=False;
+            message="please enter Username"
+        else:    
+            print "its Not emply...its",request.POST['username']
+            print 'processing login attempt';
+            try:
+                #comment this line when you ARE OUTSIDE SICSR!
+        	    #status = authenticate(request.POST['username'],request.POST['password']);
+                #UNCOMMENT this lin when you are outside SICSR!
+                status = True;
+                print status;
+                print 'auth process completed'
+            except e as Exception:
+                return HttpResponse('Error!!! %s' %  e.message());
             
         if status is True:
             #if successful ldap login
@@ -63,7 +71,7 @@ def login(request):
             
             # We will have to think of a better method of doing this..!! eventually
             # for SA and SD ppl 
-            SA=['009','008','020','025','027','030','031','036','046','048','059','069','076','080','090','093','0100','0101'] # add all the SA ppl ka PRN
+            '''SA=['009','008','020','025','027','030','031','036','046','048','059','069','076','080','090','093','0100','0101'] # add all the SA ppl ka PRN
             if userName[2:8]=="030142": # if they are in msscca
                 print "in mscca",userName[2:8]
                 if userName[8:11] in SA: # last three digits of PRN
@@ -75,7 +83,7 @@ def login(request):
                     sd=group.objects.get_or_create(name='SD')
                     newuser.groups.add(sd[0])
             newuser.groups.add(groupexists[0]);
-            newuser.save();
+            newuser.save();'''
         else:
             print "user already existed..!!!"
             userexists[0].last_login=datetime.today();
