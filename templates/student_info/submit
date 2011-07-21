@@ -1,4 +1,4 @@
 <html>
 Yay yay..!! submitted..!! lalala
-<input type="button" value="view Tex" onClick="javascript.href='/generate_resume/{{ prn }}/latex'">
+<input type="button" value="view Tex" onClick="javascript:location.href='/generate_resume/{{ prn }}/latex'">
 </html>
