@@ -5,7 +5,7 @@
 {% block content %}
 <html>
 <script language='javascript'>
-    function createText(o, what, fieldType)
+    function createText(o, what,name, fieldType)
     {
         //alert(o.checked)
         p=o.parentNode.parentNode;
@@ -21,6 +21,7 @@
                     input=document.createElement("input");
 
                     input.type='text'
+                    input.name=name;
                     p.appendChild(text)
                     p.appendChild(input)
 
@@ -29,6 +30,7 @@
                 else
                 {
                     input=document.createElement(fieldType);
+                    input.name=name;
 
                       p.appendChild(text)
                 p.appendChild(input)
@@ -62,7 +64,8 @@ function aggr(o)
 }
 function postData()
 {
-
+    alert("FDS");
+return true;
 }
 </script>
 <hr>
@@ -70,39 +73,40 @@ SEARCH CRITERIA
 <hr>
 <br>
  <div id = 'content'>
- <form onsubmit="return postData();"
-    <table>
+ <form method="post" action="/company/getResume">
+ {% csrf_token %}
+  <table>
         <tr>
-            <td>Workex   <td>Yes<input type= 'checkbox'  id='workex' onChange="createText(this,'how many years','select');"> 
+            <td>Workex   <td>Yes<input type= 'checkbox' id='workex' onChange="createText(this,'how many years','workex_l_count','select');"> 
         </tr>
         <tr>
-            <td> Allow Backlogs   <td>Yes<input type= 'checkbox'  id='backlogs'> </td>
+            <td> Allow Backlogs   <td>Yes<input type= 'checkbox' name="backlogs" id='backlogs'> </td>
         </tr>
         <tr>
-            <td>Spoken Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','select');"> 
+            <td>Spoken Languages <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','personal_languages_count','select');"> 
         </tr>
         <tr>
-            <td>Programming Languages <td>Any Specific language<input type= 'checkbox'  id='languages' onChange="createText(this,' add languages','text');"> 
-         </tr><tr><td></td>           <td>Number of languages<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','select');"> 
+            <td>Programming Languages <td>Any Specific language<input type= 'checkbox'  id='languages' onChange="createText(this,' add languages','swExposure_programming_text','text');"> 
+         </tr><tr><td></td>           <td>Number of languages<input type= 'checkbox'  id='languages' onChange="createText(this,' minimum how many languages','swExposure_programming_count','select');"> 
         </tr>
         <tr>
-            <td>Min Age <td>Yes<input type= 'checkbox'  id='languages' onChange="createText(this,' Minimu age requred','select');"> 
+            <td>Min Age <td>Yes<input type= 'checkbox' id='languages' onChange="createText(this,' Minimu age requred','student_birthdate_text','select');"> 
         </tr>
         <tr>
-            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox'  id='grad_marks' onChange="createText(this,'Marks','text');">
+            <td>Minimum Aggregrate <td>Graduation<input type= 'checkbox'   id='grad_marks' onChange="createText(this,'Marks','marks_graduation_text','text');">
         </tr>
         <tr>
-            <td></td> <td>XII<input type= 'checkbox'  id='XII_marks' onChange="createText(this,'Marks','text');">
+            <td></td> <td>XII<input type= 'checkbox' id='XII_marks' onChange="createText(this,'Marks',"marks_XII_text",'text');">
         </tr>
         <tr>
-            <td><td>X<input type= 'checkbox'  id='X_marks' onChange="createText(this,'Marks','text');">
+            <td><td>X<input type= 'checkbox'  id='X_marks' onChange="createText(this,'Marks',"marks_X_text",'text');">
         </tr>
         <tr>
-            <td>Offered City<td><input type= 'checkbox'  id='city' onChange="createText(this,'City Name','text');">
+            <td>Offered City<td><input type= 'checkbox'  id='city' onChange="createText(this,'City Name','personal_city_text','text');">
         </tr>
      </table>    
  </div>
- <input type='button' value="search Resumes">
+ <input type='submit' value="search Resumes">
 </html>
 {% endblock %}
 

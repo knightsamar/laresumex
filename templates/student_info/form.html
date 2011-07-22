@@ -285,6 +285,8 @@ function changeName()
         //for all eleemtns who are named 'month' OR 'year'
        if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
        {
+         if (select[i].id.indexOf('year')>=0)
+             concat(select[i])
          //thee shall deem them unsuccessfull
          select[i].name=null;
          continue;
@@ -327,11 +329,11 @@ function remove(o)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
-<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/student_info/10030142007/submit'>
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/student_info/{{ prn }}/submit'>
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 {% if flag == "edit" %}
- <img src="/Users/apoorva/laresumex/STORE/photos/{{ s.prn }}.png" height=200 width=200>
+<img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=200 width=200>
 {% endif %}
  <div id='section'>
  <label for = "Fname"> Full Name*</label>
