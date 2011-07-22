@@ -1,0 +1,22 @@
+* Facilitate some extra fields from the user which WILL NOT be displayed in the resume.
+    * Has backlogs ? When ? Which semester ?
+    * Is a Software Development optee or System Administration optee or other MBA-IT/BCA/BBA-IT Stream optee ?
+    
+* Process and store the Additional Sections data.
+
+* Allow reordering of the Sections (...shouldn't this be in the generate resume's domain of functionality ?)
+
+* When submitting an EDIT of an EXISTING resume, all the dates, month and year are reset to 1,1,1900...Fix this!
+
+* Instead of Percentage, ask for Total Marks and Marks-out-of in the Marks section. -- HG
+
+* Decide whether we want to store weaknesses and whether they will be shown in the resume by asking Ashwini Mam/HG or better give the user a choice.
+
+* Write a noscript element. Don't allow this form to be displayed if JavaScript is not enabled. 
+
+* Correct all spelling mistakes in the form :P
+
+IDEAS
+=====
+* If possible, allow rich text boxes for all textareas and be sure we can render them in the resume some way..maybe convert from HTML to latex formatting -- because I would want some words bold in a description.
+

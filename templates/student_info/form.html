@@ -8,7 +8,12 @@
     Form for the resume
 {% endblock %}
 {% block content %}
-    <script language = "javascript">
+    <script language="JavaScript">
+    /* Autofills the passed dropdown objet with contents based on it's value 
+      
+       For day, month and year, fills with values.
+       For courses, fills with degrees.
+    */
     function fillOptions(o)
     {
         if (o.children.length >1) return false;
@@ -64,11 +69,8 @@
                  var option=document.createElement("option");
                  option.text=course[i];
                  o.add(option,null)
-
             }
         } 
-  
- 
     }
      
  function addNew(elName)
@@ -158,6 +160,15 @@
             c.appendChild(clone);
         }*/
  }
+    
+
+ /* changes the sibling fields to suit the current value of the passed object.
+    
+    For Months, changes the Day according to the capacity of the month.
+    For the Appearing/Result Awaiting, disables the marks field.
+   
+    TODO: for leap year, it should make February right.
+ */
  function change(o)
  {
      id0=o.id.split('_')[0];
@@ -333,7 +344,9 @@ function remove(o)
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 {% if flag == "edit" %}
-<img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=200 width=200>
+<div id='photo'>
+    <img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=200 width=200>
+</div>
 {% endif %}
  <div id='section'>
  <label for = "Fname"> Full Name*</label>
@@ -352,9 +365,15 @@ function remove(o)
 <br>         <br>
 
   Birthdate*
-  <select name = "date"  id="birthdate_date"  onBlur="change(this);"onFocus="fillOptions(this);"><option>{{ p.birthdate.day }} </option></select>
-  <select name = "month" id="birthdate_month" onBlur="change(this);" onFocus="fillOptions(this);"> <option>{{ p.birthdate|date:"b"|title }}</option></select>
-  <select name = "year"  id="birthdate_year" onFocus="fillOptions(this);" onBlur="concat(this);"><option>{{ p.birthdate.year }}</option></select>
+  <select name = "date"  id="birthdate_date"  onBlur="change(this);" onFocus="fillOptions(this);">
+        <option>{{ p.birthdate.day }} </option>
+  </select>
+  <select name = "month" id="birthdate_month" onBlur="change(this);" onFocus="fillOptions(this);"> 
+        <option>{{ p.birthdate|date:"b"|title }}</option>
+  </select>
+  <select name = "year"  id="birthdate_year" onBlur="concat(this);" onFocus="fillOptions(this);">
+        <option>{{ p.birthdate.year }}</option>
+  </select>
  <hr>  
  <br><BR>
  
