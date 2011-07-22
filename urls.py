@@ -31,8 +31,9 @@ urlpatterns = patterns('',
     # company
     (r'search',"company.views.search"),
     (r'company/getResume',"company.views.getResume"),
+    (r'company/list',"company.views.company_list"),
     
-    # sudent_info
+    # student_info
     (r'student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'student_info/form',"student_info.views.showform"),
     (r'student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),

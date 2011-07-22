@@ -4,6 +4,7 @@
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from django.shortcuts import render_to_response, redirect;
+from company.models import *
 
 ''' import vars '''
 from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
@@ -29,3 +30,12 @@ def getResume(request):
 
     print final_string
     return HttpResponse("Please wait till i fetch the resumes...\n\n"+final_string);
+
+def company_list(request):
+    companies=company.objects.all();
+    print "we have ", type(companies)
+    t=loader.get_template('company/company_names')
+    c=Context({
+                'companies':companies,
+            });
+    return HttpResponse(t.render(c));

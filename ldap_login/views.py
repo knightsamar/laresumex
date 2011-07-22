@@ -3,7 +3,7 @@
 from django.http import HttpResponse;
 from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
-from ldap_login.models import user,group;
+from ldap_login.models import user;
 from datetime import datetime
 from django.core.mail import send_mail
 
@@ -66,7 +66,7 @@ def login(request):
             else:
                 print "its a staff..!"
                 groupid='staff'
-            groupexists=group.objects.get_or_create(name=groupid)
+            #groupexists=group.objects.get_or_create(name=groupid)
             print "groupexists... = ", groupexists
             
             # We will have to think of a better method of doing this..!! eventually
@@ -76,13 +76,13 @@ def login(request):
                 print "in mscca",userName[2:8]
                 if userName[8:11] in SA: # last three digits of PRN
                     print "SA- ", userName[8:11]
-                    sa=group.objects.get_or_create(name='SA')
-                    newuser.groups.add(sa[0])
+                    #sa=group.objects.get_or_create(name='SA')
+                    #newuser.groups.add(sa[0])
                 else:
                     print "SD", userName[8:11]
                     sd=group.objects.get_or_create(name='SD')
-                    newuser.groups.add(sd[0])
-            newuser.groups.add(groupexists[0]);
+                    #newuser.groups.add(sd[0])
+            #newuser.groups.add(groupexists[0]);
             newuser.save();'''
         else:
             print "user already existed..!!!"
