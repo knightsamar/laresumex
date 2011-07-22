@@ -5,6 +5,8 @@ from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from django.shortcuts import render_to_response, redirect;
 from company.models import *
+from student_info.models import student
+from datetime import date
 
 ''' import vars '''
 from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
@@ -32,10 +34,35 @@ def getResume(request):
     return HttpResponse("Please wait till i fetch the resumes...\n\n"+final_string);
 
 def company_list(request):
+    if 'username' not in request.session:
+        return redirect('/ldap_login/');
+    else:
+        prn=request.session['username'];
+    print prn    
+    s=student.objects.get(pk=prn);
     companies=company.objects.all();
-    print "we have ", type(companies)
+    print companies
+    today=date.today()
+    main_list=list()
+    for c in companies:
+        c_dict=dict()
+        print "procesig Compan",c
+        c_dict['name']=c.name;
+        if c.date_of_interview > today:
+            c_dict['gone']="";
+        else:
+            c_dict['gone']="disabled=true";
+        m=c.students_applied.all()
+        if s in m:
+            c_dict['Checked']='Checked=true';
+        else:
+             c_dict['Checked']="";
+        print "the dict", c_dict;
+        main_list.append(c_dict)
+    print main_list     
     t=loader.get_template('company/company_names')
     c=Context({
-                'companies':companies,
+                'companies':main_list,
+                
             });
     return HttpResponse(t.render(c));

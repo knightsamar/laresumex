@@ -47,6 +47,7 @@ def login(request):
     
         print 'redirecting now...';
 	    #check for user existance... and/or add the use in our feedback database..!!
+        '''
         userexists=user.objects.get_or_create(pk=userName)
         if userexists[1] is True:
             print " got a new user"
@@ -71,7 +72,7 @@ def login(request):
             
             # We will have to think of a better method of doing this..!! eventually
             # for SA and SD ppl 
-            '''SA=['009','008','020','025','027','030','031','036','046','048','059','069','076','080','090','093','0100','0101'] # add all the SA ppl ka PRN
+            """SA=['009','008','020','025','027','030','031','036','046','048','059','069','076','080','090','093','0100','0101'] # add all the SA ppl ka PRN
             if userName[2:8]=="030142": # if they are in msscca
                 print "in mscca",userName[2:8]
                 if userName[8:11] in SA: # last three digits of PRN
@@ -83,14 +84,14 @@ def login(request):
                     sd=group.objects.get_or_create(name='SD')
                     #newuser.groups.add(sd[0])
             #newuser.groups.add(groupexists[0]);
-            newuser.save();'''
+            newuser.save();"""
         else:
             print "user already existed..!!!"
             userexists[0].last_login=datetime.today();
             userexists[0].save();
 		
             #redirect to the index view!
-        return redirect('/home');
+        return redirect('/home');'''
        
     else:
    
