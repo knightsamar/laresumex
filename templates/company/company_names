@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    List of companies
+{% endblock %}
+{% block content %}
+
+<html>
+Following is the list of companies visiting our college. 
+<br><BR>
+<ul>
+{% for k in companies %}
+    <li>{{ k.name }}    <input type='checkbox'></li>
+{% empty %}
+    <i> no companies </i>
+{% endfor %}
+</ul>
+{% endblock %}
