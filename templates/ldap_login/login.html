@@ -3,7 +3,7 @@
  Login 
 {% endblock %}
 {% block content %}
-<form action='/home' method='POST'>
+<form action='/ldap_login/' method='POST'>
 
     {% csrf_token %}
     {% if message != None %}

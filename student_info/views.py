@@ -72,6 +72,7 @@ def edit(request,prn):
         debugger(table_data);
         debugger(table_data_status); '''
         tables['flag']='edit'
+        tables['prn']=prn
         c = RequestContext(request,tables);
         t = loader.get_template('student_info/form.html');
         
@@ -278,6 +279,11 @@ def showform(request):
     print "sdfsd"
     
     t=loader.get_template('student_info/form.html')
-    c=RequestContext(request,{'flag':'form'});
+    c=RequestContext(request,
+            {
+                'flag':'form',
+                'prn':prn
+            }
+            );
     
     return HttpResponse(t.render(c));
