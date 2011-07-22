@@ -1,7 +1,7 @@
 # Django settings for laresumex project.
 
 #CUSTOM VARS
-FULL_PATH = "/Users/apoorva/laresumex";
+FULL_PATH = "/home/sdrc/laresumex";
 RESUME_STORE = "%s/STORE/" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 

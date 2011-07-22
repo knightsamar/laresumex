@@ -27,24 +27,30 @@ def index(request):
     # see whether user has logged in....
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
-    '''
+    prn = request.session['username'] 
     s=student.objects.filter(pk=prn);
     if len(s) is 0:
-        it means there is no entry
+        #it means there is no entry
         create_form=True;
     else:
-        Form already exists
+        #Form already exists
         create_form=False
-    c=Context({'create_form':create_form})
-    '''
+    
     t=loader.get_template('index.html')
-    c=Context();
+    c=Context({
+        'prn':request.session['username'],
+        'create_form':create_form,
+        'MEDIA_URL' : MEDIA_URL
+             }
+        );
     return HttpResponse(t.render(c));
 
 
 def latex(request,prn):
+    if 'username' not in request.session:
+            return redirect('/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
-    user = '10030142056' #the current user from session;
+    #the current user from session;
     if prn is not None:
     	try:
 	        s = student.objects.get(pk=prn)
@@ -119,6 +125,8 @@ def latex(request,prn):
 
 
 def pdf(request,prn):
+    if 'username' not in request.session:
+            return redirect('ldap_login/')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
@@ -166,6 +174,8 @@ def pdf(request,prn):
     return response;
 
 def html(request,prn):
+    if 'username' not in request.session:
+           return redirect('/ldap_login')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
@@ -218,76 +228,3 @@ def get_done(cmd,path=RESUME_STORE):
 
     return True;
 
-def latex_sample(request,prn):
-    '''generates the resume and puts it into the resume store for version control'''
-    user = '10030142056' #the current user from session;
-    if prn is not None:
-    	try:
-	        s = student.objects.get(pk=prn)
-        except Exception as e:
-            output = "<h3>Student details for PRN %s not found! Can't generate a LaTeX file!</h3>" % (prn);
-            return HttpResponse(output);
-        
-        if s is not None:
-            #pass the student object with all his entered info to the template generator
-            t = loader.get_template('%s/template.html' % RESUME_FORMAT);
-            
-            pprint(tables);
-            student_data = dict();
-            pprint(tables.items());
-
-            #get all related objects
-            for tbl,v in tables.iteritems():
-                print 'Getting for %s and %s' % (tbl,v)
-                print "=========>>", v  ,"<<======="
-                student_data[tbl]=eval(v).objects.filter(primary_table=s)
-
-            #add the basic info wala original object also
-            student_data['s'] = s;
-            student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
-            
-            #do we have the photo ? if yes, then include it.
-            student_data['photo'] = RESUME_STORE + "/photos/" + prn + ".png"  
-            #else, store None.
-
-            pprint(student_data);
-            c = Context({'s' : student_data});
-             
-            try:
-                #every latex file goes into that prn's directory
-                destination_dir = '%s/%s/' % (RESUME_STORE, prn)
-
-                try:
-                    chdir(destination_dir) #if we can't change into it, create it!
-                except OSError:
-                    mkdir(destination_dir);
-                finally:
-                    chdir(FULL_PATH);
-                 
-                resume_file = '%s/%s.tex' % (destination_dir, prn)
-                #now store the person's generated resume-latex-code
-                '''f = file(resume_file,'w'); #if the file exists, overwrite it ELSE  create it.
-               
-                f.write(t.render(c));
-                f.close();'''
-              
-                """#for now postponed to next release
-                #now add this file to version control
-
-                hg_command = "hg add %s; hg commit -u laresumex -m 'updated by %s' " % (resume_file,user);
-                return_status = get_done(hg_command);
-                """
-                return_status = True;
-            except Exception as e:
-               print 'Exception was ', e;
-               return_status = False;
-            finally:
-                if return_status is False:
-                    output = "<h3>Couldn't generate your .TEX file! Return code was %d </h3>" % return_status;
-                else:
-                    output = "<h3>Doneaa!</h3>";
-        else:
-            output = "<h3>Student details for PRN %s not found!</h3>" % (prn);
-    else:
-       output = "<h3>Hey, pass me a PRN man!</h3>";
-    return HttpResponse(t.render(c));
