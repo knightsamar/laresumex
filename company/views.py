@@ -48,7 +48,7 @@ def company_list(request):
         c_dict=dict()
         print "procesig Compan",c
         c_dict['name']=c.name;
-        if c.date_of_interview > today:
+        if c.last_date_of_applying > today:
             c_dict['gone']="";
         else:
             c_dict['gone']="disabled=true";
@@ -61,8 +61,17 @@ def company_list(request):
         main_list.append(c_dict)
     print main_list     
     t=loader.get_template('company/company_names')
-    c=Context({
+    c=RequestContext(request,{
                 'companies':main_list,
                 
             });
     return HttpResponse(t.render(c));
+def apply(request):
+    print request.POST
+    # check for the session and redirect
+    # check for only three entries in POST except for csrfmiddlewaretoken
+    # fetch student of ths prn
+    #take each company from POST
+        #add this student to the list of applied_students
+        #save
+    return HttpResponse('Saved')

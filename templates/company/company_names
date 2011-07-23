@@ -20,13 +20,15 @@ function selected(o)
 
 function checkThree()
 {
-    alert('sad')
     input =document.getElementsByTagName('input')
     count =0;
     for(var i=0;i<input.length;i++)
     {
         if(input[i].type=='checkbox' && input[i].checked==true)
+            {
             count++
+            selected(input[i])
+            }
     }
     alert(count)
     if (count>3) 
@@ -40,7 +42,8 @@ function checkThree()
 Following is the list of companies visiting our college. 
 <br><BR>
 <ul>
-<form onsubmit='return checkThree();'>
+<form onsubmit='return checkThree();' method="post" action="/company/apply">
+{% csrf_token %}
 {% for k in companies %}
     <li>
         {{ k.name }} 

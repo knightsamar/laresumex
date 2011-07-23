@@ -17,6 +17,7 @@ TODO
     - the admin view is only way of adding data into the app
     - admon wd add the cmapny and the deadline by which students should say they are applying or not.
     - the admin will also fill in the eligibility criteria ( manually in the text area)  for the record
+    - a way that when a student clicks on the company and then view the elegibility crieteria and/ or the company url
     - on creation of new company types, there can be a hook or trigger that mails this info to the students
         -do we need to create MBA, MSC, or year wise groups??? 
         - as this wd be used for many years.. 
