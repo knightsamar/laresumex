@@ -79,12 +79,20 @@ def edit(request,prn):
         print "dsfasdfasdafsdf"
         return HttpResponse(t.render(c));
 
+
 def submit(request, prn):
+    '''processes submissions of NEW forms and also EDIT forms!'''
+
     if 'username' not in request.session:
         print "no session found"
         return redirect('/ldap_login')
     '''will accept form submissions and process them -- i don't know why this is seperate from the edit() but i feel it's better FOR NOW'''
     #what is submitted ?
+    
+   #was javascript enabled and everything ok on the client side ???
+    if not ('allok' in request.POST and request.POST['allok'] is 1):
+       return HttpResponse("<h2 align='center' style='color: red;'> Hey, you need to enable JavaScript if you want us to help you! </h2>");
+
     print "I have got files called ", request.FILES;
     for f in request.FILES.values():
             dest= RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P

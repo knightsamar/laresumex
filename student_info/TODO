@@ -12,7 +12,7 @@
 
 * Decide whether we want to store weaknesses and whether they will be shown in the resume by asking Ashwini Mam/HG or better give the user a choice.
 
-* Write a noscript element. Don't allow this form to be displayed if JavaScript is not enabled. 
+* Write a noscript element. Don't allow this form to be displayed if JavaScript is not enabled. -- DONE! By Samar
 
 * Correct all spelling mistakes in the form :P
 

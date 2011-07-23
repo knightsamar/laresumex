@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 <!-- Form for the resume -->
 {% load some_tags %}
-<html>n
+<html>
 <head>
 
 {% block title %}
@@ -309,12 +309,17 @@ function changeName()
        //if (select[i].value=="")
           //  {select[i].focus();return false;}
     }
+
     textarea=document.getElementsByTagName('textarea');
-    for(var i=0;i<textarea.length;i++)
+    for (var i=0;i<textarea.length;i++)
         //if(tablearea[i].value=="")
             textarea[i].name=textarea[i].id;
    // return false;
+
+    //now tell in the form submission the secret
+    document.getElementById('allok').value = 1;
 }
+
 function remove(o)
 {
     if (o.tagName=='TD')
@@ -336,6 +341,7 @@ function remove(o)
 }    
     </script>
 </head>
+
 
 <body>
 
@@ -767,9 +773,13 @@ function remove(o)
   <input type = 'file' name='photo'>
 
   <br><Br><BR>
+  <input type='hidden' value='0' name='allok' id='allok'>
   <input type='submit' value='get ur resume'><input type='reset'>
   </div>
 </form>
+<noscript>
+    <h2 align='center' style="color: red;"> Hey, you need to enable JavaScript if you want us to help you! </h2>
+</noscript>
 {% endblock %}
 </body>
 </html>
