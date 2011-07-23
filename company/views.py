@@ -15,6 +15,7 @@ def search(request):
     c=RequestContext(request,{})
     t=loader.get_template('company/search.html')
     return HttpResponse(t.render(c))
+
 def getResume(request):
     print str(request.POST)
     print "====Now we'l process the post fields..==="
@@ -38,8 +39,11 @@ def company_list(request):
         return redirect('/ldap_login/');
     else:
         prn=request.session['username'];
-    print prn    
-    s=student.objects.get(pk=prn);
+    print prn
+    s=student.objects.filter(pk=prn);
+    if s :
+        s=s[0]
+
     companies=company.objects.all();
     print companies
     today=date.today()
