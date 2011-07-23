@@ -90,7 +90,7 @@ def submit(request, prn):
     #what is submitted ?
     
    #was javascript enabled and everything ok on the client side ???
-    if not ('allok' in request.POST and request.POST['allok'] is 1):
+    if not ('allok' in request.POST and request.POST['allok'] == '1'):
        return HttpResponse("<h2 align='center' style='color: red;'> Hey, you need to enable JavaScript if you want us to help you! </h2>");
 
     print "I have got files called ", request.FILES;

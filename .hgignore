@@ -1,5 +1,4 @@
 syntax: glob
-
 *~
 *.pyc
 .*swp
@@ -13,6 +12,7 @@ templates/moderncv/*.aux
 .DS_Store
 *.orig
 *.png
+
 syntax: regexp
 #we need the directory STORE because it is looked for when creating the subdirs 
 #but we don't need every individual's data in it :)
