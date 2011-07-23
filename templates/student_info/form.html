@@ -241,10 +241,10 @@
   hidden.id=hidden.name;
 
   H=document.getElementById(hidden.name);
-  if ((o.previousElementSibling) && (o.previousElementSibling.name=="month"))
+  if ((o.previousElementSibling) && (o.previousElementSibling.id.indexOf('month') != -1))
       {
             var previousElementSiblingMonthKiValue=o.previousElementSibling.value
-        if ((o.previousElementSibling.previousElementSibling) && (o.previousElementSibling.previousElementSibling.name=="date"))
+        if ((o.previousElementSibling.previousElementSibling) && (o.previousElementSibling.previousElementSibling.id.indexOf('date') != -1))
           var previousElementSiblingDateKiValue=o.previousElementSibling.previousElementSibling.value
         else 
              previousElementSiblingDateKiValue="01"
@@ -261,7 +261,7 @@
   if (H)
       H.value=hidden.value
   else    
-  o.parentNode.appendChild(hidden);
+      o.parentNode.appendChild(hidden);
 
  }
 
@@ -296,8 +296,10 @@ function changeName()
         //for all eleemtns who are named 'month' OR 'year'
        if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
        {
-         if (select[i].id.indexOf('year')>=0)
-             concat(select[i])
+           if (select[i].id.indexOf('year')>=0)
+           {
+               concat(select[i])
+           }
          //thee shall deem them unsuccessfull
          select[i].name=null;
          continue;
