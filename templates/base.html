@@ -1,0 +1,58 @@
+{% load some_tags %}
+<html>
+<head>
+
+<title>La-Resume-x ::{% block title %}{% endblock %}</title>
+<style type="text/css">
+
+#section {
+	margin-top: 6%;
+    margin-left:10%
+}
+
+heading {
+	border-bottom-style: double;
+	margin-bottom: 9px;
+	border-bottom-width: 4px;
+	line-height: 6px;
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 18px;
+	font-family: verdana;
+}
+
+li {
+	list-style-position: outside;
+	list-style-type: square;
+	margin: 11px;
+}
+
+hr {
+	line-height: 6px;
+	text-shadow: 4px 8px #ca651e;
+	color: #56c72b;
+}
+
+img {
+      border: 1px dotted black;
+      float: right;
+      margin: 10px;
+      position: relative;
+}
+</style>
+
+</head>
+<body>
+<font align='center' size='30' color='purple' >LA-Resumex.. </font>Resume in Latex ..:):D
+<hr>
+{% block content %}
+{% endblock %}
+<hr>
+This software is designed by:
+{% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
+    Samar and Apoorva
+{% else %}
+    Apoorva and Samar
+{% endif %}
+</body>
+</html>

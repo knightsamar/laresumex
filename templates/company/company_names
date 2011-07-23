@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}
+    List of companies
+{% endblock %}
+{% block content %}
+
+<html>
+<script language="javascript">
+function selected(o)
+{
+    if (o.checked == true)
+    {
+        o.name=o.id
+    }
+    else if(o.checked == false)
+    {
+        o.removeAttribute('name')
+    }
+}
+
+function checkThree()
+{
+    input =document.getElementsByTagName('input')
+    count =0;
+    for(var i=0;i<input.length;i++)
+    {
+        if(input[i].type=='checkbox' && input[i].checked==true)
+            {
+            count++
+            selected(input[i])
+            }
+    }
+    alert(count)
+    if (count>3) 
+    {
+        alert('You can ony apply for 3 companies')
+        return false;
+    }
+    return true;
+}
+</script>
+Following is the list of companies visiting our college. 
+<br><BR>
+<ul>
+<form onsubmit='return checkThree();' method="post" action="/company/apply">
+{% csrf_token %}
+{% for k in companies %}
+    <li>
+        {{ k.name }} 
+        <input type='checkbox' id="{{ k.name }}" onclick="selected(this);" {{ k.gone }} {{k.Checked}}>
+
+    </li>
+{% empty %}
+    <i> no companies </i>
+{% endfor %}
+</ul>
+<input type='submit' value="Submit">
+{% endblock %}
