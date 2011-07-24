@@ -10,7 +10,7 @@ class company(models.Model):
     email_id=models.EmailField();
     phone_number=models.CharField(max_length=15)
     #comapny_url=models.CharField(max_length=20)
-    #came_for_group=models.ManyToManyField('ldap_login/group')
+    came_for_group=models.ManyToManyField('ldap_login.group')
     eligibilty=models.TextField();
 
     def __str__(self):
