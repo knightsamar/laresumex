@@ -51,6 +51,8 @@ def latex(request,prn):
             return redirect('/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
+    if prn != request.session['username']:
+        return HttpResponse('Please mind your own resume..')
     if prn is not None:
     	try:
 	        s = student.objects.get(pk=prn)
@@ -127,6 +129,8 @@ def latex(request,prn):
 def pdf(request,prn):
     if 'username' not in request.session:
             return redirect('ldap_login/')
+    if prn != request.session['username']:
+        return HttpResponse('Nor ur resume')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
@@ -176,6 +180,8 @@ def pdf(request,prn):
 def html(request,prn):
     if 'username' not in request.session:
            return redirect('/ldap_login')
+    if prn != request.session['username']:
+          return HttpResponse('Not urs..!!')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
