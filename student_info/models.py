@@ -30,7 +30,9 @@ class marks(models.Model):
     fromDate=models.DateField(null=True, blank=True);
     
     def __str__(self):
-        return "Obtained %d in %s at %s" % (self.marks,self.course,self.uni)
+        if self.marks is None:
+            return "%s in %s at %s" %(self.markstype,self.course,self.uni)
+        return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
 
     class Meta:
         verbose_name_plural = 'Marks of Students';
