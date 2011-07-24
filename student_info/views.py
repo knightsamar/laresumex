@@ -251,13 +251,7 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    t=loader.get_template('done.html')
-    c=Context(
-              {
-                  'msg':"submitted"
-              }    
-            )
-    return HttpResponse(t.render(c));
+    return redirect('/student_info/Submitted/done');
 
 
 def ajaxRequest(request):
@@ -282,3 +276,13 @@ def showform(request):
             );
     
     return HttpResponse(t.render(c));
+
+
+def done(request,msg):
+  t=loader.get_template('done.html')
+  c=Context(
+            {
+                'msg':msg
+            }
+            )
+  return HttpResponse(t.render(c)) 

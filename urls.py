@@ -38,4 +38,5 @@ urlpatterns = patterns('',
     (r'student_info/form',"student_info.views.showform"),
     (r'student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
     (r'form',"student_info.views.showform"),
+    (r'student_info/(?P<msg>\D+)/done',"student_info.views.done"),
 )
