@@ -162,9 +162,9 @@ def submit(request, prn):
             if field_name[1] == 'title':
                #create a new object and push it to the ExtraFields dictionary
                e = ExtraField();
-               e.primary_table = prn;
+               e.primary_table = s;
                e.title = data;
-               extra_fields.append(e);
+               extra_fields[''.join(field_name)] = e;
             #if it's a description
             elif field_name[1] == 'desc' or 'year':
                 pass;
@@ -199,6 +199,7 @@ def submit(request, prn):
            '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
            row[field_name[1]] = data;'''
         elif len(field_name) is 3 and field_name[0] not in l: # for multi-valued single Display
+              print "!!!!!!!!inside mvsd processing";
               if field_name[2].isdigit() is False:
                 field_name[1]=field_name[1]+'_'+field_name[2]  
               else:
@@ -264,7 +265,7 @@ def submit(request, prn):
                 if "end" in c:
                     c="endDate"
                 else:
-                     c="fromDate"
+                    c="fromDate"
             t.__setattr__(c,d);
             print r[0],".",c,"======>",d;    
         t.save();    

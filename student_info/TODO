@@ -1,3 +1,11 @@
+BUGS
+====
+* When trying to directly go to your own Edit wala URL, when the form has NOT been filled, it display a list index out range error. Instead a proper redirection should happen.
+
+
+
+TODOs
+=====
 * Facilitate some extra fields from the user which WILL NOT be displayed in the resume.
     * Has backlogs ? When ? Which semester ?
     * Is a Software Development optee or System Administration optee or other MBA-IT/BCA/BBA-IT Stream optee ?
