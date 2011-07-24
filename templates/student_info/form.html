@@ -180,6 +180,7 @@
       { 
          prev.value=o.value;
          prev.disabled=true;
+         
        // o.parentNode.removeChild(o.previousElementSibling);
       }
       else
@@ -352,8 +353,8 @@ function remove(o)
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 <div id='section'>
- <label for = "Fname"> Full Name*</label>
-        <input type="text" id='fullname' size=60 value="{{ s.fullname }}">
+ <label for = "Fname" > Full Name*</label>
+        <input type="text" title="Full Name as in your certificates" id='fullname' size=60 value="{{ s.fullname }}">
      <br><BR>    
   Gender* 
   {% if s.sex == 'm' %}
@@ -381,7 +382,7 @@ function remove(o)
  <br><BR>
  
  <label for = "Objective"><heading> Career Objectve *</heading><BR><BR><BR></label> <br>
-      <textarea rows='3' cols = '124' prev_value="{{s.career_objective }}"name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
+      <textarea rows='3' cols = '124' title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
  </div>  
  <hr>
 
@@ -402,13 +403,15 @@ function remove(o)
   <tr id='marks'>
   <td> <input type="text" id="marks_course_{{forloop.counter}}" value="{{ marks.course }}" ></td>
   <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
-  <td> <input type="text" id="marks_marks_{{ forloop.counter }}" value="{{ marks.marks }}" >
-  <select id='marks_type_1'onChange="change(this);">
-          <option>%</option>
+  <td> <input type="text" id="marks_marks_{{ forloop.counter }}" value="{{ marks.marks }}" title="Total Marks" >
+  <select id='marks_markstype_1'onChange="change(this);">
+          <option>{{marks.markstype }}</option>
+          <option>Total</option>
           <option>GPA</option>
           <option>Appearing</option>
           <option>Result Awaiting</option>
           </select>
+  Out OF<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks_outof}}"> 
 </td>
   <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
 <td><input type='button' value='remove' onClick="remove(this.parentNode)";>  </td>
@@ -418,29 +421,33 @@ function remove(o)
   <tr>
     <td>X<sup>th</sup><input type="hidden" id="marks_course_1" value="Xth"></td>
     <td><input type ='text' size=40 id="marks_uni_1" ></td>
-    <td><input type='text' size = 5 id="marks_marks_1">%
+    <td><input type='text' size = 5 id="marks_marks_1" title="Total marks "><input type="hidden" id="marks_course_1" value="Total">
+     Out OF<input type="text" id='marks_outof_1'> </td>
     <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="concat(this)">> </select></td>
   </tr>
   <tr>
       <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" value="XIIth"></td>
       <td><input type ='text' size=40 id="marks_uni_2" ></td>
-      <td><input type='text' size =5 maxlength=5 id="marks_marks_2">%</td>
+      <td><input type='text' size =5 maxlength=5 id="marks_marks_2" title='Total marks'><input type="hidden" id="marks_markstype_2" value="%">
+       Out OF<input type="text" id='marks_outof_2'> </td>
       <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
-  </tr>
+        </tr>
   <tr id='marks'>
       <td>
       <select name = "course" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
       <td><input type ='text' size=40 id="marks_uni_3"></td>
       <td><input type='text' size = 5 maxlength=5 id="marks_marks_3">
-          <select id='marks_type_1'onChange="change(this);">
-          <option>%</option>
+          <select id='marks_markstype_3'onChange="change(this);">
+          <option>Total marks</option>
           <option>GPA</option>
           <option>Appearing</option>
           <option>Result Awaiting</option>
           </select>
-      </td>
-      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
+       Out OF<input type="text" id='marks_outof_3'>
 
+      </td>
+      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select></td>
+      
   </tr>
   {% endfor %}
   </table>

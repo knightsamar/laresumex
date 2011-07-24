@@ -8,15 +8,17 @@ class group(models.Model):
 
     def __str__(self):
        if self.name.isdigit() is True:
-
-            Three_yr_courses={ 122:'BBA(IT)',121:'BCA'}
-            Two_yr_courses={ 142:'MSc(CA)',141:'MBA(IT)'}
-            if self.name[5:8] in Three_yr_courses.keys():
+            
+            Three_yr_courses={ 122:'BBA(IT)', 121:'BCA'}
+            Two_yr_courses={ 142:'MSc(CA)', 141:'MBA(IT)'}
+            curse=""
+            a=0
+            if int(self.name[5:8]) in Three_yr_courses.keys():
                 a=3
-                curse=Three_yr_courses[self.name[:2]]
-            else:
+                curse=Three_yr_courses[int(self.name[5:8])]
+            elif int(self.name[5:8]) in Two_yr_courses.keys():
                 a=2
-                curse=Two_yr_courses[int(self.name[5:8])]
+                curse=Two_yr_courses[int(self.name[5:8])]   
             yr=curse+" "+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
        else:
               yr=self.name

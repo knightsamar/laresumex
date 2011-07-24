@@ -72,7 +72,7 @@ def login(request):
                 else:
                     print "SD", userName[8:11]
                     sd=group.objects.get_or_create(name='SD')
-                    #newuser.groups.add(sd[0])"""
+                    #newuser.groups.add(sd])"""
             userexists[0].groups.add(groupexists);
             userexists[0].save();
    

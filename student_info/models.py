@@ -24,7 +24,9 @@ class marks(models.Model):
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
-    marks=models.DecimalField(max_digits=5,decimal_places=2);
+    marks=models.DecimalField(max_digits=5,decimal_places=2, blank=True, null=True);
+    markstype=models.CharField(max_length=10)
+    outof=models.IntegerField(null=True, blank=True)
     fromDate=models.DateField(null=True, blank=True);
     
     def __str__(self):
