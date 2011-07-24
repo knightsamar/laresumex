@@ -27,7 +27,8 @@ def login(request):
             try:
                 #comment this line when you ARE OUTSIDE SICSR!
         	    #status = authenticate(request.POST['username'],request.POST['password']);
-                #UNCOMMENT this lin when you are outside SICSR!
+                
+                #UNCOMMENT the next line when you are outside SICSR!
                 status = True;
                 print status;
                 print 'auth process completed'
@@ -72,7 +73,7 @@ def login(request):
                 else:
                     print "SD", userName[8:11]
                     sd=group.objects.get_or_create(name='SD')
-                    #newuser.groups.add(sd[0])"""
+                    #newuser.groups.add(sd])"""
             userexists[0].groups.add(groupexists);
             userexists[0].save();
    

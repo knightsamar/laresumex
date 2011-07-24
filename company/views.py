@@ -6,6 +6,7 @@ from django.http import HttpResponse;
 from django.shortcuts import render_to_response, redirect;
 from company.models import *
 from student_info.models import student
+from ldap_login.models import *
 from datetime import date
 
 ''' import vars '''
@@ -39,13 +40,21 @@ def company_list(request):
         return redirect('/ldap_login/');
     else:
         prn=request.session['username'];
-    print prn
-    s=student.objects.filter(pk=prn);
-    if s :
-        s=s[0]
-    else:
-        return HttpResponse('Please Fill in ur details first.. ;)')
-    companies=company.objects.all();
+    print prn 
+    try:
+	       s = student.objects.get(pk=prn)
+    except Exception as e:
+            output = "<h3>Fill in ur details first</h3>";
+            return HttpResponse(output);
+    u=user.objects.get(pk=prn)
+    companies=list();
+    for g in u.groups.all():
+        h=company.objects.filter(came_for_group=g)
+        for c in h:
+            if c not in companies:
+                companies.extend(h)
+
+     
     print "companies are ",companies
 
     today=date.today()
@@ -84,11 +93,11 @@ def apply(request):
         return HttpResponse('More than Three companies :)')
     # fetch student of ths prn
     
-    s=student.objects.filter(pk=prn);
-    if s :
-        s=s[0]
-    else:
-        return HttpResponse('Please Fill in ur details first.. ;)')
+    try:
+	       s = student.objects.get(pk=prn)
+    except Exception as e:
+            output = "<h3>Fill in ur details first</h3>";
+            return HttpResponse(output);
     
     # make a list f the companies ths student had applied to pehle
     c=company.objects.filter(students_applied=s)
@@ -113,4 +122,5 @@ def apply(request):
         else:
             k.students_applied.remove(s)
             k.save();
-    return HttpResponse('Saved')
+        
+    return redirect('/student_info/Saved/done');

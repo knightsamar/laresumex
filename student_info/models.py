@@ -24,11 +24,15 @@ class marks(models.Model):
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
-    marks=models.DecimalField(max_digits=5,decimal_places=2);
+    marks=models.DecimalField(max_digits=5,decimal_places=2, blank=True, null=True);
+    markstype=models.CharField(max_length=10)
+    outof=models.IntegerField(null=True, blank=True)
     fromDate=models.DateField(null=True, blank=True);
     
     def __str__(self):
-        return "Obtained %d in %s at %s" % (self.marks,self.course,self.uni)
+        if self.marks is None:
+            return "%s in %s at %s" %(self.markstype,self.course,self.uni)
+        return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
 
     class Meta:
         verbose_name_plural = 'Marks of Students';

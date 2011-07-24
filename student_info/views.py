@@ -166,7 +166,8 @@ def submit(request, prn):
                e.title = data;
                extra_fields.append(e);
             #if it's a description
-            elif field_name[1] == 'desc' or 
+            elif field_name[1] == 'desc' or 'year':
+                pass;
                 #take the number at the end of the fieldname
                 #find objects from the ExtraFields dictionary which has this number in it's title or name
                 #for all such objects
@@ -180,14 +181,9 @@ def submit(request, prn):
                     #if still can't find
                         #create a duplicate object of this object but without the description/year.
                         #fill it.
-
         #elif field_name[0]=="
         elif str(field_name[0]) in l:
            column_dict=dict();
-
-           if field_name[2] == 'X' or field_name[2] =='XII':
-               column_dict['course']=field_name[2];
-
            column_dict[field_name[1]]=data;
            
            if "title" not in column_dict:
@@ -277,13 +273,7 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    t=loader.get_template('student_info/submit')
-    c=Context(
-              {
-                  'prn':s.prn
-              }    
-            )
-    return HttpResponse(t.render(c));
+    return redirect('/student_info/Submitted/done');
 
 
 def ajaxRequest(request):
@@ -308,3 +298,13 @@ def showform(request):
             );
     
     return HttpResponse(t.render(c));
+
+
+def done(request,msg):
+  t=loader.get_template('done.html')
+  c=Context(
+            {
+                'msg':msg
+            }
+            )
+  return HttpResponse(t.render(c)) 
