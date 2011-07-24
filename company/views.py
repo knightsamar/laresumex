@@ -43,7 +43,8 @@ def company_list(request):
     s=student.objects.filter(pk=prn);
     if s :
         s=s[0]
-
+    else:
+        return HttpResponse('Please Fill in ur details first.. ;)')
     companies=company.objects.all();
     print companies
     today=date.today()
@@ -72,10 +73,43 @@ def company_list(request):
     return HttpResponse(t.render(c));
 def apply(request):
     print request.POST
-    # check for the session and redirect
+    #check for the session and redirect
+    if 'username' not in request.session:
+        return redirect('/ldap_login/')   
+    prn=request.session['username']
+
     # check for only three entries in POST except for csrfmiddlewaretoken
+    if len(request.POST) >4: # onr extra for csrf...
+        return HttpResponse('More than Three companies :)')
     # fetch student of ths prn
+    
+    s=student.objects.filter(pk=prn);
+    if s :
+        s=s[0]
+    else:
+        return HttpResponse('Please Fill in ur details first.. ;)')
+    
+    # make a list f the companies ths student had applied to pehle
+    c=company.objects.filter(students_applied=s)
     #take each company from POST
-        #add this student to the list of applied_students
-        #save
+
+    for k in request.POST.keys():
+         if k == 'csrfmiddlewaretoken':
+            continue;
+         applied_company=company.objects.get(name=k)
+         # if already applied
+         if applied_company in c:
+             continue;
+         else:
+            applied_company.students_applied.add(s);
+            applied_company.save();           
+            #add this student to the list of applied_students
+            #save
+    # if unchecked.. then remove.
+    for k in c:
+        if k.name in request.POST.keys():
+            continue
+        else:
+            k.students_applied.remove(s)
+            k.save();
     return HttpResponse('Saved')

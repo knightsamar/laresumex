@@ -7,6 +7,8 @@ class group(models.Model):
     created_on = models.DateTimeField(auto_now_add=True);
 
     def __str__(self):
+       if self.name.isdigit() is True:
+
             Three_yr_courses={ 122:'BBA(IT)',121:'BCA'}
             Two_yr_courses={ 142:'MSc(CA)',141:'MBA(IT)'}
             if self.name[5:8] in Three_yr_courses.keys():
@@ -16,7 +18,9 @@ class group(models.Model):
                 a=2
                 curse=Two_yr_courses[int(self.name[5:8])]
             yr=curse+" "+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
-            return yr;
+       else:
+              yr=self.name
+       return yr;
 
 #many user belongs to one group
 class user(models.Model): 
