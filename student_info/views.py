@@ -160,10 +160,6 @@ def submit(request, prn):
         #elif field_name[0]=="
         elif str(field_name[0]) in l:
            column_dict=dict();
-
-           if field_name[2] == 'X' or field_name[2] =='XII':
-               column_dict['course']=field_name[2];
-
            column_dict[field_name[1]]=data;
            
            if "title" not in column_dict:
@@ -255,10 +251,10 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    t=loader.get_template('student_info/submit')
+    t=loader.get_template('done.html')
     c=Context(
               {
-                  'prn':s.prn
+                  'msg':"submitted"
               }    
             )
     return HttpResponse(t.render(c));

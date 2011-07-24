@@ -122,4 +122,10 @@ def apply(request):
         else:
             k.students_applied.remove(s)
             k.save();
-    return HttpResponse('Saved')
+    t=loader.get_template('done.html')
+    c=Context(
+            {
+                'msg':'Saved'
+            }
+    )
+    return HttpResponse(t.render(c))

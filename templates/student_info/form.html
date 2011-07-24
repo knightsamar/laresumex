@@ -404,14 +404,14 @@ function remove(o)
   <td> <input type="text" id="marks_course_{{forloop.counter}}" value="{{ marks.course }}" ></td>
   <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
   <td> <input type="text" id="marks_marks_{{ forloop.counter }}" value="{{ marks.marks }}" title="Total Marks" >
-  <select id='marks_markstype_1'onChange="change(this);">
+  <select id='marks_markstype_{{forloop.counter}}'onChange="change(this);">
           <option>{{marks.markstype }}</option>
           <option>Total</option>
           <option>GPA</option>
           <option>Appearing</option>
           <option>Result Awaiting</option>
           </select>
-  Out OF<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks_outof}}"> 
+  Out OF<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks.outof}}"> 
 </td>
   <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
 <td><input type='button' value='remove' onClick="remove(this.parentNode)";>  </td>
@@ -421,14 +421,14 @@ function remove(o)
   <tr>
     <td>X<sup>th</sup><input type="hidden" id="marks_course_1" value="Xth"></td>
     <td><input type ='text' size=40 id="marks_uni_1" ></td>
-    <td><input type='text' size = 5 id="marks_marks_1" title="Total marks "><input type="hidden" id="marks_course_1" value="Total">
+    <td><input type='text' size = 5 id="marks_marks_1" title="Total marks "><input type="hidden" id="marks_markstype_1" value="Total">
      Out OF<input type="text" id='marks_outof_1'> </td>
     <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="concat(this)">> </select></td>
   </tr>
   <tr>
       <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" value="XIIth"></td>
       <td><input type ='text' size=40 id="marks_uni_2" ></td>
-      <td><input type='text' size =5 maxlength=5 id="marks_marks_2" title='Total marks'><input type="hidden" id="marks_markstype_2" value="%">
+      <td><input type='text' size =5 maxlength=5 id="marks_marks_2" title='Total marks'><input type="hidden" id="marks_markstype_2" value="Total">
        Out OF<input type="text" id='marks_outof_2'> </td>
       <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
         </tr>
@@ -437,8 +437,8 @@ function remove(o)
       <select name = "course" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
       <td><input type ='text' size=40 id="marks_uni_3"></td>
       <td><input type='text' size = 5 maxlength=5 id="marks_marks_3">
-          <select id='marks_markstype_3'onChange="change(this);">
-          <option>Total marks</option>
+          <select id='marks_markstype_3'onChange="change(this);" title="Total Marks">
+          <option>Total</option>
           <option>GPA</option>
           <option>Appearing</option>
           <option>Result Awaiting</option>
@@ -784,6 +784,8 @@ function remove(o)
   </div>
   <input type='hidden' value='0' name='allok' id='allok'>
   <input type='submit' value='Submit Information!'><input type='reset'>
+  <input type='button' value='Home' onclick="javascript:location.href='/home'">
+
  
 </form>
 <noscript>
