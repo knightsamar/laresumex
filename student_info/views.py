@@ -20,6 +20,10 @@ def edit(request,prn):
     if "username" not in request.session:
        print "no session found"
        return redirect("/ldap_login")
+    if prn != request.session['username']:
+        print "prn", prn, type(prn)
+        print "username", request.session['username'],type(request.session['username'])
+        return HttpResponse('Please Edit ur own form :@')
     '''The problem with this view :
             We(I) are doing it the old-fashioned way. 
             We(I) are not using the power of Models which allow automatic server-side validation -- i need to read on that.
