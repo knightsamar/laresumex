@@ -160,7 +160,8 @@ def submit(request, prn):
             print "=====>DATE<=====",date
             print datetime(int(date[2]),int(date[1]),int(date[0]))
             p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
-        #if it's an ExtraField
+        #if it's an ExtraField 
+        '''
         elif 'ExtraField' in field_name[0]:
             #if it's a title
             if field_name[1] == 'title':
@@ -171,21 +172,41 @@ def submit(request, prn):
                extra_fields[''.join(field_name)] = e;
             #if it's a description
             elif field_name[1] == 'desc' or 'year':
-                pass;
                 #take the number at the end of the fieldname
+                number = field_name[0][-1];
                 #find objects from the ExtraFields dictionary which has this number in it's title or name
-                #for all such objects
+                to_find = 'ExtraField'+number;
+                if to_find in extra_fields:
+                    e = extra_fields[to_find]; #this is the statement on which depends the CORRECTNESS of the whole thing.
                     #does it have the description/year already filled ?
+                    if e.field_name[1] is "year":
+                        if e.fromDate is None: 
+                            e.fromDate = data;
+                        else:
+                            #create a new object;
+                            e = ExtraField();
+
+
+                    elif e.field_name[1] is "desc" and e.desc is None:
+                        e.desc = data;
+
                         #if no,
                             #fill the info.
+                            if field_name[1] == 'year':
+                                e.fromDate = data;
+                            else:
+                                e.desc = data;
+                                
                             #save
+
                         #if yes,
                             #go to next object
-                        
+                else:    
                     #if still can't find
                         #create a duplicate object of this object but without the description/year.
                         #fill it.
         #elif field_name[0]=="
+        '''
         if str(field_name[0]) in l:
            column_dict=dict();
            column_dict[field_name[1]]=data;
