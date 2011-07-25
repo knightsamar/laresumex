@@ -359,8 +359,8 @@ function remove(o)
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 <div id='section'>
- <label for = "Fname" > Full Name*</label>
-        <input type="text" title="Full Name as in your certificates" id='fullname' size=60 value="{{ s.fullname }}">
+ <label for = "Fname" > <a class='tooltip'href = '#'>Ful name*<span class='tooltip'>as in your certificates</span></a></label>
+        <input type="text" id='fullname' size=60 value="{{ s.fullname }}">
      <br><BR>    
   Gender* 
   {% if s.sex == 'm' %}
@@ -498,17 +498,17 @@ function remove(o)
   <br><BR>
    
   <table cellpadding=13>
-  <tr><th>Name </th><th>month/year</th>
+  <tr><th>Name  and description </th><th>month/year</th>
   {% for cert in c %}
    <tr id='certi'>
-    <td><textarea rows=2 cols=50 id='certification_desc_{{ forloop.counter }}' >{{ cert.desc }}</textarea></td>
+    <td><textarea rows=2 cols=50 title="" id='certification_desc_{{ forloop.counter }}' >{{ cert.desc }}</textarea></td>
     <td><select name = "month" id="certification_month_{{ forloop.counter }}" onFocus="fillOptions(this);"><option>{{ cert.fromDate|date:"b"|title }}
 </option></select>
     <select name = "year"  id="certification_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ cert.fromDate.year }}</option></select></td>
     </tr>
    {% empty %}
    <tr id='certi'>
-    <td><textarea rows=2 cols=50 id='certification_desc_1'></textarea></td>
+    <td><a class='tooltip' href='#'><textarea rows=2 cols=50 id='certification_desc_1'></textarea><span class='tooltip'> Please mention the certificates and with enough details</span></a></td>
     <td><select name = "month" id="certification_month_1" onFocus="fillOptions(this);"></select>
         <select name = "year"  id="certification_year_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select></td>
     </tr>
