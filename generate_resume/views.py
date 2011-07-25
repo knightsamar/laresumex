@@ -7,23 +7,23 @@ from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response, redirect;
 
 from pprint import pprint
 
 ''' import vars '''
-from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
 ''' import process helpers '''
 import subprocess 
 from os import mkdir,chdir #for changing directories
-
+from student_info.utility import our_redirect;
 from time import sleep
 
+    
 def index(request):
     if 'username' not in request.session:
         print "from home to login as No session"
-        return redirect('/laresumex/ldap_login')
+        return our_redirect('/ldap_login')
     # see whether user has logged in....
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
@@ -40,7 +40,8 @@ def index(request):
     c=Context({
         'prn':request.session['username'],
         'create_form':create_form,
-        'MEDIA_URL' : MEDIA_URL
+        'MEDIA_URL' : MEDIA_URL,
+        'ROOT':ROOT
              }
         );
     return HttpResponse(t.render(c));
@@ -48,7 +49,7 @@ def index(request):
 
 def latex(request,prn):
     if 'username' not in request.session:
-            return redirect('/laresumex/ldap_login/')
+            return our_redirect('/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
     if prn != request.session['username']:
@@ -80,7 +81,8 @@ def latex(request,prn):
             student_data['sw']=student_data['sw'][0]
             #do we have the photo ? if yes, then include it.
             student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
-            #else, store None.
+            #else, store None
+            student_data['ROOT']:ROOT
 
             pprint(student_data);
             c = Context(student_data);
@@ -128,7 +130,7 @@ def latex(request,prn):
 
 def pdf(request,prn):
     if 'username' not in request.session:
-            return redirect('laresumex/ldap_login/')
+            return out_redirect('/ldap_login/')
     if prn != request.session['username']:
         return HttpResponse('Nor ur resume')
     if prn is not None:
@@ -179,7 +181,7 @@ def pdf(request,prn):
 
 def html(request,prn):
     if 'username' not in request.session:
-           return redirect('/laresumex/ldap_login')
+           return our_redirect('/ldap_login')
     if prn != request.session['username']:
           return HttpResponse('Not urs..!!')
     if prn is not None:
@@ -200,7 +202,7 @@ def html(request,prn):
         cmd = "yes Q | htlatex %s.tex" % (prn);
         done = get_done(cmd,"%s/%s/" % (RESUME_STORE,prn));
     
-        return redirect('%s/%s' % (MEDIA_URL, html_file));
+        return our_redirect('%s/%s' % (MEDIA_URL, html_file));
     except Exception as e:
         #tell them can't do it.
         return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));

@@ -48,7 +48,7 @@ function checkThree()
 Following is the list of companies visiting our college. 
 <br><BR>
 <ul>
-<form onsubmit='return checkThree();' method="post" action="/laresumex/company/apply">
+<form onsubmit='return checkThree();' method="post" action="{{ROOT}}/company/apply">
 {% csrf_token %}
 {% for k in companies %}
     <li>
@@ -61,5 +61,5 @@ Following is the list of companies visiting our college.
 {% endfor %}
 </ul>
 <input type='submit' value="Submit">
-<input type='button' value='Home' onclick="javascript:location.href='/laresumex/home/'">
+<input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home/'">
 {% endblock %}

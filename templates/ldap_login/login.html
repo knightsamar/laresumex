@@ -3,7 +3,7 @@
  Login 
 {% endblock %}
 {% block content %}
-<form action='/laresumex/ldap_login/' method='POST'>
+<form action='{{ROOT}}/ldap_login/' method='POST'>
 
     {% csrf_token %}
     {% if message != None %}

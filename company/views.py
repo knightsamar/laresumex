@@ -3,14 +3,13 @@
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response, redirect;
 from company.models import *
 from student_info.models import student
 from ldap_login.models import *
 from datetime import date
-
+from student_info.utility import our_redirect;
 ''' import vars '''
-from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
 def search(request):
     c=RequestContext(request,{})
@@ -37,7 +36,7 @@ def getResume(request):
 
 def company_list(request):
     if 'username' not in request.session:
-        return redirect('/laresumex/ldap_login/');
+        return our_redirect('/ldap_login/');
     else:
         prn=request.session['username'];
     print prn 
@@ -78,6 +77,7 @@ def company_list(request):
     t=loader.get_template('company/company_names')
     c=RequestContext(request,{
                 'companies':main_list,
+                'ROOT':ROOT
                 
             });
     return HttpResponse(t.render(c));
@@ -85,7 +85,7 @@ def apply(request):
     print request.POST
     #check for the session and redirect
     if 'username' not in request.session:
-        return redirect('/laresumex/ldap_login/')   
+        return our_redirect('/ldap_login/')   
     prn=request.session['username']
 
     # check for only three entries in POST except for csrfmiddlewaretoken
@@ -123,4 +123,4 @@ def apply(request):
             k.students_applied.remove(s)
             k.save();
         
-    return redirect('/laresumex/student_info/Saved/done');
+    return our_redirect('/student_info/Saved/done');

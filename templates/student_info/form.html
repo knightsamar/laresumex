@@ -355,7 +355,7 @@ function remove(o)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
-<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/laresumex/student_info/{{ prn }}/submit'>
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 <div id='section'>
@@ -801,7 +801,7 @@ function remove(o)
   </div>
   <input type='hidden' value='0' name='allok' id='allok'>
   <input type='submit' value='Submit Information!'><input type='reset'>
-  <input type='button' value='Home' onclick="javascript:location.href='/home'">
+  <input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home'">
 
  
 </form>
