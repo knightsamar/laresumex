@@ -19,7 +19,7 @@ from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 def edit(request,prn):
     if "username" not in request.session:
        print "no session found"
-       return redirect("/ldap_login")
+       return redirect("/laresumex/ldap_login")
     if prn != request.session['username']:
         print "prn", prn, type(prn)
         print "username", request.session['username'],type(request.session['username'])
@@ -92,7 +92,7 @@ def submit(request, prn):
 
     if 'username' not in request.session:
         print "no session found"
-        return redirect('/ldap_login')
+        return redirect('/laresumex/ldap_login')
     
    #was javascript enabled and everything ok on the client side ???
     if not ('allok' in request.POST and request.POST['allok'] == '1'):
@@ -278,7 +278,7 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    return redirect('/student_info/Submitted/done');
+    return redirect('/laresumex/student_info/Submitted/done');
 
 
 def ajaxRequest(request):
@@ -289,7 +289,7 @@ def ajaxRequest(request):
 def showform(request):
     if 'username' not in request.session:
         print "No session"
-        return redirect('/ldap_login')
+        return redirect('/laresumex/ldap_login')
         
     prn=request.session['username'];
     print "sdfsd"

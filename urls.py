@@ -25,32 +25,18 @@ urlpatterns = patterns('',
     #ldap_login
     (r'^ldap_login/$','ldap_login.views.login'), #for authentication
     (r'^ldap_login/logout$','ldap_login.views.logout'), #for loggin out
-    (r'home',"generate_resume.views.index"),
+    (r'^home/$',"generate_resume.views.index"),
     
     # company
-<<<<<<< local
     (r'^search',"company.views.search"),
     (r'^company/getResume',"company.views.getResume"),
     (r'^company/list',"company.views.company_list"),
     (r'^company/apply',"company.views.apply"),
-=======
-    #(r'search',"company.views.search"),
-    (r'company/getResume',"company.views.getResume"),
-    (r'company/list',"company.views.company_list"),
-    (r'company/apply',"company.views.apply"),
->>>>>>> other
 
     # student_info
-<<<<<<< local
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),
     (r'^student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
+    (r'^student_info/(?P<msg>\D+)/done',"student_info.views.done"),
     (r'^form',"student_info.views.showform"),
-=======
-    (r'student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
-    (r'student_info/form',"student_info.views.showform"),
-    (r'student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
-    (r'form',"student_info.views.showform"),
-    (r'student_info/(?P<msg>\D+)/done',"student_info.views.done"),
->>>>>>> other
 )

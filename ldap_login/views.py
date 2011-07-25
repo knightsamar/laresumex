@@ -1,5 +1,5 @@
 #comment this line when you ARE OUTSIDE SICSR!
-#from ldapAuthBackend import authenticate;
+from ldapAuthBackend import authenticate;
 from django.http import HttpResponse;
 from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
@@ -14,8 +14,8 @@ def login(request):
     message = None;
     print request.POST
     if 'username' in request.session:
-        return redirect('home');
-    if 'username' in request.POST:# and 'password' in request.POST:
+        return redirect('/laresumex/home');
+    if 'username' in request.POST and 'password' in request.POST:
         print "== Got username..!!!!"
         if request.POST['username'] == "":
             print"but its empty"
@@ -26,10 +26,9 @@ def login(request):
             print 'processing login attempt';
             try:
                 #comment this line when you ARE OUTSIDE SICSR!
-        	    #status = authenticate(request.POST['username'],request.POST['password']);
-                
+                status = authenticate(request.POST['username'],request.POST['password']);
                 #UNCOMMENT the next line when you are outside SICSR!
-                status = True;
+                #status = True;
                 print status;
                 print 'auth process completed'
             except e as Exception:
@@ -79,7 +78,7 @@ def login(request):
    
 		
             #redirect to the index view!
-            return redirect('home');
+            return redirect('/laresumex/home');
         else: # if status == False
             message = 'Wrong Username/password';
             print "because status was", status, "hence message is", message;
@@ -122,4 +121,4 @@ def logout(request):
 			#then tell me to login first, using the message if possible 
 			#message = "Hey, you need to go in before you can go out :P :P";
 
-    return redirect('ldap_login/');	
+    return redirect('/laresumex/ldap_login/');	

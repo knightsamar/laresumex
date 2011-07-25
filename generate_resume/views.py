@@ -23,7 +23,7 @@ from time import sleep
 def index(request):
     if 'username' not in request.session:
         print "from home to login as No session"
-        return redirect('/ldap_login')
+        return redirect('/laresumex/ldap_login')
     # see whether user has logged in....
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
@@ -48,7 +48,7 @@ def index(request):
 
 def latex(request,prn):
     if 'username' not in request.session:
-            return redirect('/ldap_login/')
+            return redirect('/laresumex/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
     if prn != request.session['username']:
@@ -128,7 +128,7 @@ def latex(request,prn):
 
 def pdf(request,prn):
     if 'username' not in request.session:
-            return redirect('ldap_login/')
+            return redirect('laresumex/ldap_login/')
     if prn != request.session['username']:
         return HttpResponse('Nor ur resume')
     if prn is not None:
@@ -179,7 +179,7 @@ def pdf(request,prn):
 
 def html(request,prn):
     if 'username' not in request.session:
-           return redirect('/ldap_login')
+           return redirect('/laresumex/ldap_login')
     if prn != request.session['username']:
           return HttpResponse('Not urs..!!')
     if prn is not None:

@@ -37,7 +37,7 @@ def getResume(request):
 
 def company_list(request):
     if 'username' not in request.session:
-        return redirect('/ldap_login/');
+        return redirect('/laresumex/ldap_login/');
     else:
         prn=request.session['username'];
     print prn 
@@ -85,7 +85,7 @@ def apply(request):
     print request.POST
     #check for the session and redirect
     if 'username' not in request.session:
-        return redirect('/ldap_login/')   
+        return redirect('/laresumex/ldap_login/')   
     prn=request.session['username']
 
     # check for only three entries in POST except for csrfmiddlewaretoken
@@ -123,4 +123,4 @@ def apply(request):
             k.students_applied.remove(s)
             k.save();
         
-    return redirect('/student_info/Saved/done');
+    return redirect('/laresumex/student_info/Saved/done');
