@@ -7,8 +7,7 @@ from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response, redirect;
-
+from student_info.utility import *; 
 from pprint import pprint
 
 ''' import vars '''

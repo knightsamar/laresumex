@@ -3,12 +3,12 @@
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from django.shortcuts import render_to_response, redirect;
+#from django.shortcuts import render_to_response, redirect;
 from company.models import *
 from student_info.models import student
 from ldap_login.models import *
-from datetime import date
-
+from datetime import datetime
+from student_info.utility import our_redirect
 ''' import vars '''
 from laresumex.settings import RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -37,7 +37,7 @@ def getResume(request):
 
 def company_list(request):
     if 'username' not in request.session:
-        return redirect('/ldap_login/');
+        return our_redirect('/ldap_login/');
     else:
         prn=request.session['username'];
     print prn 
@@ -57,12 +57,14 @@ def company_list(request):
      
     print "companies are ",companies
 
-    today=date.today()
+    today=datetime.today()
     main_list=list()
     for c in companies:
         c_dict=dict()
         print "processing Companies",c
         c_dict['name']=c.name;
+        c_dict['date_of_applying']=c.last_date_of_applying
+        c_dict['process']=c.date_of_process
         if c.last_date_of_applying > today:
             c_dict['gone']="";
         else:
@@ -83,9 +85,10 @@ def company_list(request):
     return HttpResponse(t.render(c));
 def apply(request):
     print request.POST
-    #check for the session and redirect
+    #check for the session and our_redirect
     if 'username' not in request.session:
-        return redirect('/ldap_login/')   
+        return our_redirect('/ldap_login/')   
+       
     prn=request.session['username']
 
     # check for only three entries in POST except for csrfmiddlewaretoken
@@ -123,4 +126,4 @@ def apply(request):
             k.students_applied.remove(s)
             k.save();
         
-    return redirect('/student_info/Saved/done');
+    return our_redirect('/student_info/Saved/done');
