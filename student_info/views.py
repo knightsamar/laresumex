@@ -55,8 +55,12 @@ def edit(request,prn):
             for l in tables[t]:
                 print l
         tables['s']=s;   
-        tables['p']=tables['p'][0]
-        tables['sw']=tables['sw'][0];
+        try:
+            tables['p']=tables['p'][0] 
+            tables['sw']=tables['sw'][0];
+        except Exception as e:    
+          pass;
+            
         
         '''        
         #for storing record objects 
@@ -151,7 +155,7 @@ def submit(request, prn):
                 index=field_name[1]+'_'+field_name[2];
                 print "=====> adding", data , "to attribute", index, "of Personal";
                 p.__setattr__(index,data);     
-        elif field_name[0]=="birthdate":
+        if field_name[0]=="birthdate":
             date=data.split(',')
             print "=====>DATE<=====",date
             print datetime(int(date[2]),int(date[1]),int(date[0]))
@@ -182,7 +186,7 @@ def submit(request, prn):
                         #create a duplicate object of this object but without the description/year.
                         #fill it.
         #elif field_name[0]=="
-        elif str(field_name[0]) in l:
+        if str(field_name[0]) in l:
            column_dict=dict();
            column_dict[field_name[1]]=data;
            
@@ -198,7 +202,7 @@ def submit(request, prn):
            
            '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
            row[field_name[1]] = data;'''
-        elif len(field_name) is 3 and field_name[0] not in l: # for multi-valued single Display
+        if len(field_name) is 3 and field_name[0] not in l: # for multi-valued single Display
               print "!!!!!!!!inside mvsd processing";
               if field_name[2].isdigit() is False:
                 field_name[1]=field_name[1]+'_'+field_name[2]  

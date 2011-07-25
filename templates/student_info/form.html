@@ -83,9 +83,13 @@
         if (c.tagName=='TR')
             {
                 l=c.parentNode.children.length;
-                if (c.id=='marks')
+                 var form =false;
+                {% if flag == 'form' %}
+                   var form=true;
+                {% endif %}   
+               if ((c.id=='marks') && (form))
                     firstNode=c.parentNode.children[3];
-                else    
+                else  
                     firstNode=c.parentNode.children[1]
                 lastNode=c.parentNode.children[l-1]
                 clone=firstNode.cloneNode(true);
@@ -180,6 +184,7 @@
       { 
          prev.value=o.value;
          prev.disabled=true;
+         o.nextElementSibling.disabled=true;
          
        // o.parentNode.removeChild(o.previousElementSibling);
       }
@@ -188,6 +193,7 @@
          prev.disabled=false;
          prev.value="";
          prev.focus();
+         o.nextElementSibling.disabled=false;
        }
      }
      else if (id1 =='month')
@@ -403,7 +409,13 @@ function remove(o)
   <tr id='marks'>
   <td> <input type="text" id="marks_course_{{forloop.counter}}" value="{{ marks.course }}" ></td>
   <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
-  <td> <input type="text" id="marks_marks_{{ forloop.counter }}" value="{{ marks.marks }}" title="Total Marks" >
+  <td>{% if not marks.marks %}
+       <input type="text" id='marks_marks_{{ forloop.counter }}' disabled=true> 
+
+   {% else %}
+  <input type="text" id='marks_marks_{{ forloop.counter }}' value="{{marks.marks}}"> 
+  {% endif %}
+
   <select id='marks_markstype_{{forloop.counter}}'onChange="change(this);">
           <option>{{marks.markstype }}</option>
           <option>Total</option>
@@ -411,7 +423,12 @@ function remove(o)
           <option>Appearing</option>
           <option>Result Awaiting</option>
           </select>
-  Out OF<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks.outof}}"> 
+   {% if not marks.outof %}
+       Out Of<input type="text" id='marks_outof_{{ forloop.counter }}' disabled=true> 
+
+   {% else %}
+  Out Of<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks.outof}}"> 
+  {% endif %}
 </td>
   <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
 <td><input type='button' value='remove' onClick="remove(this.parentNode)";>  </td>
