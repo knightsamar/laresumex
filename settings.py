@@ -7,8 +7,8 @@ RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 ROOT="/laresumex";
 
 #DEFAUT VARS
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 ADMINS = (
     ('Apoorva', 'ascoolas.apoorva@gmail.com'),
@@ -107,3 +107,6 @@ INSTALLED_APPS = (
     'laresumex.company',
     'laresumex.ldap_login',
 )
+
+#necessary for error email logs and other such mails to be sent
+EMAIL_BACKEND = ('django.core.mail.backends.smtp.EmailBackend');

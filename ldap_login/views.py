@@ -7,6 +7,8 @@ from ldap_login.models import user,group;
 from datetime import datetime
 from django.core.mail import send_mail
 
+from laresumex.settings import ROOT
+
 #from django_auth_ldap.config import LDAPSearch
 #ldap_login
 def login(request):
@@ -80,7 +82,7 @@ def login(request):
             #redirect to the index view!
             return redirect('/laresumex/home');
         else: # if status == False
-            message = 'Wrong Username/password';
+            message = 'Wrong Username/Password';
             print "because status was", status, "hence message is", message;
             print 'redirecting now...';
             
@@ -89,13 +91,14 @@ def login(request):
    
     # print request.POST['username']
     # print request.POST['password']
-      print "nothing is  true hence showint the login teplate again"
+      print "nothing is true hence showing the login teplate again"
     #we aren't either procesing a login attempt OR the user had a failed login attempt!
 
     t = loader.get_template('ldap_login/login.html');
     c = RequestContext (request,
         {
-          'message' : message
+          'message' : message,
+          'ROOT' : ROOT,
         });
          
     return HttpResponse(t.render(c));

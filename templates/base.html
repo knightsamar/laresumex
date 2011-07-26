@@ -1,8 +1,6 @@
-{% load some_tags %}
-<html>
-<head>
 
-<title>La-Resume-x ::{% block title %}{% endblock %}</title>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>La-Resume-x ::{% block title %}{% endblock %}</title></head><body>{% load some_tags %}
+
 <style type="text/css">
 
 #section {
@@ -41,18 +39,19 @@ img {
 }
 </style>
 
-</head>
-<body>
-<font align='center' size='30' color='purple' >LA-Resumex.. </font>Resume in Latex ..:):D
+
+
+<font align="center" size="30" color="purple">LA-Resumex<b>...</b> </font>Resume in <img src="http://projects.sdrclabs.in/laresumex_media/800px-LaTeX_logo.svg.png" height="60" width="40"> 
 <hr>
 {% block content %}
 {% endblock %}
 <hr>
-This software is designed by:
+This software is a creation of 
 {% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
-    Samar and Apoorva
+    <a href="http://www.facebook.com/knightsamar" target='_blank'>Samar</a> and <a href="http://www.facebook.com/apoorva.srinivasan1" target='_blank'>Apoorva</a>
 {% else %}
-    Apoorva and Samar
+     <a href="http://www.facebook.com/apoorva.srinivasan1" target='_blank'>Apoorva</a> and <a href="http://www.facebook.com/knightsamar" target='_blank'>Samar</a>
 {% endif %}
-</body>
-</html>
+
+
+</body></html>

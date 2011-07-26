@@ -37,6 +37,7 @@ def index(request):
         create_form=False
     
     t=loader.get_template('index.html')
+    
     c=Context({
         'prn':request.session['username'],
         'create_form':create_form,
@@ -82,7 +83,7 @@ def latex(request,prn):
             #do we have the photo ? if yes, then include it.
             student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
             #else, store None
-            student_data['ROOT']:ROOT
+            student_data['ROOT'] = ROOT
 
             pprint(student_data);
             c = Context(student_data);
