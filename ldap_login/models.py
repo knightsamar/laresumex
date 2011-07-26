@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin #for special admin things
 # Create your models here.
 
 #one group has many users
@@ -12,13 +13,16 @@ class group(models.Model):
             Two_yr_courses={ 142:'MSc(CA)', 141:'MBA(IT)'}
             course=""
             a=0
-            if int(self.name[5:8]) in Three_yr_courses.keys():
-                a=3
-                course=Three_yr_courses[int(self.name[5:8])]
-            elif int(self.name[5:8]) in Two_yr_courses.keys():
-                a=2
-                course=Two_yr_courses[int(self.name[5:8])]   
-            yr=course+" "+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
+            try:
+                if int(self.name[5:8]) in Three_yr_courses.keys():
+                    a=3
+                    course=Three_yr_courses[int(self.name[5:8])]
+                elif int(self.name[5:8]) in Two_yr_courses.keys():
+                    a=2
+                    course=Two_yr_courses[int(self.name[5:8])]   
+                yr=course+" "+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
+            except Exception as e:
+                yr = self.name
        else:
             yr=self.name
        return yr;
@@ -30,9 +34,7 @@ class user(models.Model):
     #last_login = models.DateTimeField(auto_now=True);
     created_on = models.DateTimeField(auto_now_add=True);
     groups = models.ManyToManyField(group);
-
-
+    
     def __str__(self):
 	    return self.username;
-
 

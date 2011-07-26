@@ -718,7 +718,7 @@ function remove(o)
              <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
 
 </div> {% endcomment %}
-
+{% comment %}
    <div id='section'>
    Add Another Section<br><br>
    <div id='ExtraField'>
@@ -739,7 +739,7 @@ function remove(o)
 <input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
 </div>
 <hr>
-
+{% endcomment %}
 
 
    <div id='section'>
@@ -766,7 +766,7 @@ function remove(o)
             
                 <textarea rows=5 cols=50 name="personal_per_address" id="personal_per_address">{{ p.per_address }}</textarea>
                <br> <BR>
-            <li>Address of Corrospondance<br>
+            <li>Address of Correspondance<br>
                 <textarea rows=5 cols=50 id="personal_corr_address" name="personal_corr_address">{{ p.corr_address }}</textarea>  
 
 

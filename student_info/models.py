@@ -8,8 +8,8 @@ class student(models.Model):
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
-    email=models.EmailField(max_length=75);
-    phone_number=models.PositiveIntegerField(max_length=10);
+    email=models.EmailField(max_length=255);
+    phone_number=models.PositiveIntegerField(max_length=12);
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
@@ -39,16 +39,16 @@ class marks(models.Model):
 
 class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
-     mother_name=models.CharField(max_length=20);
-     father_name=models.CharField(max_length=20);
+     mother_name=models.CharField(max_length=30);
+     father_name=models.CharField(max_length=30);
      birthdate=models.DateField(null=True);
-     mother_occupation=models.CharField(max_length=20); 
-     father_occupation=models.CharField(max_length=20);
+     mother_occupation=models.CharField(max_length=30); 
+     father_occupation=models.CharField(max_length=30);
      languages=models.CharField(max_length=200);
      hobbies=models.CharField(max_length=200);
      strength=models.CharField(max_length=200);
-     per_address=models.TextField(max_length=200);
-     corr_address=models.TextField(max_length=200);
+     per_address=models.TextField(max_length=200,help_text='Permanent Address');
+     corr_address=models.TextField(max_length=200, help_text='Correspondence Address');
      def __str__(self):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -82,7 +82,6 @@ class ExtraField(models.Model):
         verbose_name_plural = 'ExtraField info about students';
 
 class workex(ExtraField):
-    #title=models.CharField(default="workex", editable=False); -- think of a way to override the titile so that the title is always Eorkex.. or do we do that while taking the input???
     pass;
         
 class certification(ExtraField):

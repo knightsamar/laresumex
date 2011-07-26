@@ -22,7 +22,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'laresumex',                      # Or path to database file if using sqlite3.
         'USER': 'laresumex',                      # Not used with sqlite3.
-        'PASSWORD': 'Vbsx86zFsaKGWw42',           # Not used with sqlite3.
+        'PASSWORD': 'l@1jk23bnj15bnk13513n',      # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -63,7 +63,7 @@ MEDIA_URL = 'http://projects.sdrclabs.in/laresumex_media';
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-#ADMIN_MEDIA_PREFIX = '~media/'
+ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '9jf+y@qgarz#yev+g$x(^oo=7cv2^-@v$62@#3*iz9q6*4#!asdu123fo'
