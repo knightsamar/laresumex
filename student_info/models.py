@@ -18,7 +18,7 @@ class student(models.Model):
     Extra_field=models.BooleanField();
    
     def __str__(self):
-        return " Resume details of %s(%s)" % (self.fullname, self.prn);
+        return "%s (%s)" % (self.fullname, self.prn);
  
 class marks(models.Model):
     primary_table=models.ForeignKey('student');
@@ -39,11 +39,11 @@ class marks(models.Model):
 
 class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
-     mother_name=models.CharField(max_length=30);
-     father_name=models.CharField(max_length=30);
+     mother_name=models.CharField(max_length=50);
+     father_name=models.CharField(max_length=50);
      birthdate=models.DateField(null=True);
-     mother_occupation=models.CharField(max_length=30); 
-     father_occupation=models.CharField(max_length=30);
+     mother_occupation=models.CharField(max_length=50); 
+     father_occupation=models.CharField(max_length=50);
      languages=models.CharField(max_length=200);
      hobbies=models.CharField(max_length=200);
      strength=models.CharField(max_length=200);
