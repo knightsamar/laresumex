@@ -8,6 +8,7 @@ templates/*.log
 templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
+apache2/django.wsgi
 *.sqlite*
 .DS_Store*
 *.orig
