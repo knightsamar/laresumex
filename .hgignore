@@ -9,7 +9,7 @@ templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
 *.sqlite*
-.DS_Store
+.DS_Store*
 *.orig
 *.png
 
