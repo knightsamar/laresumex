@@ -3,20 +3,12 @@
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-<<<<<<< local
-=======
 #from django.shortcuts import render_to_response, redirect;
->>>>>>> other
 from company.models import *
 from student_info.models import student
 from ldap_login.models import *
-<<<<<<< local
-from datetime import date
-from student_info.utility import our_redirect;
-=======
 from datetime import datetime
 from student_info.utility import our_redirect
->>>>>>> other
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -98,10 +90,7 @@ def apply(request):
     #check for the session and our_redirect
     if 'username' not in request.session:
         return our_redirect('/ldap_login/')   
-<<<<<<< local
-=======
        
->>>>>>> other
     prn=request.session['username']
 
     # check for only three entries in POST except for csrfmiddlewaretoken

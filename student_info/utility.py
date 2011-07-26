@@ -1,10 +1,7 @@
 from django.shortcuts import redirect
 from laresumex.settings import ROOT
-<<<<<<< local
 EMAIL_BACKEND = ('django.core.mail.backends.smtp.EmailBackend')
-=======
 
->>>>>>> other
 def errorMaker(msg,fatal=False):
     '''displays the given error message nicely and if it's fatal exits'''
     '''I think Apoorva,u can make this better -- i can't find the function u used in change_agent'''
@@ -20,9 +17,6 @@ def debugger(msg):
     #currently we only print
     print "DEBUG[%s]: %s" % ('Calling function',msg)
     return
-<<<<<<< local
 
-=======
->>>>>>> other
 def our_redirect(path):
     return redirect(ROOT+path)
