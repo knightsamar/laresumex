@@ -3,6 +3,42 @@
 
 <style type="text/css">
 
+
+/* code inspiration for tooltip:- http://sixrevisions.com/css/css-only-tooltips/
+*/
+.tooltip{   
+    border-bottom: 3px dotted coral;
+        color: Black;
+        outline:none;
+        cursor: alias;
+        text-decoration: none;
+        position: relative;
+}
+.tooltip span{
+        margin-left: -999px;
+    padding:0.8 1em;
+        position:absolute;
+}
+.tooltip:hover span{
+        font-family:comic sans;
+        position:absolute;
+        top: 2em;
+        z-index: 99;
+        margin-left:-10px; 
+        width:250px;
+        box-shadow:5px 5px 5px rgba(0,0,0.1);
+        background-color:#fbd7b9;
+}
+
+.tooltip:hover em{
+    font-family:Tahoma;
+    font-size:0.7em;
+    font-weight:bold;
+    display:block;
+    padding:0.2em 0 0.6em 0;
+}
+
+* html a:hover {background:transparent;}
 #section {
 	margin-top: 6%;
     margin-left:10%
@@ -40,8 +76,9 @@ img {
 </style>
 
 
-
 <font align="center" size="30" color="purple">LA-Resumex<b>...</b> </font>Resume in <img src="http://projects.sdrclabs.in/laresumex_media/800px-LaTeX_logo.svg.png" height="60" width="40"> 
+</head>
+<body>
 <hr>
 {% block content %}
 {% endblock %}

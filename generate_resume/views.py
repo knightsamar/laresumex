@@ -7,7 +7,11 @@ from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
+<<<<<<< local
 
+=======
+from student_info.utility import *; 
+>>>>>>> other
 from pprint import pprint
 
 ''' import vars '''

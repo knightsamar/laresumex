@@ -4,9 +4,9 @@ from django.db import models
 
 class company(models.Model):
     name=models.CharField(max_length=40);
-    last_date_of_applying=models.DateField();
+    last_date_of_applying=models.DateTimeField();
     students_applied=models.ManyToManyField('student_info.student',blank=True)
-    date_of_process=models.DateField();
+    date_of_process=models.DateTimeField();
     email_id=models.EmailField();
     phone_number=models.CharField(max_length=15)
     #comapny_url=models.CharField(max_length=20)

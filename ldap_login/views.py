@@ -1,11 +1,12 @@
 #comment this line when you ARE OUTSIDE SICSR!
 from ldapAuthBackend import authenticate;
 from django.http import HttpResponse;
-from django.shortcuts import redirect;
+#from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
 from ldap_login.models import user,group;
 from datetime import datetime
 from django.core.mail import send_mail
+from student_info.utility import our_redirect
 
 from laresumex.settings import ROOT
 
@@ -16,8 +17,13 @@ def login(request):
     message = None;
     print request.POST
     if 'username' in request.session:
+<<<<<<< local
         return redirect('/laresumex/home');
     if 'username' in request.POST and 'password' in request.POST:
+=======
+        return our_redirect('/home');
+    if 'username' in request.POST:# and 'password' in request.POST:
+>>>>>>> other
         print "== Got username..!!!!"
         if request.POST['username'] == "":
             print"but its empty"
@@ -79,8 +85,13 @@ def login(request):
             userexists[0].save();
    
 		
+<<<<<<< local
             #redirect to the index view!
             return redirect('/laresumex/home');
+=======
+            #our_redirect to the index view!
+            return our_redirect('/home');
+>>>>>>> other
         else: # if status == False
             message = 'Wrong Username/Password';
             print "because status was", status, "hence message is", message;
@@ -124,4 +135,8 @@ def logout(request):
 			#then tell me to login first, using the message if possible 
 			#message = "Hey, you need to go in before you can go out :P :P";
 
+<<<<<<< local
     return redirect('/laresumex/ldap_login/');	
+=======
+    return our_redirect('/ldap_login/');	
+>>>>>>> other
