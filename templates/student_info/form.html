@@ -236,6 +236,7 @@
  function concat(o)
  {
   var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
+  var compulsory=new Array('personal','fullnam');
   id=o.id.split('_');
   hidden=document.createElement('input')
   hidden.type="hidden";
@@ -276,6 +277,7 @@
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
 function changeName()
 {
+    var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks')
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
     {
@@ -288,13 +290,14 @@ function changeName()
 
         // if this value is same as the previous value then do not submit. 
        //for all such fields who have month or year 
-      
+        
         if(input[i].id!="")
         {   
                 input[i].name=input[i].id;
         }
-        //if (input[i].value=="")
-          //  {input[i].focus();return false;}
+        a=input[i].name.split('_')[0]
+        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0) )
+            {input[i].focus();return false;}
           
     }
     select=document.getElementsByTagName('select');
@@ -313,8 +316,8 @@ function changeName()
        }
        select[i].name=select[i].id;
        
-       //if (select[i].value=="")
-          //  {select[i].focus();return false;}
+       if (select[i].value=="")
+            {select[i].focus();return false;}
     }
 
     textarea=document.getElementsByTagName('textarea');
@@ -359,8 +362,8 @@ function remove(o)
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
 <div id='section'>
- <label for = "Fname" > <a class='tooltip'href = '#'>Ful name*<span class='tooltip'>as in your certificates</span></a></label>
-        <input type="text" id='fullname' size=60 value="{{ s.fullname }}">
+ <label for = "Fname" > <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
+        <input type="text" id='fullname' com=true size=60 value="{{ s.fullname }}">
      <br><BR>    
   Gender* 
   {% if s.sex == 'm' %}
@@ -370,8 +373,8 @@ function remove(o)
 		  <input type="radio"  name="sex" value='m' >Male
           <input type="radio"  name="sex" value="f" checked=true>Female<br><BR><br>
   {% endif %}        
-  Phone Number* <input type='text' maxlength=10 size=10 name="phone_number" value={{ s.phone_number }}><BR><BR>
- Email ID* <input type='text' name='email' value={{ s.email }}>
+  Phone Number* <input type='text' com = true maxlength=10 size=10 name="phone_number" value={{ s.phone_number }}><BR><BR>
+ Email ID* <input type='text' name='email' com = true value={{ s.email }}>
 <br>         <br>
 
   Birthdate*
@@ -388,7 +391,7 @@ function remove(o)
  <br><BR>
  
  <label for = "Objective"><heading> Career Objectve *</heading><BR><BR><BR></label> <br>
-      <textarea rows='3' cols = '124' title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
+      <textarea rows='3' cols = '124' com = true title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
  </div>  
  <hr>
 
