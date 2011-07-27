@@ -8,7 +8,10 @@
     Form for the resume
 {% endblock %}
 {% block content %}
+
+
     <script language="JavaScript">
+      
     /* Autofills the passed dropdown objet with contents based on it's value 
       
        For day, month and year, fills with values.
@@ -349,6 +352,7 @@ function remove(o)
         o.parentNode.removeChild(o)
     }    
 }    
+       
     </script>
 </head>
 
@@ -361,7 +365,9 @@ function remove(o)
 <form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='/student_info/{{ prn }}/submit'>
 <!--<form method='post' action='/student_info/10030142031/submit'>-->
 {% csrf_token %}
-<div id='section'>
+<div id="accordion">   
+<div>
+    <h3><a href='#'>Gettng Started</a></h3>
  <label for = "Fname" > <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
         <input type="text" id='fullname' com=true size=60 value="{{ s.fullname }}">
      <br><BR>    
@@ -390,16 +396,12 @@ function remove(o)
  <hr>  
  <br><BR>
  
- <label for = "Objective"><heading> Career Objectve *</heading><BR><BR><BR></label> <br>
+ <label for = "Objective"><h3> Career Objectve *</h3><BR><BR><BR></label> <br>
       <textarea rows='3' cols = '124' com = true title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
  </div>  
- <hr>
 
-  <br>
-
-  <div id='section'>
-  <heading>Qualification:-</heading>
-   <BR><BR><BR>
+  <div>
+  <h3><a href='#'>Qualification:-</a></h3>
     
   <table cellpadding=13>
   <tr>
@@ -474,12 +476,8 @@ function remove(o)
   <input type='button'  onClick="addNew('marks');" value='Add Another'>    
 
 </div>
-<hr>
-
-
-  <div id='section'>
-  <heading>Strengths..!! and weaknesses</heading>
-  <br><BR><BR>
+  <div>
+  <h3><a href='#'>Strengths..!! and weaknesses</a></h3>
   
   <div id='strengths'>
       {% for st in p.strength|split:',' %}
@@ -493,12 +491,9 @@ function remove(o)
   <input type='button'onClick="addNew('strengths');" value='Add Another'>    
 
 </div>
-<hr>
 
-
-  <div id='section'>
-  <heading>Certifications</heading>
-  <br><BR>
+  <div>
+  <h3><a href='#'>SCertifications</a></h3>
    
   <table cellpadding=13>
   <tr><th>Name  and description </th><th>month/year</th>
@@ -519,11 +514,8 @@ function remove(o)
   </table>
   <input type='button'  onClick="addNew('certi');" value='Add Another'>      
 </div>
-<HR>
-
   <div id='section'>
-  <heading>Software Exposure</heading>
-   <br><BR>
+  <h3><a href='#'>SSoftware Exposure</a></h3>
         <ul>
             
             <li>Programming languages
@@ -574,11 +566,9 @@ function remove(o)
          </ul>
 
 </div>
-<HR>
 
   <div id='section'>
-  <heading>Work Experience</heading>
-  <br><BR><BR>
+  <h3><a href='#'>SWork Experience</a></h3>
    
 <table>
 <tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
@@ -613,16 +603,13 @@ function remove(o)
              <input type='button'  onClick="addNew('workex');" value='Add Another'>   
 
  </div> 
-<HR>
-
   <div id='section'>
-  <heading>Projects Undertaken</heading>
-  <BR><BR> 
+  <h3><a href='#'>SProjects Undertaken</a></h3>
   <table>
             <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for pr in pro %}
             <tr id = 'projects'>
-             <td><input type='text' id="project_heading_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
+             <td><input type='text' id="project_h3_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
              <td><textarea id="project_desc_{{ forloop.counter }}" rows=2 cols=30>{{ pr.desc }}</textarea></td>
 
              <td>
@@ -638,7 +625,7 @@ function remove(o)
 
             {% empty %}
             <tr id = 'projects'>
-             <td><input type='text' id="project_heading_1"></td>
+             <td><input type='text' id="project_h3_1"></td>
              <td><textarea id="project_desc_1" rows=2 cols=30></textarea></td>
 
              <td>
@@ -653,11 +640,9 @@ function remove(o)
              <input type='button'  onClick="addNew('projects');" value='Add Another'>   
 
 </div>
-<HR>
 
    <div id='section'>
- <heading>Academic Acheivements</heading>
-  <BR><Br><Br>
+ <h3><a href='#'>Academic Acheivements</a></h3>
     <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for ac in a %}
@@ -678,11 +663,8 @@ function remove(o)
              <input type='button'  onClick="addNew('academic');" value='Add Another'>   
 
 </div>
-<HR>
-
-   <div id='section'>
-   <heading>Extra Curricular</heading>
-    <BR><BR><BR><BR>
+   <div>
+   <h3><a href='#'>Extra Curricular</a></h3>
         <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for extra in e %}
@@ -709,7 +691,7 @@ function remove(o)
 
   {% comment %} <div id='section'>
    {% for extra in ex %}
-   <heading>{{ extra.title }}</heading>
+   <h3>{{ extra.title }}</h3>
     
         <table>
             <tr><th>Description</th><th>YEar</th></tr>
@@ -723,8 +705,8 @@ function remove(o)
 
 </div> {% endcomment %}
 
-   <div id='section'>
-   Add Another Section<br><br>
+   <div>
+  <hr><a href='#'> Add Another Section</a></h3>
    <div id='ExtraField'>
    <li>Section Title <input type='text' id='ExtraField_title_1'><br>
         <table>
@@ -742,13 +724,9 @@ function remove(o)
 
 <input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
 </div>
-<hr>
 
-
-
-   <div id='section'>
-   <heading>Personal</heading>
-    <BR><BR><BR>
+   <div>
+   <h3><a href='#'>Personal</a></h3>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">
              <li>Father's Name  <input type='text' id="personal_father_name" value="{{ p.father_name }}">
@@ -788,25 +766,23 @@ function remove(o)
              <input type='button'  onClick="addNew('hobbies');" value='Add Another'>   
         </ul>
   </div>
-   {% if flag == "edit" %}
+<div>
+<h3><a href='#'> Photo</a></h3>
+{% if flag == "edit" %}
    <div id='photo'>
        <img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=150 width=180>
    </div>
    {% endif %}
  
-  <HR>
-
-  <div id='section'>
     Upload your recent passport sized photograph.
   <input type = 'file' name='photo'>
 
-  <br><Br><BR>
   </div>
+</div> 
   <input type='hidden' value='0' name='allok' id='allok'>
   <input type='submit' value='Submit Information!'><input type='reset'>
   <input type='button' value='Home' onclick="javascript:location.href='/home'">
 
- 
 </form>
 <noscript>
     <h2 align='center' style="color: red;"> Hey, you need to enable JavaScript if you want us to help you! </h2>

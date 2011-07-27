@@ -4,6 +4,7 @@
 FULL_PATH = "/Users/apoorva/laresumex";
 RESUME_STORE = "%s/STORE/" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
+ROOT = ""
 
 #DEFAUT VARS
 DEBUG = True
