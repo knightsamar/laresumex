@@ -122,87 +122,89 @@ def submit(request, prn):
         print " ======>>> editing original <<<======="
         s[0].delete() #delete to create a new one.
     
-    s = student.objects.create(
-        pk=prn,
-        fullname=post['fullname'],
-        career_objective=post['career_objective'],
-        phone_number=post['phone_number']
-        )
+    try:
+
+        s = student.objects.create(
+            pk=prn,
+            fullname=post['fullname'],
+            career_objective=post['career_objective'],
+            phone_number=post['phone_number']
+            )
     
-    s.save();
-    p = personal.objects.get_or_create(primary_table=s)[0];
-    table_dict=dict();
-    mvsd=dict();
-    extra_fields = dict()
-    l = ['marks', 'extracurricular','academic','certification','project','workex'] #list of model names other than personal.
+        s.save();
+        p = personal.objects.get_or_create(primary_table=s)[0];
+        table_dict=dict();
+        mvsd=dict();
+        extra_fields = dict()
+        l = ['marks', 'extracurricular','academic','certification','project','workex'] #list of model names other than personal.
 
-    post_keys = post.keys();
-    post_keys.sort();
+        post_keys = post.keys();
+        post_keys.sort();
 
-    for field in post_keys: #it will be a list
-        data = post[field]; #get data for this item
-        field_name = field.split('_'); #format of the name - tableName_FieldName_OccurenceId
+        for field in post_keys: #it will be a list
+            data = post[field]; #get data for this item
+            field_name = field.split('_'); #format of the name - tableName_FieldName_OccurenceId
         
-        #we are using this long branch of IF and ELIFs because Python doesn't have switch case!!!
-        if field == 'csrfmiddlewaretoken':
-            continue;
-        elif len(field_name) is 1: # for student model
-            print "=====>Setting ", field_name[0] , "of student with ",data
-            s.__setattr__(field_name[0],data)
-            continue;
-        elif field_name[0] == 'personal':  
-            if field_name[2].isdigit() is False:
-                index=field_name[1]+'_'+field_name[2];
-                print "=====> adding", data , "to attribute", index, "of Personal";
-                p.__setattr__(index,data);     
-        if field_name[0]=="birthdate":
-            date=data.split(',')
-            print "=====>DATE<=====",date
-            print datetime(int(date[2]),int(date[1]),int(date[0]))
-            p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
-        #if it's an ExtraField
-        elif 'ExtraField' in field_name[0]:
-            #if it's a title
-            if field_name[1] == 'title':
-               #create a new object and push it to the ExtraFields dictionary
-               e = ExtraField();
-               e.primary_table = s;
-               e.title = data;
-               extra_fields[''.join(field_name)] = e;
-            #if it's a description
-            elif field_name[1] == 'desc' or 'year':
-                pass;
-                #take the number at the end of the fieldname
-                #find objects from the ExtraFields dictionary which has this number in it's title or name
-                #for all such objects
-                    #does it have the description/year already filled ?
-                        #if no,
-                            #fill the info.
-                            #save
-                        #if yes,
-                            #go to next object
+            #we are using this long branch of IF and ELIFs because Python doesn't have switch case!!!
+            if field == 'csrfmiddlewaretoken':
+                continue;
+            elif len(field_name) is 1: # for student model
+                print "=====>Setting ", field_name[0] , "of student with ",data
+                s.__setattr__(field_name[0],data)
+                continue;
+            elif field_name[0] == 'personal':  
+                if field_name[2].isdigit() is False:
+                    index=field_name[1]+'_'+field_name[2];
+                    print "=====> adding", data , "to attribute", index, "of Personal";
+                    p.__setattr__(index,data);     
+            if field_name[0]=="birthdate":
+                date=data.split(',')
+                print "=====>DATE<=====",date
+                print datetime(int(date[2]),int(date[1]),int(date[0]))
+                p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
+            #if it's an ExtraField
+            elif 'ExtraField' in field_name[0]:
+                #if it's a title
+                if field_name[1] == 'title':
+                    #create a new object and push it to the ExtraFields dictionary
+                    e = ExtraField();
+                    e.primary_table = s;
+                    e.title = data;
+                    extra_fields[''.join(field_name)] = e;
+                #if it's a description
+                elif field_name[1] == 'desc' or 'year':
+                    pass;
+                    #take the number at the end of the fieldname
+                    #find objects from the ExtraFields dictionary which has this number in it's title or name
+                    #for all such objects
+                        #does it have the description/year already filled ?
+                            #if no,
+                                #fill the info.
+                                #save
+                            #if yes,
+                                #go to next object
                         
-                    #if still can't find
-                        #create a duplicate object of this object but without the description/year.
-                        #fill it.
-        #elif field_name[0]=="
-        if str(field_name[0]) in l:
-           column_dict=dict();
-           column_dict[field_name[1]]=data;
+                         #if still can't find
+                            #create a duplicate object of this object but without the description/year.
+                            #fill it.
+                #elif field_name[0]=="
+            if str(field_name[0]) in l:
+                column_dict=dict();
+                column_dict[field_name[1]]=data;
            
-           if "title" not in column_dict:
-               column_dict['title']=field_name[0]
+                if "title" not in column_dict:
+                    column_dict['title']=field_name[0]
            
-           index=field_name[0]+'_'+field_name[2];
+                index=field_name[0]+'_'+field_name[2];
            
-           if index not in table_dict:
-               table_dict[index]=dict()
+                if index not in table_dict:
+                    table_dict[index]=dict()
            
-           table_dict[index].update(column_dict)
+                    table_dict[index].update(column_dict)
            
-           '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
-           row[field_name[1]] = data;'''
-        if len(field_name) is 3 and field_name[0] not in l: # for multi-valued single Display
+            '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
+            row[field_name[1]] = data;'''
+            if len(field_name) is 3 and field_name[0] not in l: # for multi-valued single Display
               print "!!!!!!!!inside mvsd processing";
               if field_name[2].isdigit() is False:
                 field_name[1]=field_name[1]+'_'+field_name[2]  
@@ -214,21 +216,22 @@ def submit(request, prn):
                    mvsd[index]+=','+data
  
 
-        #if we are retrieving the data
-        '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=prn);
+            #if we are retrieving the data
+            '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=prn);
              row[field_name[1]] = data;
              row.save();'''
              
-    p.save();
-    print "P saved"
+        p.save();
+        print "P saved"
     
-    print "=========>>>> The Main list : <=============="    
-    pprint(table_dict)
-    #print "======> s/w Exposure====="
-    #print sw_exposure 
-    #print "=====>MVSD<======"
-    print mvsd
-    
+        print "=========>>>> The Main list : <=============="    
+        pprint(table_dict)
+        #print "======> s/w Exposure====="
+        #print sw_exposure 
+        #print "=====>MVSD<======"
+        print mvsd
+    except Exception as e:
+        return our_redirect('/form')
     
     # ============>>> MVSD <<<====================
     for table_row, value in mvsd.iteritems():
