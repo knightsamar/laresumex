@@ -28,7 +28,6 @@ urlpatterns = patterns('',
     (r'^home/$',"generate_resume.views.index"),
     
     # company
-    (r'^search',"company.views.search"),
     (r'^company/getResume',"company.views.getResume"),
     (r'^company/list',"company.views.company_list"),
     (r'^company/apply',"company.views.apply"),
