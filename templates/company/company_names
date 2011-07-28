@@ -56,12 +56,13 @@ Following is the list of companies visiting our college.
 {% csrf_token %}
 {% for k in companies %}
     <li>
+        <font face="Verdana" size=2>
         <a class = 'tooltip' href ='#'>{{ k.name }}<span class='tooltip'> <em>{{k.name}}</em>{{k.info}}</span></a>
         <input type='checkbox' title="{{k.name }}"id="{{ k.name }}" onclick="selected(this);" {{ k.gone }} {{k.Checked}}>
         {% if k.gone == "" %}
         <pre>          The process starts from <b> {{k.process}} </b>... So please apply before <b>{{ k.date_of_applying }}</b> </pre>
         {% endif %}
-
+</font>
     </li>
 {% empty %}
     <i> no companies </i>
