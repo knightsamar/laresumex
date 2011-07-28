@@ -362,11 +362,25 @@ function remove(o)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
+
 <form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
 {% csrf_token %}
-<div id="accordion">   
-<div>
-    <h3><a href='#'>Gettng Started</a></h3>
+<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">Getting Started</a></li>
+				<li><a href="#tabs-2">Qualificaion</a></li>
+				<li><a href="#tabs-3">Personality Traits</a></li>
+				<li><a href="#tabs-4">Certification</a></li>
+				<li><a href="#tabs-5">Software Skil Set</a></li>
+				<li><a href="#tabs-6">Workex</a></li>
+				<li><a href="#tabs-7">Projects Undertaken</a></li>
+				<li><a href="#tabs-8">Academic Achievements</a></li>
+				<li><a href="#tabs-9">Exta Curricular</a></li>
+				<li><a href="#tabs-10">Personal</a></li>
+				<li><a href="#tabs-11">Photo</a></li>
+			</ul>
+
+<div id='tabs-1'>
  <label for = "Fname" > <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
         <input type="text" id='fullname' com=true size=60 value="{{ s.fullname }}">
      <br><BR>    
@@ -394,14 +408,10 @@ function remove(o)
   </select>
  <hr>  
  <br><BR>
- 
- <label for = "Objective"><h3> Career Objectve *</h3><BR><BR><BR></label> <br>
+ <label for = "Objective"> Career Objectve *</label> <br>
       <textarea rows='3' cols = '124' com = true title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
- </div>  
-
-  <div>
-  <h3><a href='#'>Qualification:-</a></h3>
-    
+</div>
+<div id='tabs-2'>
   <table cellpadding=13>
   <tr>
       <th>Class</th>
@@ -473,11 +483,8 @@ function remove(o)
   {% endfor %}
   </table>
   <input type='button'  onClick="addNew('marks');" value='Add Another'>    
-
 </div>
-  <div>
-  <h3><a href='#'>Strengths..!! and weaknesses</a></h3>
-  
+<div id= 'tabs-3'>
   <div id='strengths'>
       {% for st in p.strength|split:',' %}
         <li><input type="text" id="personal_strength_{{ forloop.counter }}" value="{{ st }}">
@@ -490,10 +497,7 @@ function remove(o)
   <input type='button'onClick="addNew('strengths');" value='Add Another'>    
 
 </div>
-
-  <div>
-  <h3><a href='#'>SCertifications</a></h3>
-   
+<div id='tabs-4'>
   <table cellpadding=13>
   <tr><th>Name  and description </th><th>month/year</th>
   {% for cert in c %}
@@ -513,9 +517,8 @@ function remove(o)
   </table>
   <input type='button'  onClick="addNew('certi');" value='Add Another'>      
 </div>
-  <div>
-  <h3><a href='#'>SSoftware Exposure</a></h3>
-        <ul>
+<div id = 'tabs-5'>
+   <ul>
             
             <li>Programming languages
             <ul id = 'programming'>
@@ -563,12 +566,8 @@ function remove(o)
              <input type='button'  onClick="addNew('web');" value='Add Another'>   
 
          </ul>
-
 </div>
-
-  <div>
-  <h3><a href='#'>SWork Experience</a></h3>
-   
+<div id = 'tabs-6'>
 <table>
 <tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for wex in w %}
@@ -600,10 +599,8 @@ function remove(o)
              {% endfor %}
 </table>
              <input type='button'  onClick="addNew('workex');" value='Add Another'>   
-
- </div> 
-  <div>
-  <h3><a href='#'>SProjects Undertaken</a></h3>
+</div> 
+<div id='tabs-7'>
   <table>
             <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for pr in pro %}
@@ -639,10 +636,8 @@ function remove(o)
              <input type='button'  onClick="addNew('projects');" value='Add Another'>   
 
 </div>
-
-   <div>
- <h3><a href='#'>Academic Acheivements</a></h3>
-    <table>
+ <div id='tabs-8'>
+   <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for ac in a %}
             <tr id = 'academic'>
@@ -662,9 +657,8 @@ function remove(o)
              <input type='button'  onClick="addNew('academic');" value='Add Another'>   
 
 </div>
-   <div>
-   <h3><a href='#'>Extra Curricular</a></h3>
-        <table>
+ <div id='tabs-9'>
+     <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for extra in e %}
             <tr id = 'extracurricular'>
@@ -684,23 +678,6 @@ function remove(o)
 </table>
              <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
 </div>
-   <div>
-   {% for extra in ex %}
-   <h3>{{ extra.title }}</h3>
-    
-        <table>
-            <tr><th>Description</th><th>YEar</th></tr>
-            <tr id = '{{extra.title}}'>
-                <td><textarea rows=2 cols=50 id="{{extra.title}}_desc_{{ forloop.counter }}">{{ extra.desc }}</textarea></td>
-                <td><select name = "year"  id="{{extra.title}}_year_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{extra.fromDate.year}} </option></select> </td>
-            </tr>
-       </table>
-        {% endfor %}
-             <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
-
-</div>
-   <div>
-  <hr><a href='#'> Add Another Section</a></h3>
 {% comment %}
    <div id='section'>
    Add Another Section<br><br>
@@ -723,9 +700,7 @@ function remove(o)
 </div>
 {% endcomment %}
 
-   <div>
-   <h3><a href='#'>Personal</a></h3>
-
+<div id='tabs-10'>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">
              <li>Father's Name  <input type='text' id="personal_father_name" value="{{ p.father_name }}">
@@ -765,8 +740,7 @@ function remove(o)
              <input type='button'  onClick="addNew('hobbies');" value='Add Another'>   
         </ul>
   </div>
-<div>
-<h3><a href='#'> Photo</a></h3>
+<div id= 'tabs-11'>
 {% if flag == "edit" %}
    <div id='photo'>
        <img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=150 width=180>
@@ -776,7 +750,7 @@ function remove(o)
     Upload your recent passport sized photograph.
   <input type = 'file' name='photo'>
 
-  </div>
+ 
 </div> 
   <input type='hidden' value='0' name='allok' id='allok'>
   <input type='submit' value='Submit Information!'><input type='reset'>
