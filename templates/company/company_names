@@ -20,8 +20,8 @@ function selected(o)
 
 function checkThree()
 {
-    input =document.getElementsByTagName('input')
-    count =0;
+    input=document.getElementsByTagName('input')
+    count=0;
     for(var i=0;i<input.length;i++)
     {
         if(input[i].type=='checkbox' && input[i].checked==true)
@@ -56,13 +56,16 @@ Following is the list of companies visiting our college.
 {% csrf_token %}
 {% for k in companies %}
     <li>
-        <font face="Verdana" size=2>
-        <a class = 'tooltip' href ='#'>{{ k.name }}<span class='tooltip'> <em>{{k.name}}</em>{{k.info}}</span></a>
-        <input type='checkbox' title="{{k.name }}"id="{{ k.name }}" onclick="selected(this);" {{ k.gone }} {{k.Checked}}>
+        <span class='company'> 
+        <a class = 'tooltip' href ='#'>{{ k.name }}<span class='tooltip'> <em>{{k.name}}</em>{{ k.info }}</span></a>
+        <input type='checkbox' title="{{k.name }}" id="{{ k.name }}" onclick="selected(this);" {{ k.gone }} {{k.Checked}}>
         {% if k.gone == "" %}
-        <pre>          The process starts from <b> {{k.process}} </b>... So please apply before <b>{{ k.date_of_applying }}</b> </pre>
+        <pre>   The process starts from <b> {{k.process}} </b>... So please apply before <b>{{ k.date_of_applying }}</b> </pre>
+        {% else %}
+        <pre>   Company is already gone! </pre>
         {% endif %}
-</font>
+       
+       </company>
     </li>
 {% empty %}
     <i> no companies </i>

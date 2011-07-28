@@ -1,5 +1,10 @@
 <<<-------Release I-------->>>
 
+
+URGENT:
+    * Add backlogs wali field in form -- inside the photo wala section.
+    * Migrate the database changes according to father's occupation etc...using South or intelligent queries.
+
 ==== To be done
     * HTML preview for the latex - DONE by Samar
     * Validation - Client and server side for the form and student info - REMAINS
@@ -8,7 +13,7 @@
     * Changing the latex template acc to abhay sudhakaran -- DONE, Partially
     * Taking the values from the db for generating the latex - DONE by Apoorva!
     * Session and Ldap - DONE by Apoorva.
-    
+        
     * INDIVIDUAL TODOS ARE NOW AVAILABLE IN EACH APP. Refer them.
 
     * ===========To put a concrete release plan here.===============

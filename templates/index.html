@@ -3,7 +3,10 @@
     Home
 {% endblock %}
 {% block content %}
-Hi... Welcome to the resume building software.. la resumex
+{% comment %}
+    We will have the special hiya logic here soon ;)
+{% endcomment %}
+Hi!
 <br><BR>
 {% if create_form %}
 <input type='button' value = 'create your resume' onclick='javascript:location.href="{{ ROOT }}/form"'><br>

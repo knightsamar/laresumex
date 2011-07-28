@@ -11,6 +11,7 @@ from datetime import datetime
 ''' import utility functions '''
 from student_info.utility import our_redirect,errorMaker, debugger;
 from pprint import pprint
+from os import path;
 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
@@ -42,7 +43,6 @@ def edit(request,prn):
         else:
             s=s[0]
             debugger("Resume found! Using it");
-        
         
         #get all the records and tell us whether they were creatd or retrieved
         tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
@@ -100,8 +100,20 @@ def submit(request, prn):
 
     #what is submitted ?
     print "I have got files called ", request.FILES;
+
+    photo_file=RESUME_STORE+"/photos/"+prn+".png";
+
+    if path.exists(photo_file):
+        photo_exists = True;  
+    else:
+        photo_exists = False;
+
+    if not photo_exists and len(request.FILES) is 0:
+        return our_redirect('/form')
+
+    #TODO: check whether the photo is a photo or something else ?
     for f in request.FILES.values():
-            dest= RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
+            dest=RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
             for chunk in f.chunks():
