@@ -372,10 +372,10 @@ function remove(o)
 				<li><a href="#tabs-3">Personality Traits</a></li>
 				<li><a href="#tabs-4">Certification</a></li>
 				<li><a href="#tabs-5">Software Skil Set</a></li>
-				<li><a href="#tabs-6">Workex</a></li>
-				<li><a href="#tabs-7">Projects Undertaken</a></li>
+				<li><a href="#tabs-6">Other fields</a></li>
+				{% comment %}<li><a href="#tabs-7">Projects Undertaken</a></li>
 				<li><a href="#tabs-8">Academic Achievements</a></li>
-				<li><a href="#tabs-9">Exta Curricular</a></li>
+				<li><a href="#tabs-9">Exta Curricular</a></li>{% endcomment %}
 				<li><a href="#tabs-10">Personal</a></li>
 				<li><a href="#tabs-11">Photo</a></li>
 			</ul>
@@ -568,6 +568,10 @@ function remove(o)
          </ul>
 </div>
 <div id = 'tabs-6'>
+<div id ='accordion'>
+    <div>
+        <h3><a href='#'>Work Ex </a></h3>
+        <div>
 <table>
 <tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for wex in w %}
@@ -599,8 +603,11 @@ function remove(o)
              {% endfor %}
 </table>
              <input type='button'  onClick="addNew('workex');" value='Add Another'>   
-</div> 
-<div id='tabs-7'>
+    </div> 
+    </div>
+<div>
+    <h3><a href ='#'>Projects Undertaken</a></h3>
+    <div>
   <table>
             <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for pr in pro %}
@@ -636,7 +643,10 @@ function remove(o)
              <input type='button'  onClick="addNew('projects');" value='Add Another'>   
 
 </div>
- <div id='tabs-8'>
+</div>
+ <div>
+    <h3><a href='#'>Academic Achievements</a></h3>
+   <div> 
    <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for ac in a %}
@@ -657,7 +667,10 @@ function remove(o)
              <input type='button'  onClick="addNew('academic');" value='Add Another'>   
 
 </div>
- <div id='tabs-9'>
+</div>
+ <div>
+ <h3><a href='#'>Extra Curricular</a></h3>
+ <div>
      <table>
             <tr><th>Description</th><th>YEar</th></tr>
         {% for extra in e %}
@@ -677,6 +690,9 @@ function remove(o)
          {% endfor %}   
 </table>
              <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
+</div>
+</div>
+</div><!-- end of accordion -->
 </div>
 {% comment %}
    <div id='section'>
@@ -699,7 +715,6 @@ function remove(o)
 <input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
 </div>
 {% endcomment %}
-
 <div id='tabs-10'>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">
