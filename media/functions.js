@@ -172,11 +172,10 @@
  }
 
 
-/* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
-function changeName()
-{
-    alert("hey");
-
+/* check whether mandatory values are filled or not */
+function mandatoryCheck()
+{ 
+    //clientside mandatoriness checking
     var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks')
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
@@ -197,8 +196,23 @@ function changeName()
         }
         a=input[i].name.split('_')[0]
         if ((input[i].value=="")&&(compulsory.indexOf(a)>=0) )
-            {input[i].focus();return false;}
-          
+            {
+
+                input[i].focus();
+                //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
+                alert("Please check your form!");
+                return false;
+            }
+    }  
+}
+
+/* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
+function changeName()
+{
+    //check mandatoriness!
+    if (!mandatoryCheck())
+    {
+        return false;
     }
     select=document.getElementsByTagName('select');
     for (var i=0;i<select.length;i++)
