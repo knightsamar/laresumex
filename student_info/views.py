@@ -212,7 +212,7 @@ def submit(request, prn):
                 if index not in table_dict:
                     table_dict[index]=dict()
            
-                    table_dict[index].update(column_dict)
+                table_dict[index].update(column_dict)
            
             '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
             row[field_name[1]] = data;'''
