@@ -551,21 +551,23 @@ function addNew(elName)
 <div id= 'tabs-11'>
 {% if flag == "edit" %}
        <img id='photo' src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=150 width=180>
+Change the uploaded Photograph
 {% else %}
         <span id='photo'><i>No photo uploaded!</i></span>
+    Upload your recent passport sized photograph.
 {% endif %}
         
-    Upload your recent passport sized photograph.
   <input type = 'file' name='photo'>
-
+<br><br>
  
+    <input type='submit' value='Submit Information!'><input type='reset'>
 </div> 
-</div>
+
+</div><! -- end of the tabs div -->
   <input type='hidden' value='0' name='allok' id='allok'>
 </form>
 
 <div id='buttons' class='#' style='text-align:center;'>
-    <input type='submit' value='Submit Information!'><input type='reset'>
     <input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home'">
 </div>
 

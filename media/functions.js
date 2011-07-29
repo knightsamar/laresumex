@@ -200,10 +200,11 @@ function mandatoryCheck()
 
                 input[i].focus();
                 //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
-                alert("Please check your form!");
+                alert("Please check your form! " + input[i].name);
                 return false;
             }
     }  
+ return true;
 }
 
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
@@ -212,6 +213,7 @@ function changeName()
     //check mandatoriness!
     if (!mandatoryCheck())
     {
+        alert('mandatory Check is False')
         return false;
     }
     select=document.getElementsByTagName('select');

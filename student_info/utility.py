@@ -19,4 +19,5 @@ def debugger(msg):
     return
 
 def our_redirect(path):
+    print ROOT+path
     return redirect(ROOT+path)

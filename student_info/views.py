@@ -305,13 +305,19 @@ def showform(request):
     if 'username' not in request.session:
         print "No session"
         return our_redirect('/ldap_login')
-        
-        
-    prn=request.session['username'];
-    print "sdfsd"
     
-    t=loader.get_template('student_info/form.html')
-    c=RequestContext(request,
+    #the user shoud not get the form if he already has one.
+    try:
+        s=student.objects.get(pk=request.session['username'])
+        print "student Fornd...", s
+    except Exception as e:
+
+        print "student does not exist" 
+        prn=request.session['username'];
+        print "sdfsd"
+    
+        t=loader.get_template('student_info/form.html')
+        c=RequestContext(request,
             {
                 'flag':'form',
                 'prn':prn,
@@ -319,7 +325,10 @@ def showform(request):
             }
             );
     
-    return HttpResponse(t.render(c));
+        return HttpResponse(t.render(c));
+
+    return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
+    return HttpResponse('you arent supposed to see this page. if u see this please contact samar')
 
 
 def done(request,msg):
