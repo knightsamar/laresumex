@@ -1,0 +1,789 @@
+{% extends 'base.html' %}
+<!-- Form for the resume -->
+{% load some_tags %}
+<html>
+<head>
+
+{% block title %}
+    Form for the resume
+{% endblock %}
+{% block content %}
+
+
+    <script language="JavaScript">
+      
+    /* Autofills the passed dropdown objet with contents based on it's value 
+      
+       For day, month and year, fills with values.
+       For courses, fills with degrees.
+    */
+    function fillOptions(o)
+    {
+        if (o.children.length >1) return false;
+        //o=document.getElementById('month');
+        if (o.name == 'month')
+        {
+            var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
+          
+            for (var i =0;i<12;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=months[i];
+                 o.add(option,null)
+
+            }
+        }
+        else if(o.name == 'date')
+        {
+             for (var i =1;i<=31;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=i;
+                 o.add(option,null)
+
+            }
+        }
+        else if(o.name == 'year')
+            {
+                if((o.prevElementSibling)&&(o.previousElementSibling.value=="")) o.previousElementSibling.focus()
+                var d= new Date();
+
+                if(o.id.split('_')[0] == 'birthdate')
+                    { var i=d.getFullYear()-60; var j=(d.getFullYear()-18);} // need to be min 18 yrs old..!!
+                else
+                    {var i=d.getFullYear()-18; j=d.getFullYear()+2;}
+                for (;i<=j;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=i;
+                 o.add(option,null)
+
+            }
+           } 
+        else  if (o.name == 'course')
+        {
+          var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'MBA', 'MSc(CA)');
+            for (var i =0;i<course.length;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=course[i];
+                 o.add(option,null)
+            }
+        } 
+    }
+     
+ function addNew(elName)
+ {
+        c=document.getElementById(elName);
+        removeButton=document.createElement('input')
+        removeButton.type='button';
+        removeButton.value="remove";
+        
+        if (c.tagName=='TR')
+            {
+                l=c.parentNode.children.length;
+                 var form =false;
+                {% if flag == 'form' %}
+                   var form=true;
+                {% endif %}   
+               if ((c.id=='marks') && (form))
+                    firstNode=c.parentNode.children[3];
+                else  
+                    firstNode=c.parentNode.children[1]
+                lastNode=c.parentNode.children[l-1]
+                clone=firstNode.cloneNode(true);
+                 for(var i=0;i<lastNode.children.length;i++)
+                   {
+                    for (var j=0;j<lastNode.children[i].children.length;j++)
+                    {
+                        id=lastNode.children[i].children[j].id.split('_');
+                        id[2]=parseInt(id[2])+1;
+                        clone.children[i].children[j].id=id.join('_');
+                        if (clone.children[i].children[j].type != 'button')
+                        clone.children[i].children[j].value="";
+                    }
+                   }
+                {% if flag == 'form' %}
+                removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
+               id[1]='remove';
+                var removeId=id.join('_');
+
+                removeButton.id=removeId;
+                clone.appendChild(removeButton);
+                {% endif %}
+                c.parentNode.appendChild(clone);
+                clone.children[0].focus()
+
+            }
+        else
+        {
+            var bacche = c.children;
+            l=bacche.length;
+            var clone=bacche[0].cloneNode(true);
+            id=bacche[l-1].children[0].id.split('_');
+            id[2]=parseInt(id[2])+1;
+            clone.children[0].id=id.join('_');
+            clone.children[0].value="";
+            {% if flag == 'form' %}
+            removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
+            id[1]='remove';
+            var removeId=id.join('_');
+            removeButton.id=removeId;
+
+            clone.appendChild(removeButton);
+ //           clone.innerHTML+="<input type='button' value='remove' onclick='removeNode(elName);'>";
+            {% endif %}
+            c.appendChild(clone);
+          clone.children[0].focus()
+            
+        }
+             
+        /*
+        if (c.tagName=="TR") 
+          {  
+            c.parentNode.appendChild(c.cloneNode(true));
+            tr=document.createElement('TR');
+            c.parentNode.parentNode.appendChild(tr);
+            for(var i=0;i<l;i++)
+                { 
+                 var clone=bacche[i].cloneNode(true);
+                 id=clone.id.split('_');
+                 id[2]=parseInt(id[2])+1
+                 clone.id=id.join('_')
+                 tr.appendChild(clone);
+                 
+                 }
+          }
+        else
+        {
+            var clone=bacche[l-1].cloneNode(true);
+            id=clone.id.split('_');
+            id[2]=parseInt(id[2])+1
+            clone.id=id.join('_')
+            c.appendChild(clone);
+        }*/
+ }
+    
+
+ /* changes the sibling fields to suit the current value of the passed object.
+    
+    For Months, changes the Day according to the capacity of the month.
+    For the Appearing/Result Awaiting, disables the marks field.
+   
+    TODO: for leap year, it should make February right.
+ */
+ function change(o)
+ {
+     id0=o.id.split('_')[0];
+     id1=o.id.split('_')[1];
+     prev=o.previousElementSibling;
+     if (id0 == 'marks')
+     {
+      if (o.value == 'Appearing' || o.value =='Result Awaiting')
+      { 
+         prev.value=o.value;
+         prev.disabled=true;
+         o.nextElementSibling.disabled=true;
+         
+       // o.parentNode.removeChild(o.previousElementSibling);
+      }
+      else
+       {
+         prev.disabled=false;
+         prev.value="";
+         prev.focus();
+         o.nextElementSibling.disabled=false;
+       }
+     }
+     else if (id1 =='month')
+     {
+         if (prev.value=="")
+             prev.focus();
+         if (o.value =='Feb')
+             if((prev.value=='30')||(prev.value=='31'))
+             {
+                 prev.value='28';
+                 prev.focus();
+             }
+          if((o.value == 'April')||(o.value =='June')||(o.value =='Sept')||(o.value =='Nov'))
+              if(prev.value=='31')
+              {
+                  prev.value='30';
+                  prev.focus();
+              }
+     }
+      else if (id1 =='date')
+     {
+         
+         if (o.nextElementSibling.value =='Feb')
+             if((o.value=='30')||(o.value=='31'))
+             {
+                o.value='28';
+                o.focus();
+             }
+          if((o.nextElementSibling.value == 'April')||(o.nextElementSibling.value =='June')||(o.nextElementSibling.value =='Sept')||(o.nextElementSibling.value =='Nov'))
+              if(o.value=='31')
+              {
+                  o.value='30';
+
+                  o.focus();
+              }
+     }
+    
+ 
+ }
+ function concat(o)
+ {
+  var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
+  var compulsory=new Array('personal','fullnam');
+  id=o.id.split('_');
+  hidden=document.createElement('input')
+  hidden.type="hidden";
+  if (id[1].indexOf("year")==0)
+      id[1]="monthyear"
+  else
+      id[1]=id[1].substr(0,id[1].indexOf("year"))+"monthyear";
+  
+  hidden.name=id.join("_");
+  hidden.id=hidden.name;
+
+  H=document.getElementById(hidden.name);
+  if ((o.previousElementSibling) && (o.previousElementSibling.id.indexOf('month') != -1))
+      {
+            var previousElementSiblingMonthKiValue=o.previousElementSibling.value
+        if ((o.previousElementSibling.previousElementSibling) && (o.previousElementSibling.previousElementSibling.id.indexOf('date') != -1))
+          var previousElementSiblingDateKiValue=o.previousElementSibling.previousElementSibling.value
+        else 
+             previousElementSiblingDateKiValue="01"
+
+      }
+  else 
+  { 
+      var previousElementSiblingMonthKiValue="Jan"
+      var previousElementSiblingDateKiValue="01"
+  }
+ 
+  newDate= previousElementSiblingDateKiValue+","+(months.indexOf(previousElementSiblingMonthKiValue)+1) + "," + o.value
+  hidden.value=newDate;
+  if (H)
+      H.value=hidden.value
+  else    
+      o.parentNode.appendChild(hidden);
+
+ }
+
+
+/* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
+function changeName()
+{
+    var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks')
+    input=document.getElementsByTagName('input');
+    for (var i=0;i<input.length;i++)
+    {
+        //alert(input[i].id)
+        
+        /*if it has an id
+        if (input[i].id != "") && ((input[i].id.indexOf('month') == -1) || (input[i].id.indexOf('year') ==            
+                and the id is not 'month' or 'year'*/
+
+
+        // if this value is same as the previous value then do not submit. 
+       //for all such fields who have month or year 
+        
+        if(input[i].id!="")
+        {   
+                input[i].name=input[i].id;
+        }
+        a=input[i].name.split('_')[0]
+        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0) )
+            {input[i].focus(); alert(input[i].name);return false;}
+          
+    }
+    select=document.getElementsByTagName('select');
+    for (var i=0;i<select.length;i++)
+    {
+        //for all eleemtns who are named 'month' OR 'year'
+       if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
+       {
+           if (select[i].id.indexOf('year')>=0)
+           {
+               concat(select[i])
+           }
+         //thee shall deem them unsuccessfull
+         select[i].name=null;
+         continue;
+       }
+       select[i].name=select[i].id;
+       
+       if (select[i].value=="")
+            {select[i].focus();return false;}
+    }
+
+    textarea=document.getElementsByTagName('textarea');
+    for (var i=0;i<textarea.length;i++)
+        //if(tablearea[i].value=="")
+            textarea[i].name=textarea[i].id;
+   // return false;
+
+    //now tell in the form submission the secret
+    document.getElementById('allok').value = 1;
+}
+
+function remove(o)
+{
+    if (o.tagName=='TD')
+    {
+        p=o.parentNode;
+        if(p.parentNode.childElementCount == 2)
+            return false
+        p.parentNode.removeChild(p)
+    }
+    else
+    {
+        if (o.parentNode.childElementCount == 1)
+        {
+            alert('one element is required')
+            return false
+        }
+        o.parentNode.removeChild(o)
+    }    
+}    
+       
+    </script>
+</head>
+
+
+<body>
+
+<h3 align='center'>Resume</h3>
+ 
+<br/><br/>
+
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
+{% csrf_token %}
+<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">Getting Started</a></li>
+				<li><a href="#tabs-2">Qualificaion</a></li>
+				<li><a href="#tabs-3">Personality Traits</a></li>
+				<!--<li><a href="#tabs-4">Certification</a></li>-->
+				<li><a href="#tabs-5">Software Skil Set</a></li>
+				<li><a href="#tabs-6">Other fields</a></li>
+				{% comment %}<li><a href="#tabs-7">Projects Undertaken</a></li>
+				<li><a href="#tabs-8">Academic Achievements</a></li>
+				<li><a href="#tabs-9">Exta Curricular</a></li>{% endcomment %}
+				<li><a href="#tabs-10">Personal</a></li>
+				<li><a href="#tabs-11">Photo</a></li>
+			</ul>
+
+<div id='tabs-1'>
+ <label for = "Fname" > <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
+        <input type="text" id='fullname' com=true size=60 value="{{ s.fullname }}">
+     <br><BR>    
+  Gender* 
+  {% if s.sex == 'm' %}
+          <input type="radio"  name="sex" value='m' checked=true>Male
+          <input type="radio"  name="sex" value='m' >Female<br><br>
+   {% else %}       
+		  <input type="radio"  name="sex" value='m' >Male
+          <input type="radio"  name="sex" value="f" checked=true>Female<br><BR><br>
+  {% endif %}        
+  Phone Number* <input type='text' com = true maxlength=10 size=10 name="phone_number" value={{ s.phone_number }}><BR><BR>
+ Email ID* <input type='text' name='email' com = true value={{ s.email }}>
+<br>         <br>
+
+  Birthdate*
+  <select name = "date"  id="birthdate_date"  onBlur="change(this);" onFocus="fillOptions(this);">
+        <option>{{ p.birthdate.day }} </option>
+  </select>
+  <select name = "month" id="birthdate_month" onBlur="change(this);" onFocus="fillOptions(this);"> 
+        <option>{{ p.birthdate|date:"b"|title }}</option>
+  </select>
+  <select name = "year"  id="birthdate_year" onBlur="concat(this);" onFocus="fillOptions(this);">
+        <option>{{ p.birthdate.year }}</option>
+  </select>  
+ <hr>  
+ <br><BR>
+ <label for = "Objective"> Career Objectve *</label> <br>
+      <textarea rows='3' cols = '124' com = true title="Keep it short an simple" prev_value="{{s.career_objective }}" name = "career_objective" id="career_objective">{{ s.career_objective }} </textarea>
+</div>
+<div id='tabs-2'>
+  <table cellpadding=13>
+  <tr>
+      <th>Class</th>
+      <th>Board/University</th>
+      <th>Score</th>
+      <th>Year</th>
+  </tr>
+  {% for marks in m %}
+  <tr id='marks'>
+  <td> <input type="text" id="marks_course_{{forloop.counter}}" value="{{ marks.course }}" ></td>
+  <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
+  <td>{% if not marks.marks %}
+       <input type="text" id='marks_marks_{{ forloop.counter }}' disabled=true> 
+
+   {% else %}
+  <input type="text" id='marks_marks_{{ forloop.counter }}' value="{{marks.marks}}"> 
+  {% endif %}
+
+  <select id='marks_markstype_{{forloop.counter}}'onChange="change(this);">
+          <option>{{marks.markstype }}</option>
+          <option>Total</option>
+          <option>GPA</option>
+          <option>Appearing</option>
+          <option>Result Awaiting</option>
+          </select>
+   {% if not marks.outof %}
+       Out Of<input type="text" id='marks_outof_{{ forloop.counter }}' disabled=true> 
+
+   {% else %}
+  Out Of<input type="text" id='marks_outof_{{ forloop.counter }}' value="{{marks.outof}}"> 
+  {% endif %}
+</td>
+  <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
+<td><input type='button' value='remove' onClick="remove(this.parentNode)";>  </td>
+  </tr>
+  
+  {% empty %}
+  <tr>
+    <td>X<sup>th</sup><input type="hidden" id="marks_course_1" value="Xth"></td>
+    <td><input type ='text' size=40 id="marks_uni_1" ></td>
+    <td><input type='text' size = 5 id="marks_marks_1" title="Total marks "><input type="hidden" id="marks_markstype_1" value="Total">
+     Out Of<input type="text" size=5 id='marks_outof_1'> </td>
+    <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="concat(this)">> </select></td>
+  </tr>
+  <tr>
+      <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" value="XIIth"></td>
+      <td><input type ='text' size=40 id="marks_uni_2" ></td>
+      <td><input type='text' size =5 maxlength=5 id="marks_marks_2" title='Total marks'><input type="hidden" id="marks_markstype_2" value="Total">
+       Out Of<input type="text" id='marks_outof_2' size=5 maxlength=5> </td>
+      <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select> </td>
+        </tr>
+  <tr id='marks'>
+      <td>
+      <select name = "course" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
+      <td><input type ='text' size=40 id="marks_uni_3"></td>
+      <td><input type='text' size = 5 maxlength=5 id="marks_marks_3">
+          <select id='marks_markstype_3'onChange="change(this);" title="Total Marks">
+          <option>Marks</option>
+          <option>GPA</option>
+          <option>Appearing</option>
+          <option>Result Awaiting</option>
+          </select>
+       Out Of<input type="text" id='marks_outof_3' maxlength=5 size=5>
+
+      </td>
+      <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this)">> </select></td>
+      
+  </tr>
+  {% endfor %}
+  </table>
+  <input type='button'  onClick="addNew('marks');" value='Add Another'>    
+</div>
+<div id= 'tabs-3'>
+  <div id='strengths'>
+      {% for st in p.strength|split:',' %}
+        <li><input type="text" id="personal_strength_{{ forloop.counter }}" value="{{ st }}">
+            <input type='button' value='remove' onClick="remove(this.parentNode)";>
+        </li>
+        {% empty %}
+        <li><input type="text" id="personal_strength_1"></li>
+       {% endfor %} 
+  </div>   
+  <input type='button'onClick="addNew('strengths');" value='Add Another'>    
+
+</div>
+<div id = 'tabs-5'>
+   <ul>
+            
+            <li>Programming languages
+            <ul id = 'programming'>
+                    {% for software in sw.programming|split:',' %}
+                    <li><input type='text' id="swExposure_programming_{{ forloop.counter }}" value="{{ software }}">
+                         <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                    </li>
+                {% empty %}
+                 <li><input type='text' id="swExposure_programming_1">
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('programming');" value='Add Another'>   
+             <li>Database
+            <ul id = 'swExposure'>
+                {% for software in sw.databases|split:',' %}
+                <li><input type='text' id="swExposure_databases_{{ forloop.counter }}" value="{{ software }}">
+                    <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                </li>
+                {% empty %}
+                <li><input type='text' id="swExposure_databases_1">
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('swExposure');" value='Add Another'>   
+            <li>OS
+            <ul id = 'os'>
+                {% for os in sw.OS|split:',' %}
+                <li><input type='text' id="swExposure_OS_{{ forloop.counter }}" value={{ os }}>
+                    <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                </li>
+                {% empty %}
+                <li><input type='text' id="swExposure_OS_1">
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('os');" value='Add Another'>   
+            <li>Web Tools
+            <ul id = 'web'>
+                {% for web in sw.webTools|split:',' %}
+                <li><input type='text' id="swExposure_webTools_{{ forloop.counter }}" value={{ web }}>
+                    <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                </li>
+                {% empty %}
+                <li><input type='text' id="swExposure_webTools_1"></li>
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('web');" value='Add Another'>   
+
+         </ul>
+</div>
+<div id = 'tabs-6'>
+<div id ='accordion'>
+    <div>
+        <h3><a href='#'>Work Ex </a></h3>
+        <div>
+<table>
+<tr>            <th>Job Description</th><th>Start Date</th><th>End Date</th></tr>
+            {% for wex in w %}
+            <tr id = 'workex'>
+                <td><textarea rows=3 cols=30 id="workex_desc_{{ forloop.counter }}">{{ wex.desc }}</textarea></td>
+             
+             <td>
+                  <select name = "month" id="workex_startmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> <option>{{ wex.fromDate|date:"b"|title }}</option> </select>
+                  <select name = "year"  id="workex_startyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ wex.fromDate.year }}</option> </select>  </td>
+            <td>
+                <select name = "month" id="workex_endmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> <option>{{ wex.endDate|date:"b"|title }}</option> </select>
+                <select name = "year"  id="workex_endyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ wex.endDate.year }}</option> </select>  </td>
+                <td>
+                <input type='button' value='remove' onClick="remove(this.parentNode)">
+                </td>
+             </tr>
+             {% empty %}
+             <tr id = 'workex'>
+                <td><textarea rows=3 cols=30 id="workex_desc_1"></textarea></td>
+             
+             <td>
+                  <select name = "month" id="workex_startmonth_1" onFocus="fillOptions(this);"> </select>
+                  <select name = "year"  id="workex_startyear_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
+            <td>
+                <select name = "month" id="workex_endmonth_1" onFocus="fillOptions(this);"> </select>
+                <select name = "year"  id="workex_endyear_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
+             </tr>
+
+             {% endfor %}
+</table>
+             <input type='button'  onClick="addNew('workex');" value='Add Another'>   
+    </div> 
+    </div>
+<div>
+<h3><a href='#'>Certifications</a></h3>
+<div>
+
+<table cellpadding=13>
+  <tr><th>Name  and description </th><th>month/year</th>
+  {% for cert in c %}
+   <tr id='certi'>
+    <td><textarea rows=2 cols=50 title="" id='certification_desc_{{ forloop.counter }}' >{{ cert.desc }}</textarea></td>
+    <td><select name = "month" id="certification_month_{{ forloop.counter }}" onFocus="fillOptions(this);"><option>{{ cert.fromDate|date:"b"|title }}
+</option></select>
+    <select name = "year"  id="certification_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ cert.fromDate.year }}</option></select></td>
+    </tr>
+   {% empty %}
+   <tr id='certi'>
+    <td><a class='tooltip' href='#'><textarea rows=2 cols=50 id='certification_desc_1'></textarea><span class='tooltip'> Please mention the certificates and with enough details</span></a></td>
+    <td><select name = "month" id="certification_month_1" onFocus="fillOptions(this);"></select>
+        <select name = "year"  id="certification_year_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select></td>
+    </tr>
+   {% endfor %} 
+  </table>
+  <input type='button'  onClick="addNew('certi');" value='Add Another'>      
+</div>
+</div>
+<div>
+    <h3><a href ='#'>Projects Undertaken</a></h3>
+    <div>
+  <table>
+            <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
+            {% for pr in pro %}
+            <tr id = 'projects'>
+             <td><input type='text' id="project_h3_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
+             <td><textarea id="project_desc_{{ forloop.counter }}" rows=2 cols=30>{{ pr.desc }}</textarea></td>
+
+             <td>
+                  <select name = "month" id="project_startmonth_{{ forloopcounter }}" onFocus="fillOptions(this);"> <option>{{ pr.fromDate|date:"b"|title }}</option> </select>
+                  <select name = "year"  id="project_startyear_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ pr.fromDate.year }}</option></select></td>
+            <td>
+                <select name = "month" id="project_endmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{ pr.endDate|date:"b"|title}}</option></select>
+                <select name = "year"  id="project_endyear_{{ forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ pr.endDate.year }}</option></select></td>
+                <td>
+                <input type='button' value='remove' onClick="remove(this.parentNode)">
+                </td>
+             </tr>   
+
+            {% empty %}
+            <tr id = 'projects'>
+             <td><input type='text' id="project_h3_1"></td>
+             <td><textarea id="project_desc_1" rows=2 cols=30></textarea></td>
+
+             <td>
+                  <select name = "month" id="project_startmonth_1" onFocus="fillOptions(this);"> </select>
+                  <select name = "year"  id="project_startyear_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
+            <td>
+                <select name = "month" id="project_endmonth_1" onFocus="fillOptions(this);"> </select>
+                <select name = "year"  id="project_endyear_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
+             </tr>   
+             {% endfor %}
+</table>
+             <input type='button'  onClick="addNew('projects');" value='Add Another'>   
+
+</div>
+</div>
+ <div>
+    <h3><a href='#'>Academic Achievements</a></h3>
+   <div> 
+   <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+        {% for ac in a %}
+            <tr id = 'academic'>
+               <td><textarea rows=2 cols=50 id="academic_desc_{{ forloop.counter }}">{{ ac.desc }}</textarea></td>
+               <td><select name = "year"  id="academic_year_{{forloop.counter }}" onFocus="fillOptions(this);" ><option>{{ac.fromDate.year}}</option> </select></td>
+               <td>
+                <input type='button' value='remove' onClick="remove(this.parentNode)">
+               </td>
+            </tr>   
+            {% empty %}
+            <tr id='academic'>
+                <td><textarea rows=2 cols=50 id="academic_desc_1"></textarea></td>
+                <td><select name = "year"  id="academic_year_1" onFocus="fillOptions(this);" onblur="concat(this)" > </select>  </td>
+            </tr>
+            {% endfor %}
+</table>
+             <input type='button'  onClick="addNew('academic');" value='Add Another'>   
+
+</div>
+</div>
+ <div>
+ <h3><a href='#'>Extra Curricular</a></h3>
+ <div>
+     <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+        {% for extra in e %}
+            <tr id = 'extracurricular'>
+                <td><textarea rows=2 cols=50 id="extracurricular_desc_{{ forloop.counter }}">{{ extra.desc }}</textarea></td>
+                <td><select name = "year"  id="extracurricular_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onblur="concat(this)" ><option>{{extra.fromDate.year}}</option> </select></td>
+               <td>
+                <input type='button' value='remove' onClick="remove(this.parentNode)">
+               </td> 
+            </tr>    
+        {% empty %}
+            <tr id = 'extracurricular'>
+               <td><textarea rows=2 cols=50 id="extracurricular_desc_1"></textarea></td>
+             
+                <td><select name = "year"  id="extracurricular_year_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
+            </tr>    
+         {% endfor %}   
+</table>
+             <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
+</div>
+</div>
+</div><!-- end of accordion -->
+</div>
+{% comment %}
+   <div id='section'>
+   Add Another Section<br><br>
+   <div id='ExtraField'>
+   <li>Section Title <input type='text' id='ExtraField_title_1'><br>
+        <table>
+            <tr><th>Description</th><th>YEar</th></tr>
+
+            <tr id = 'extrafield_1'>
+               <td><textarea rows=2 cols=50 id="ExtraField1_desc_1"></textarea></td>
+             
+            <td>
+            <select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);"> </select>  </td>
+</table>
+        <input type='button'  onClick="addNew('extrafield_1');" value='Add Another'>  
+        <br><BR>
+ </div>       
+
+<input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
+</div>
+{% endcomment %}
+<div id='tabs-10'>
+        <ul>
+             <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">
+             <li>Father's Name  <input type='text' id="personal_father_name" value="{{ p.father_name }}">
+             <li>Father's Occupation  <input type='text' id="personal_father_occupation" value="{{ p.father_occupation }}">
+             <li>Mother's Occupation  <input type='text' id="personal_mother_occupation" value="{{ p.mother_occupation }}">
+             <li>Languages known
+            <ul id = 'lang'>
+                {% for l in p.languages|split:',' %}
+                <li><input type='text' id="personal_languages_{{forloop.counter}}" value="{{ l }}">
+                    <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                </li>
+                {% empty %}
+                <li><input type="text" id="personal_languages_1"></li>
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('lang');" value='Add Another'>   
+             <br><BR><BR>
+            <li>Permanent Address<br>
+            
+                <textarea rows=5 cols=50 name="personal_per_address" id="personal_per_address">{{ p.per_address }}</textarea>
+               <br> <BR>
+            <li>Address of Correspondance<br>
+                <textarea rows=5 cols=50 id="personal_corr_address" name="personal_corr_address">{{ p.corr_address }}</textarea>  
+
+
+         
+            <li> Hobbies    
+                <ul id = 'hobbies'>
+                {% for h in p.hobbies|split:',' %}
+                     <li><input type='text' id="personal_hobbies_{{forloop.counter }}" value="{{ h }}">
+                         <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                     </li>
+                {% empty %}
+                    <li><input type='text' id="personal_hobbies_1">
+                {% endfor %}    
+             </ul>   
+             <input type='button'  onClick="addNew('hobbies');" value='Add Another'>   
+        </ul>
+  </div>
+<div id= 'tabs-11'>
+{% if flag == "edit" %}
+   <div id='photo'>
+       <img src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=150 width=180>
+   </div>
+   {% endif %}
+ 
+    Upload your recent passport sized photograph.
+  <input type = 'file' name='photo'>
+
+<br><BR> 
+  <input type='hidden' value='0' name='allok' id='allok'>
+  <input type='submit' value='Submit Information!'><input type='reset'>
+</div>
+  <input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home'">
+</div><!-- end of the tag --!> 
+</form>
+<noscript>
+    <h2 align='center' style="color: red;"> Hey, you need to enable JavaScript if you want us to help you! </h2>
+</noscript>
+{% endblock %}
+
+<noscript>
+    <h3>Hey! You need to enable JavaScript. Otherwise we ain't cooperating :P </h3>
+</noscript>
+    
+</body>
+</html>

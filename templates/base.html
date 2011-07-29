@@ -1,0 +1,134 @@
+
+ <title>La-Resume-x ::{% block title %}{% endblock %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>jQuery UI Example Page</title>
+		<link type="text/css" href="http://localhost:8888/laresumex/jquery/css/humanity/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
+		<script type="text/javascript" src="http://localhost:8888/laresumex/jquery/js/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="http://localhost:8888/laresumex/jquery/js/jquery-ui-1.8.14.custom.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+
+				// Accordion
+				$("#accordion").accordion({
+                    header: "h3",
+                    autoHieght: false,
+                    navigation: true
+                    });
+	
+				// Tabs
+				$('#tabs').tabs();
+
+				// Datepicker
+				$('#datepicker').datepicker({
+					inline: true
+				});
+				
+				//hover states on the static widgets
+				$('#dialog_link, ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); }, 
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+				
+			});
+		</script>
+		<style type="text/css">
+			/*demo page css*/
+			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
+			.demoHeaders { margin-top: 2em; }
+			#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+			#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+			ul#icons {margin: 0; padding: 0;}
+			ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+			ul#icons span.ui-icon {float: left; margin: 0 4px;}
+		</style>	
+<style type="text/css">
+
+
+/* code inspiration for tooltip:- http://sixrevisions.com/css/css-only-tooltips/*/
+.tooltip{   
+        color: Black;
+        outline:none;
+        cursor: alias;
+        text-decoration: none;
+        position: relative;
+}
+.tooltip span{
+        margin-left: -999px;
+    padding:0.8 1em;
+        position:absolute;
+}
+.tooltip:hover span{
+        font-family:comic sans;
+        position:absolute;
+        top: 2em;
+        z-index: 99;
+        margin-left:-10px; 
+        width:250px;
+        box-shadow:5px 5px 5px rgba(0,0,0.1);
+        background-color:#fbd7b9;
+}
+
+.tooltip:hover em{
+    font-family:Tahoma;
+    font-size:0.7em;
+    font-weight:bold;
+    display:block;
+    padding:0.2em 0 0.6em 0;
+}
+
+* html a:hover {background:transparent;}
+#section {
+	margin-top: 6%;
+    margin-left:10%
+}
+
+heading {
+	border-bottom-style: double;
+	margin-bottom: 9px;
+	border-bottom-width: 4px;
+	line-height: 6px;
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 18px;
+	font-family: verdana;
+}
+
+li {
+	list-style-position: outside;
+	list-style-type: square;
+	margin: 11px;
+}
+
+hr {
+	line-height: 6px;
+	text-shadow: 4px 8px #ca651e;
+	color: #56c72b;
+}
+
+img {
+      border: 1px dotted black;
+      float: right;
+      margin: 10px;
+      position: relative;
+}
+</style>
+
+
+<font align="center" size="30" color="purple">LA-Resumex<b>...</b> </font>Resume in <img src="http://projects.sdrclabs.in/laresumex_media/800px-LaTeX_logo.svg.png" height="60" width="40"> 
+</head>
+<hr size=34 color='Aqua'>
+{% block content %}
+{% endblock %}
+<hr>
+This software is a creation of 
+{% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
+    <a href="http://www.facebook.com/knightsamar" target='_blank'>Samar</a> and <a href="http://www.facebook.com/apoorva.srinivasan1" target='_blank'>Apoorva</a>
+{% else %}
+    <a href="www.facebook.com/apoorva.srinivasan1">Apoorva</a> and <a href = "www.facebook.com/knightsamar">Samar</a>
+{% endif %}
+MSc(CA) 10-12
+</body>
+</html>
+
+
+</body></html>
