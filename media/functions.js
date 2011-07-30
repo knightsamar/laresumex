@@ -180,22 +180,13 @@ function mandatoryCheck()
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
     {
-        //alert(input[i].id)
-        
-        /*if it has an id
-        if (input[i].id != "") && ((input[i].id.indexOf('month') == -1) || (input[i].id.indexOf('year') ==            
-                and the id is not 'month' or 'year'*/
-
-
-        // if this value is same as the previous value then do not submit. 
-       //for all such fields who have month or year 
         
         if(input[i].id!="")
         {   
                 input[i].name=input[i].id;
         }
         a=input[i].name.split('_')[0]
-        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0) )
+        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0)&&(input[i].disabled==false) )
             {
 
                 input[i].focus();
@@ -204,9 +195,17 @@ function mandatoryCheck()
                 return false;
             }
     }  
+    /*var tables = new Array('marks','workex','certification','projects','academic','extracurricular')
+    select=document.getElemetsByTagName('select');
+    for (var i=0;i<select.length;i++)
+    {
+        a=select[i].name.split('_')[0]
+        if (tables.indexOf(a)>=0)
+            continue;
+    }*/
+ 
  return true;
 }
-
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
 function changeName()
 {
@@ -235,13 +234,11 @@ function changeName()
        if (select[i].value=="")
             {select[i].focus();return false;}
     }
-
     textarea=document.getElementsByTagName('textarea');
     for (var i=0;i<textarea.length;i++)
         //if(tablearea[i].value=="")
             textarea[i].name=textarea[i].id;
    // return false;
-
     //now tell in the form submission the secret
     document.getElementById('allok').value = 1;
 }
