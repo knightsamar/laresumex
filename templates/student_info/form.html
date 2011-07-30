@@ -9,10 +9,10 @@
 {% endblock %}
 {% block content %}
 
-<link type="text/css" href="http://192.168.1.31:8888/laresumex/jquery/css/humanity/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
-		<script type="text/javascript" src="http://192.168.1.31:8888/laresumex/jquery/js/jquery-1.5.1.min.js"></script>
-		<script type="text/javascript" src="http://192.168.1.31:8888/laresumex/jquery/js/jquery-ui-1.8.14.custom.min.js"></script>
-        <script type="text/javascript" src="http://192.168.1.31:8888/laresumex/functions.js"></script>
+<link type="text/css" href="http://localhost:8888/laresumex/jquery/css/humanity/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
+		<script type="text/javascript" src="http://localhost:8888/laresumex/jquery/js/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="http://localhost:8888/laresumex/jquery/js/jquery-ui-1.8.14.custom.min.js"></script>
+        <script type="text/javascript" src="http://localhost:8888/laresumex/functions.js"></script>
 		<script type="text/javascript">
 			$(function(){
 
@@ -173,12 +173,12 @@ function addNew(elName)
         <input type="text" id='fullname' com=true size=60 value="{{ s.fullname }}">
      <br><BR>    
   Gender* 
-  {% if s.sex == 'm' %}
-          <input type="radio"  name="sex" value='m' checked=true>Male
-          <input type="radio"  name="sex" value='m' >Female<br><br>
+  {% if s.sex == 'f' %}
+          <input type="radio"  name="sex" value='m'>Male
+          <input type="radio"  name="sex" value='f' checked=true >Female<br><br>
    {% else %}       
-		  <input type="radio"  name="sex" value='m' >Male
-          <input type="radio"  name="sex" value="f" checked=true>Female<br><BR><br>
+		  <input type="radio"  name="sex" value='m'checked=true >Male
+          <input type="radio"  name="sex" value="f">Female<br><BR><br>
   {% endif %}        
   Phone Number* <input type='text' com = true maxlength=10 size=10 name="phone_number" value={{ s.phone_number }}><BR><BR>
  Email ID* <input type='text' name='email' com = true value={{ s.email }}>
@@ -546,7 +546,17 @@ function addNew(elName)
                 {% endfor %}    
              </ul>   
              <input type='button'  onClick="addNew('hobbies');" value='Add Another'>   
-        </ul>
+          <li> Areas Of Interest     
+                <ul id = 'areasofinterest'>
+                {% for h in p.areasofinterest|split:',' %}
+                     <li><input type='text' id="personal_areasofinterest_{{forloop.counter }}" value="{{ h }}">
+                         <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                     </li>
+                {% empty %}
+                    <li><input type='text' id="personal_areasofinterest_1">
+                {% endfor %}    
+             </ul>   
+             <input type='button'  onClick="addNew('areasofinterest');" value='Add Another'> </ul>
   </div>
 <div id= 'tabs-11'>
 {% if flag == "edit" %}
@@ -559,7 +569,26 @@ Change the uploaded Photograph
         
   <input type = 'file' name='photo'>
 <br><br>
- 
+
+Do you have any active backlogs??
+{% if s.backlogs %}
+          <input type="radio"  name="backogs" value='True' checked = true>Yes
+          <input type="radio"  name="backogs" value='False'  >No<br><br>
+   {% else %}       
+		  <input type="radio"  name="backlogs" value='True' >Yes
+          <input type="radio"  name="backlogs" value="False" checked = true>No<br><BR><br>
+  {% endif %} 
+<BR><BR>
+Did you have any year drop
+{% if s.yeardrop %}
+          <input type="radio"  name="yeardrop" value='True' checked = true>Yes
+          <input type="radio"  name="yeardrop" value='False' >No<br><br>
+   {% else %}       
+		  <input type="radio"  name="yeardrop" value='True' >Yes
+          <input type="radio"  name="yeardrop" value="False" checked = true>No<br><BR><br>
+  {% endif %} 
+<BR><BR>
+
 </div> 
 
 </div><! -- end of the tabs div -->

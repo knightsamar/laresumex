@@ -11,6 +11,8 @@ class student(models.Model):
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.PositiveIntegerField(max_length=12);
+    backlogs  = models.BooleanField(help_text='do u have backlogs ?');
+    yeardrop = models.BooleanField()
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
@@ -107,11 +109,6 @@ class academic(ExtraField):
 
 class extracurricular(ExtraField):
     pass;
-
-class other(models.Model):
-    backlogs  = models.BooleanField(help_text='do u have backlogs ?');
-    year_drop = models.BooleanField()
-    #prefereable_cities
 
 
 #for references inside various views
