@@ -195,15 +195,22 @@ function mandatoryCheck()
                 return false;
             }
     }  
-    /*var tables = new Array('marks','workex','certification','projects','academic','extracurricular')
-    select=document.getElemetsByTagName('select');
+    var tables = new Array('marks','workex','certification','projects','academic','extracurricular')
+    
+    /*
+    //dependency checking -- if content is filled and the month-year isn't OR if month-year is filled and content isn't.
+    select=document.getElementsByTagName('select');
     for (var i=0;i<select.length;i++)
     {
         a=select[i].name.split('_')[0]
         if (tables.indexOf(a)>=0)
-            continue;
-    }*/
- 
+        {
+            o=select[i].parentNode.parentNode.children;
+            for(var j=0;j<o.length;j++)
+            {} 
+        }
+    }
+    */
  return true;
 }
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */

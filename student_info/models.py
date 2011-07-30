@@ -1,4 +1,5 @@
 from django.db import models
+from datetime  import datetime; #for django
 
 # Create your models here.
 
@@ -19,6 +20,16 @@ class student(models.Model):
    
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
+ 
+    def total_workex(self):
+        '''returns the total workex in months'''
+        duration =0
+        workex_objs = workex.objects.filter(primary_table=self);
+       
+        for w in workex_objs:
+            duration +=  ((w.endDate - w.fromDate).days)/12; #will return the number of days;
+
+        return duration; 
  
 class marks(models.Model):
     primary_table=models.ForeignKey('student');
@@ -42,6 +53,7 @@ class personal(models.Model):
      mother_name=models.CharField(max_length=50);
      father_name=models.CharField(max_length=50);
      birthdate=models.DateField(null=True);
+     areasofinterest=models.CharField(max_length=100,null=True)
      mother_occupation=models.CharField(max_length=50); 
      father_occupation=models.CharField(max_length=50);
      languages=models.CharField(max_length=200);
@@ -95,12 +107,12 @@ class academic(ExtraField):
 
 class extracurricular(ExtraField):
     pass;
-'''
-class other(model.Model):
-    backlogs=models.BooleanField();
-    years_of_workex
-    prefereable_cities
-'''
+
+class other(models.Model):
+    backlogs  = models.BooleanField(help_text='do u have backlogs ?');
+    year_drop = models.BooleanField()
+    #prefereable_cities
+
 
 #for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
