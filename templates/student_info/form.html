@@ -40,27 +40,35 @@
 			});
             
 
-function addNew(elName)
+function addNew(elName,val)
  {
+        if(val) formflag = false
+        else formflag=true
+            alert(val)
+            alert(formflag)
         c=document.getElementById(elName);
-        removeButton=document.createElement('input')
-        removeButton.type='button';
-        removeButton.value="remove";
-        
+        if (formflag)
+        {
+            removeButton=document.createElement('input')
+            removeButton.type='button';
+            removeButton.value="remove";
+        }
+
         if (c.tagName=='TR')
             {
                 l=c.parentNode.children.length;
                  var form =false;
                 {% if flag == 'form' %}
-                   var form=true;
+                   var formflag=true;
+        
                 {% endif %}   
-               if ((c.id=='marks') && (form))
+               if ((c.id=='marks') && (formflag))
                     firstNode=c.parentNode.children[3];
                 else  
                     firstNode=c.parentNode.children[1]
                 lastNode=c.parentNode.children[l-1]
                 clone=firstNode.cloneNode(true);
-                 for(var i=0;i<lastNode.children.length;i++)
+                for(var i=0;i<lastNode.children.length;i++)
                    {
                     for (var j=0;j<lastNode.children[i].children.length;j++)
                     {
@@ -71,14 +79,15 @@ function addNew(elName)
                         clone.children[i].children[j].value="";
                     }
                    }
-                {% if flag == 'form' %}
-                removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
-               id[1]='remove';
-                var removeId=id.join('_');
+                if(formflag)
+                {
+                    removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
+                    id[1]='remove';
+                    var removeId=id.join('_');
 
-                removeButton.id=removeId;
-                clone.appendChild(removeButton);
-                {% endif %}
+                    removeButton.id=removeId;
+                    clone.appendChild(removeButton);
+                }
                 c.parentNode.appendChild(clone);
                 clone.children[0].focus()
 
@@ -233,7 +242,6 @@ function addNew(elName)
   {% endif %}
 </td>
   <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" ><option>{{ marks.fromDate.year }}</option> </select></td>
-<td><input type='button' value='remove' onClick="remove(this.parentNode)";>  </td>
   </tr>
   
   {% empty %}
@@ -254,7 +262,7 @@ function addNew(elName)
         </tr>
   <tr id='marks'>
       <td>
-      <select name="course" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
+      <select name="course-g" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
       <td><input type ='text' size=40 id="marks_uni_3"></td>
       <td><input type='text' size = 5 maxlength=5 id="marks_marks_3">
           <select id='marks_markstype_3'onChange="change(this);" title="Total Marks">
@@ -269,9 +277,27 @@ function addNew(elName)
       <td><select name = "year" id="marks_year_3"  onFocus="fillOptions(this);" onBlur="concat(this)"> </select></td>
       
   </tr>
+  <tr>
+      <td>
+      <select name="course-pg" id="marks_course_4" onFocus="fillOptions(this)"></select></td>
+      <td><input type ='text' size=40 id="marks_uni_4"></td>
+      <td><input type='text' size = 5 maxlength=5 id="marks_marks_4">
+          <select id='marks_markstype_4'onChange="change(this);" title="Total Marks">
+          <option>Marks</option>
+          <option checked =true>GPA</option>
+          <option>Appearing</option>
+          <option>Result Awaiting</option>
+          </select>
+       Out Of<input type="text" id='marks_outof_4' maxlength=5 size=5>
+
+      </td>
+      <td><select name = "year" id="marks_year_4"  onFocus="fillOptions(this);" onBlur="concat(this)"> </select></td>
+      
+  </tr>
+>
   {% endfor %}
   </table>
-  <input type='button'  onClick="addNew('marks');" value='Add Another'>    
+  <input type='button'  onClick="addNew('marks',false);" value='Add Another'>    
 </div>
 <div id= 'tabs-3'>
   <div id='strengths'>
@@ -371,7 +397,7 @@ function addNew(elName)
 
              {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('workex');" value='Add Another'>   
+             <input type='button'  onClick="addNew('workex','{{ w }}');" value='Add Another'>   
     </div> 
     </div>
 <div>
@@ -389,13 +415,13 @@ function addNew(elName)
     </tr>
    {% empty %}
    <tr id='certi'>
-    <td><a class='tooltip' href='#'><textarea rows=2 cols=50 id='certification_desc_1'></textarea><span class='tooltip'> Please mention the certificates and with enough details</span></a></td>
+    <td><textarea rows=2 cols=50 id='certification_desc_1'></textarea></td>
     <td><select name = "month" id="certification_month_1" onFocus="fillOptions(this);"></select>
         <select name = "year"  id="certification_year_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select></td>
     </tr>
    {% endfor %} 
   </table>
-  <input type='button' onClick="addNew('certi');" value='Add Another'>      
+  <input type='button' onClick="addNew('certi','{{cert}}');" value='Add Another'>      
 </div>
 </div>
 <div>
@@ -405,11 +431,11 @@ function addNew(elName)
             <tr><th>title</th><th>Description</th><th>Start Date</th><th>End Date</th></tr>
             {% for pr in pro %}
             <tr id = 'projects'>
-             <td><input type='text' id="project_h3_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
+             <td><input type='text' id="project_heading_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
              <td><textarea id="project_desc_{{ forloop.counter }}" rows=2 cols=30>{{ pr.desc }}</textarea></td>
 
              <td>
-                  <select name = "month" id="project_startmonth_{{ forloopcounter }}" onFocus="fillOptions(this);"> <option>{{ pr.fromDate|date:"b"|title }}</option> </select>
+                  <select name = "month" id="project_startmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{ pr.fromDate|date:"b"|title }}</option> </select>
                   <select name = "year"  id="project_startyear_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ pr.fromDate.year }}</option></select></td>
             <td>
                 <select name = "month" id="project_endmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{ pr.endDate|date:"b"|title}}</option></select>
@@ -421,7 +447,7 @@ function addNew(elName)
 
             {% empty %}
             <tr id = 'projects'>
-             <td><input type='text' id="project_h3_1"></td>
+             <td><input type='text' id="project_heading_1"></td>
              <td><textarea id="project_desc_1" rows=2 cols=30></textarea></td>
 
              <td>
@@ -433,7 +459,7 @@ function addNew(elName)
              </tr>   
              {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('projects');" value='Add Another'>   
+             <input type='button'  onClick="addNew('projects','{{pr}}');" value='Add Another'>   
 
 </div>
 </div>
@@ -457,7 +483,7 @@ function addNew(elName)
             </tr>
             {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('academic');" value='Add Another'>   
+             <input type='button'  onClick="addNew('academic','{{ac}}');" value='Add Another'>   
 
 </div>
 </div>
@@ -482,7 +508,7 @@ function addNew(elName)
             </tr>    
          {% endfor %}   
 </table>
-             <input type='button'  onClick="addNew('extracurricular');" value='Add Another'> 
+             <input type='button'  onClick="addNew('extracurricular','{{extra}}');" value='Add Another'> 
 </div>
 </div>
 </div><!-- end of accordion -->
@@ -511,7 +537,7 @@ function addNew(elName)
 <div id='tabs-10'>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">
-             <li>Father's Name  <input type='text' id="personal_father_name" value="{{ p.father_name }}">
+             <li>Father's Name        <input type='text' id="personal_father_name" value="{{ p.father_name }}">
              <li>Father's Occupation  <input type='text' id="personal_father_occupation" value="{{ p.father_occupation }}">
              <li>Mother's Occupation  <input type='text' id="personal_mother_occupation" value="{{ p.mother_occupation }}">
              <li>Languages known

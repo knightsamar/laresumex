@@ -50,9 +50,9 @@
 
             }
            } 
-        else  if (o.name == 'course')
+        else  if (o.name == 'course-g')
         {
-          var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'MBA', 'MSc(CA)');
+          var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com');
             for (var i =0;i<course.length;i++)
             //o.innerHTML += "<option>"+months[i]+"</option>";
             {
@@ -61,6 +61,18 @@
                  o.add(option,null)
             }
         } 
+          else  if (o.name == 'course-pg')
+        {
+          var course=new Array('MSc(CA) SEM I','MSc(CA) SEM II','MSc(CA) SEM III','MSc(CA) SEM IV','MBA(IT) SEM I','MBA(IT) SEM II','MBA(IT) SEM III','MBA(IT) SEM IV');
+            for (var i =0;i<course.length;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=course[i];
+                 o.add(option,null)
+            }
+        } 
+
     }
      
     
@@ -216,8 +228,9 @@ function mandatoryCheck()
                 
                 for (var k=0;k<o[j].children.length;k++)
                 {
-                    if ((filled && !o[j].children[k].value)|| (!filled && o[j].children[k].value))
-                    {alert('Please fill properly '+select[i].id); return false;}
+                    
+                    if ((o[j].children[k].tagName=="INPUT" || o[j].children[k].tagName=="SELECT" || o[j].children[k].tagName=="TEXTAREA") && ((filled && !o[j].children[k].value)|| (!filled && o[j].children[k].value)))
+                    {alert('Please fill properly '+select[i].id+"because "+o[j].children[k].id+"is not fileed"); return false;}
 
                 }
 
@@ -239,7 +252,7 @@ function changeName()
     select=document.getElementsByTagName('select');
     for (var i=0;i<select.length;i++)
     {
-        //for all eleemtns who are named 'month' OR 'year'
+        //for all    eleemtns who are named 'month' OR 'year'
        if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
        {
            if (select[i].id.indexOf('year')>=0)
@@ -261,10 +274,12 @@ function changeName()
             textarea[i].name=textarea[i].id;
     //now tell in the form submission the secret
     document.getElementById('allok').value = 1;
+    return true;
 }
 
 function remove(o)
 {
+    // IF extra fields can be entered as blank, then students have write to remove all their pre-wriiten fields
     if (o.tagName=='TD')
     {
         p=o.parentNode;
