@@ -1,5 +1,5 @@
 from django.db import models
-from datetime  import datetime; #for django
+from datetime  import datetime, date; #for django
 
 # Create your models here.
 
@@ -23,6 +23,7 @@ class student(models.Model):
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
  
+
     def total_workex(self):
         '''returns the total workex in months'''
         duration =0
@@ -63,6 +64,10 @@ class personal(models.Model):
      strength=models.CharField(max_length=200);
      per_address=models.TextField(max_length=200,help_text='Permanent Address');
      corr_address=models.TextField(max_length=200, help_text='Correspondence Address');
+     def get_age(self):
+        '''returns age'''
+        age=date.today()-self.birthdate
+        return (age.days /365)
      def __str__(self):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
