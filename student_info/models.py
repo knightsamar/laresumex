@@ -18,7 +18,8 @@ class student(models.Model):
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
     Extra_field=models.BooleanField();
-   
+    last_update=models.DateTimeField(auto_now=True);
+
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
  

@@ -4,6 +4,7 @@
 '''import data models '''
 from student_info.models import *;
 from generate_resume.models import resume;
+
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
@@ -12,6 +13,7 @@ from pprint import pprint
 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from datetime import datetime
 
 ''' import process helpers '''
 import subprocess 
@@ -24,7 +26,7 @@ def index(request):
     if 'username' not in request.session:
         print "from home to login as No session"
         return our_redirect('/ldap_login')
-    # see whether user has logged in....
+    # see whether user has logged in...
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
     prn = request.session['username'] 
@@ -54,7 +56,7 @@ def latex(request,prn):
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
     if prn != request.session['username']:
-        return HttpResponse('Please mind your own resume..')
+        return HttpResponse('Please mind your own resume...')
     if prn is not None:
     	try:
 	        s = student.objects.get(pk=prn)
@@ -106,7 +108,18 @@ def latex(request,prn):
                
                 f.write(t.render(c));
                 f.close();
-              
+                
+                #now update the .tex generation timestamp
+                print "Updating the resume details timestamp with what has been done";
+                print s;
+                print "Now is ", datetime.now();
+                r = resume.objects.get_or_create(prn=s);
+                print "r is ",r
+                #because we called get_or_create, we will get a tuple containing the record and a bool value telling whether it was created or fetched
+                r[0].last_tex_generated = datetime.now();
+                print r[0].last_tex_generated
+                r[0].save();
+
                 """#for now postponed to next release
                 #now add this file to version control
 
@@ -134,55 +147,79 @@ def pdf(request,prn):
     if 'username' not in request.session:
             return out_redirect('/ldap_login/')
     if prn != request.session['username']:
-        return HttpResponse('Nor ur resume')
+        return HttpResponse('Not your resume!')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
-        except:
-           output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
-           return HttpResponse(output);
-
-        #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
-        #is it fresher ?
-            #oh no! it isn't. generate it again!
-        
-        #ok, it is no need to regenerate
-            #call the generate_latex function with the prn
-
-        #if no record of this prn exists anywhere, tell the idiot!
-    
-    #generate it's pdf
-        pdf_file = "/tmp/%s.pdf" % (prn);
-        return_status = False;
-        #find the tex file
-        try:
-          #generate the pdf 
-          copy_photo_command = "cp -v %s/photos/%s.* %s/%s/" % (RESUME_STORE,prn,RESUME_STORE,prn);
-          get_done(copy_photo_command);
-          pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
-          for i in range(0,3): #run the pdflatex command min 2 and max 3 times -- Manjusha Mam, Bhaskaracharya Pratishthana
-              return_status = get_done(pdf_generation_command)
-                
-          print "Return status is ",return_status;
-          pdffile = "/tmp/%s.pdf" % prn;
-          resume_pdf = open(pdffile);
-          #prepare the file to be sent
-          response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
-          resume_pdf.close();
-          #name the file properly
-          response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
-        
+           print "We have got a student ",s
+           try:
+              r = resume.objects.get(prn=s);
+           except Exception as e:
+              #no resume was ever created for this user, hence we need to generate atleast latex once.
+              print "Resume record doesn't exist...calling latex()";
+              latex(request,prn);
+           finally:
+              r = resume.objects.get(prn=s);
+              print "Ok, now we have ",r
         except Exception as e:
-          response = HttpResponse("Some problem!");
-          print 'Exception was ', e;
-    ################because pdflatex can return 1 or 0 and still generate the file
-#          if return_status is not 0:
-#             output = "<h3>Couldn't generate your .PDF file! Return code was %s </h3>" % return_status;
-#          else:
-#             output = "<h3>Done!</h3>";
+           output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
+           print e;
+           return HttpResponse(output);
+        
+        print "Last tex generated ", r.last_tex_generated;
+        print "Last PDF generated ", r.last_pdf_generated;
+        #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
+        if (r.last_tex_generated is not None) and (r.last_tex_generated < s.last_update):
+            #oh no! it isn't fresher! generate it again!
+            print "we have got a stale .TEX file! regenerating it by calling latex"
+            latex(request,prn);
+        else:
+            #ok, there is no need to regenerate latex
+            pass; 
+        
+        #Now...is the pdf file fresher ?
+        if (r.last_pdf_generated is not None) and (r.last_pdf_generated > r.last_tex_generated):
+            #the pdf file is fresher, so we don't need to regenerate it! let's just give it back.       
+            print "PDF file for %s is already fresher, so giving it back directly!" % (r.prn);
+            pdf_file = "%s/%s/%s.pdf" % (RESUME_STORE, prn, prn);
+        else:
+            print "PDF file is stale!";
+            #the pdf file is stale, get a fresh copy!
+            #generate it's pdf
+            pdf_file = "/tmp/%s.pdf" % (prn);
+            return_status = False;
+            #find the tex file
+            try:
+              #generate the pdf 
+              copy_photo_command = "cp -v %s/photos/%s.* %s/%s/" % (RESUME_STORE,prn,RESUME_STORE,prn);
+              get_done(copy_photo_command);
+              pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
+              for i in range(0,3): #run the pdflatex command min 2 and max 3 times -- Manjusha Mam, Bhaskaracharya Pratishthana
+                   print "===========>PASS %d<===========" % (i);
+                   return_status = get_done(pdf_generation_command)
+                
+              #print "Return status is ",return_status; #doesn't matter now...after get done.
+              pdf_file = "/tmp/%s.pdf" % prn;
+              copy_pdf_command = "cp -v /tmp/%s.pdf %s/%s/" % (prn, RESUME_STORE,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
+              get_done(copy_pdf_command);
+              print "Updating timestamp for the PDF generation in our records"
+              r.last_pdf_generated = datetime.now();
+              r.save();
+            except Exception as e:
+              response = HttpResponse("Some problem!");
+              print 'Exception was ', e;
+         
+        #open the generated pdf file
+        resume_pdf = open(pdf_file);
+        #prepare the file to be sent
+        response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
+        resume_pdf.close();
+        #name the file properly
+        response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
     else:
-       output = "<h3>Hey, pass me a PRN man!</h3>";
-    
+        output = "<h3>Hey, pass me a PRN man!</h3>";
+        response = HttpResponse(output);
+
     return response;
 
 def html(request,prn):

@@ -119,10 +119,10 @@ def submit(request, prn):
             pk=prn,
             fullname=post['fullname'],
             career_objective=post['career_objective'],
-            phone_number=post['phone_number']
+            phone_number=post['phone_number'],
             )
     
-        s.save();
+        s.save(); #will also update the timestamp;
         p = personal.objects.get_or_create(primary_table=s)[0];
         table_dict=dict();
         mvsd=dict();
