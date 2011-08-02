@@ -5,7 +5,6 @@ from datetime  import datetime, date; #for django
 
 class student(models.Model):
     gender=(('m',"Male"),('f',"female"))
-    
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
@@ -116,6 +115,40 @@ class extracurricular(ExtraField):
     pass;
 
 
+
+class placement_in(models.Model):
+    jobtype=(('i',"Internship"),('p',"placement"))
+    
+    primary_table= models.ForeignKey('student');
+    comapny = models.ForeignKey('company.company');
+    placementType = models.NullBooleanField(choices=jobtype)
+    date_of_joining = models.DateField();
+    starting_salary = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
+    place = models.CharField(max_length=100, blank=True)
+    def __str__(self):
+        return "%s got %s in %s " %(self.primary_table.prn, self.placementType, self.comapny.name)
+
+    class Meta:
+        verbose_name_plural = 'Got placement in';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 
@@ -136,4 +169,6 @@ class ExtraTable(models.Model):
 class ExtraTableKaData(models.Model):
     field = models.ForeignKey('ExtraTable');
     data = models.TextField();"""
+
+
 

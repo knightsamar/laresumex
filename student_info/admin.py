@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.site.register(student);
 admin.site.register(swExposure);
 admin.site.register(ExtraField);
+admin.site.register(placement_in);
 '''admin.site.register(workex);
 admin.site.register(certification);
 admin.site.register(project);
