@@ -17,7 +17,7 @@ from datetime import datetime
 
 ''' import process helpers '''
 import subprocess 
-from os import mkdir,chdir #for changing directories
+from os import mkdir,chdir,path #for changing directories
 from student_info.utility import our_redirect;
 from time import sleep
 
@@ -166,10 +166,12 @@ def pdf(request,prn):
            print e;
            return HttpResponse(output);
         
-        print "Last tex generated ", r.last_tex_generated;
+        print "Last TEX generated ", r.last_tex_generated;
         print "Last PDF generated ", r.last_pdf_generated;
         #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
-        if (r.last_tex_generated is not None) and (r.last_tex_generated < s.last_update):
+        tex_file = "%s/%s/%s.tex" % (RESUME_STORE,prn,prn);
+        #do we have a fresher .TEX file compared to the infromation filled by the student ?
+        if (r.last_tex_generated is not None) and (r.last_tex_generated < s.last_update) or (not(path.exists(tex_file))):
             #oh no! it isn't fresher! generate it again!
             print "we have got a stale .TEX file! regenerating it by calling latex"
             latex(request,prn);
@@ -178,10 +180,10 @@ def pdf(request,prn):
             pass; 
         
         #Now...is the pdf file fresher ?
-        if (r.last_pdf_generated is not None) and (r.last_pdf_generated > r.last_tex_generated):
+        pdf_file = "%s/%s/%s.pdf" % (RESUME_STORE, prn, prn);
+        if (r.last_pdf_generated is not None) and (r.last_pdf_generated > r.last_tex_generated) and (path.exists(pdf_file)):
             #the pdf file is fresher, so we don't need to regenerate it! let's just give it back.       
             print "PDF file for %s is already fresher, so giving it back directly!" % (r.prn);
-            pdf_file = "%s/%s/%s.pdf" % (RESUME_STORE, prn, prn);
         else:
             print "PDF file is stale!";
             #the pdf file is stale, get a fresh copy!
