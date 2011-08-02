@@ -331,7 +331,7 @@ function addNew(elName,val)
                 {% for software in sw.databases|split:',' %}
                 <li><input type='text' id="swExposure_databases_{{ forloop.counter }}" value="{{ software }}">
                     <input type='button' value='remove' onClick="remove(this.parentNode)";>
-                </li>
+                </li>   
                 {% empty %}
                 <li><input type='text' id="swExposure_databases_1">
                 {% endfor %}
