@@ -81,7 +81,8 @@ def latex(request,prn):
             student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
             student_data['sw']=student_data['sw'][0]
             #do we have the photo ? if yes, then include it.
-            student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
+            #student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
+            student_data['photo'] = "%s.png" % (prn);
             #else, store None
             student_data['ROOT'] = ROOT
 
@@ -156,6 +157,8 @@ def pdf(request,prn):
         #find the tex file
         try:
           #generate the pdf 
+          copy_photo_command = "cp -v %s/photos/%s.* %s/%s/" % (RESUME_STORE,prn,RESUME_STORE,prn);
+          get_done(copy_photo_command);
           pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
           for i in range(0,3): #run the pdflatex command min 2 and max 3 times -- Manjusha Mam, Bhaskaracharya Pratishthana
               return_status = get_done(pdf_generation_command)
