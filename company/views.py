@@ -12,6 +12,13 @@ from student_info.utility import our_redirect
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
+def staff_index():
+    c=company.objects.all();
+    t=loader.get_template('company/index.html');
+    c=Context({
+        'c':c
+        })
+    return HttpResponse(t.render(c))
 def search(request):
     c=RequestContext(request,{})
     t=loader.get_template('company/search.html')
