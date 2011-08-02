@@ -157,7 +157,9 @@ def pdf(request,prn):
         try:
           #generate the pdf 
           pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
-          return_status = get_done(pdf_generation_command)
+          for i in range(0,3): #run the pdflatex command min 2 and max 3 times -- Manjusha Mam, Bhaskaracharya Pratishthana
+              return_status = get_done(pdf_generation_command)
+                
           print "Return status is ",return_status;
           pdffile = "/tmp/%s.pdf" % prn;
           resume_pdf = open(pdffile);
