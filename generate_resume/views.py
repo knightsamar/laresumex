@@ -48,7 +48,7 @@ def index(request):
             );
         return HttpResponse(t.render(c));
     else:
-        return staff_index();
+        return staff_index(request);
 
 def latex(request,prn):
     if 'username' not in request.session:
