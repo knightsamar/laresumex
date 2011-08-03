@@ -30,10 +30,12 @@ def get_students_name(request):
         return HttpResponse('not for u');
     c=company.objects.get(name=request.POST['company_name']);
     name_list=list();
-    for g in c.came_for:
-        u=user.objects.filter(group=g)
-        name_list.append(u);
-    return HttpResponse(u)    
+    for g in c.students_applied.all():
+        u=user.objects.filter(username=g.prn)
+        name_list.extend(u);
+    print name_list;
+
+    return HttpResponse(name_list)    
     
 def search(request):
     t=loader.get_template('company/search.html')

@@ -13,5 +13,6 @@ Home
 {% endfor%}
 {% csrf_token %}
 <input type='submit' value="fetch all">
+<input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>
 </html>
 {% endblock %}
