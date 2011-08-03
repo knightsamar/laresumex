@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+<html>
+{% block content %}
+
+<br/>
+{% if students_applied %}
+    <a href='{{ spreadsheet_link }}'>Download list in XLS format</a>
+{% endif %}
+
+{% endblock %}

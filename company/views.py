@@ -5,20 +5,27 @@ from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 #from django.shortcuts import render_to_response, redirect;
 from company.models import *
-from student_info.models import student
+from student_info.models import *
 from ldap_login.models import *
 from datetime import datetime
-from student_info.utility import our_redirect
+from student_info.utility import our_redirect,get_done
+
 ''' import vars '''
-from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,MEDIA_ROOT
+
+''' import spreadsheet generation module'''
+from pyExcelerator import *
+
+#TODO: We have to check the licensing restrictions imposed by it.
 
 def staff_index(request):
     com=company.objects.all();
     t=loader.get_template('company/index.html');
-
+    
     c=RequestContext(request,{
         'c':com,
-        'ROOT':ROOT
+        'ROOT':ROOT,
+        'list':full_list
         })
     return HttpResponse(t.render(c))
 
@@ -28,14 +35,71 @@ def get_students_name(request):
         return our_redirect('/ldap_login/login')
     if request.session['username'].isdigit():
         return HttpResponse('not for u');
-    c=company.objects.get(name=request.POST['company_name']);
+    print request.POST; 
+    try:
+        com=company.objects.get(name=request.POST['company_name']);
+    except Exception as e:
+        return HttpResponse('Enter all Fields');
     name_list=list();
-    for g in c.students_applied.all():
-        u=user.objects.filter(username=g.prn)
-        name_list.extend(u);
-    print name_list;
+    for g in com.students_applied.all():
+        s = student.objects.filter(prn=g.prn)
+        name_list.extend(s);
+ 
+    print "List of students is ",name_list;
+    
+    #now we will make a spreadsheet of this data.
+    wb = Workbook();
+    ws0 = wb.add_sheet('Applicants from SICSR');
+    #actually, this is going to come from the person who is selecting the list of students.
+    fields_to_get=list()
+    for f,v in request.POST.iteritems():
+        if f.startswith('criteria'):
+                fields_to_get.append(v)
+    print fields_to_get
+    #print headings in the spreadsheet
+    for f in range(len(fields_to_get)):
+        print "title == ", full_list[fields_to_get[f]];
+        ws0.write(0,f,full_list[fields_to_get[f]]);
 
-    return HttpResponse(name_list)    
+    #print data in the spreadsheet
+    
+    for x in range(len(name_list)):
+        # x is the students name list ka index
+        s=name_list[x]
+        print "for student", s
+        for y in range(len(fields_to_get)): #hardcoding 4 fields currently
+            # y is the fields ka index
+            print "fields to get. ....",fields_to_get[y]            
+            si=fields_to_get[y].split('_');
+            if si[0] == 'student':
+                if si[1] == "function":
+                    p=personal.objects.get(primary_table=s)
+                    data = p.get_age() # hardcoded nw.. need ot expand this later
+                else:
+                    data = s.__getattribute__(si[1])
+                print "==data===",data    
+            elif si[0] == 'workex':
+                data=s.total_workex();
+            else:
+                table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
+                print "we are using table ", table
+                data = str(table.__getattribute__(si[2]));
+                
+            #data = eval("name_list[%d].%s" % (x,fields_to_get[y]));
+            print "Writing data %s at %d %d" % (data,x,y);
+            ws0.write(x+1,y,data);
+    
+    spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name);
+    wb.save('/tmp/%s' % (spreadsheet_name));
+    copy_spreadsheet_command = "cp -v /tmp/%s %s" % (spreadsheet_name,MEDIA_ROOT);
+    get_done(copy_spreadsheet_command);
+
+    t = loader.get_template('company/students_list.html')
+    c = Context({'company':com,
+        'students_applied':name_list,
+        'spreadsheet_link':MEDIA_URL+'/'+spreadsheet_name,
+        })
+    return HttpResponse(t.render(c))    
     
 def search(request):
     t=loader.get_template('company/search.html')

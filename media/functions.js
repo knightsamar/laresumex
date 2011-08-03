@@ -4,7 +4,7 @@
        For day, month and year, fills with values.
        For courses, fills with degrees.
     */
-    function fillOptions(o)
+function fillOptions(o)
     {
         if (o.children.length >1) return false;
         //o=document.getElementById('month');
@@ -84,7 +84,7 @@
    
     TODO: for leap year, it should make February right.
  */
- function change(o)
+function change(o)
  {
      id0=o.id.split('_')[0];
      id1=o.id.split('_')[1];

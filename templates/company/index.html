@@ -11,6 +11,13 @@ Home
 {% empty %}
 <i> NO Companies </i>
 {% endfor%}
+<hr><br><BR>
+<h3> Select the fields if students, the companies have asked for... </h3>
+{% for t in list %}
+<li> {{ t }} <input type = 'checkbox' value = "{{ t }}" name ="criteria_{{ t }}"><br> 
+
+{% endfor %}
+
 {% csrf_token %}
 <input type='submit' value="fetch all">
 <input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>

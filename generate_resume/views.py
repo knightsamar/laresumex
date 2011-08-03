@@ -254,32 +254,4 @@ def html(request,prn):
         #tell them can't do it.
         return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
         
-def get_done(cmd,path=RESUME_STORE):
-    '''handles all panga of executing a command on linux shell'''
-    #where do we want to execute this ?
-    print "changing path to %s", path
-    chdir(path);
-
-    print "Got total --> ", cmd
-    cmds = cmd.split(';'); #split multiple commands
-    print 'total ',len(cmds);
-    for c in cmds:
-        try:
-           #cmd_with_arguments=c.split();
-           print 'Executing ',c
-
-           #connect the pipes in the processes and make the stdin and stdout flow through them properly
-           #because Popen doesn't handle pipes properly itself
-
-           sleep(3);
-           r = subprocess.Popen(c,shell=True,stdout=None);
-           if r is not 0:
-               chdir(FULL_PATH); #so that no stupid problem are caused
-               return False;    #no need of executing further commands
-        except Exception as e:
-          print 'Exception was ', e
-          chdir(FULL_PATH);
-          return False;
-
-    return True;
 
