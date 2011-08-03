@@ -1,6 +1,5 @@
 from company.models import *
 from django.contrib import admin
-from student_info.models import placement_in 
 
 
 '''
@@ -25,4 +24,5 @@ class companyAdmin(admin.ModelAdmin):
 
 admin.site.register(company,companyAdmin);
 
+admin.site.register(placement_in);
 

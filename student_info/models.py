@@ -117,23 +117,6 @@ class extracurricular(ExtraField):
 
 
 
-class placement_in(models.Model):
-    jobtype=(('i',"Internship"),('p',"placement"),('pi','placement + internship'))
-    
-    primary_table= models.ForeignKey('student');
-    comapny = models.ForeignKey('company.company');
-    profile = models.CharField(max_length=50);
-    placementType = models.NullBooleanField(choices=jobtype)
-    date_of_joining = models.DateField();
-    starting_stipen = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
-    offered_salary = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
-    place = models.CharField(max_length=100, blank=True)
-    def __str__(self):
-        return "%s got %s in %s " %(self.primary_table.prn, self.placementType, self.comapny.name)
-
-    class Meta:
-        verbose_name_plural = 'Got placement in';
-
 
 full_list={'student_prn':'Prn', 'student_fullname':'Full Name','student_function_age':'Age','marks_Xth_marks':'10th Marks','marks_XIIth_marks':'12th Marks','marks_B_marks':'Graduation Marks','marks_B_course':'Graduation in','workex_function_workex':'Years of Workex'}
 

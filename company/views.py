@@ -39,7 +39,7 @@ def get_students_name(request):
     try:
         com=company.objects.get(name=request.POST['company_name']);
     except Exception as e:
-        return HttpResponse('Enter all Fields');
+        return HttpResponse('Select COmpany NAme');
     name_list=list();
     for g in com.students_applied.all():
         s = student.objects.filter(prn=g.prn)
@@ -56,6 +56,8 @@ def get_students_name(request):
         if f.startswith('criteria'):
                 fields_to_get.append(v)
     print fields_to_get
+    if len(fields_to_get) is 0:
+        return HttpResponse('Check Some Fields to be sent to the company')
     #print headings in the spreadsheet
     for f in range(len(fields_to_get)):
         print "title == ", full_list[fields_to_get[f]];
