@@ -12,9 +12,32 @@ from student_info.utility import our_redirect
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
+def staff_index(request):
+    com=company.objects.all();
+    t=loader.get_template('company/index.html');
+
+    c=RequestContext(request,{
+        'c':com,
+        'ROOT':ROOT
+        })
+    return HttpResponse(t.render(c))
+
+
+def get_students_name(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login/login')
+    if request.session['username'].isdigit():
+        return HttpResponse('not for u');
+    c=company.objects.get(name=request.POST['company_name']);
+    name_list=list();
+    for g in c.came_for:
+        u=user.objects.filter(group=g)
+        name_list.append(u);
+    return HttpResponse(u)    
+    
 def search(request):
-    c=RequestContext(request,{})
     t=loader.get_template('company/search.html')
+    c=RequestContext(request,{})
     return HttpResponse(t.render(c))
 
 def getResume(request):

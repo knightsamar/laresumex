@@ -8,6 +8,7 @@ from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
+from company.views import staff_index;
 from student_info.utility import *; 
 from pprint import pprint
 
@@ -30,25 +31,26 @@ def index(request):
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
     prn = request.session['username'] 
-    s=student.objects.filter(pk=prn);
-    if len(s) is 0:
-        #it means there is no entry
-        create_form=True;
-    else:
-        #Form already exists
-        create_form=False
+    if prn.isdigit():
+        try:
+            s=student.objects.get(pk=prn);
+            #Form already exists
+            create_form=False
+        except Exception as e:
+            #it means there is no entry
+            create_form=True;
+        t=loader.get_template('index.html')
     
-    t=loader.get_template('index.html')
-    
-    c=Context({
-        'prn':request.session['username'],
-        'create_form':create_form,
-        'MEDIA_URL' : MEDIA_URL,
-        'ROOT':ROOT
+        c=Context({
+            'prn':request.session['username'],
+            'create_form':create_form,
+            'MEDIA_URL' : MEDIA_URL,
+            'ROOT':ROOT
              }
-        );
-    return HttpResponse(t.render(c));
-
+            );
+        return HttpResponse(t.render(c));
+    else:
+        return staff_index(request);
 
 def latex(request,prn):
     if 'username' not in request.session:

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<html>
+<h3> Select the company </h3>
+<form action = '{{ROOT}}/company/get_student_name' method='post'>
+{% for company in c %}
+    <li> {{ company }} <input type="radio" name = "company_name" value = "{{company}}"><BR>
+{% empty %}
+<i> NO Companies </i>
+{% endfor%}
+{% csrf_token %}
+<input type='submit' value="fetch all">
+</html>
+{% endblock %}

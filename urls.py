@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     # company
     (r'^company/getResume',"company.views.getResume"),
     (r'^company/list',"company.views.company_list"),
+    (r'^company/get_student_name',"company.views.get_students_name"),
     (r'^company/apply',"company.views.apply"),
 
     # student_info
