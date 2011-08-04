@@ -357,7 +357,17 @@ function addNew(elName,val)
                 {% endfor %}
              </ul>   
              <input type='button'  onClick="addNew('web');" value='Add Another'>   
-
+            <li>Other Packages
+            <ul id = 'packages'>
+                    {% for software in sw.swPackages|split:',' %}
+                    <li><input type='text' id="swExposure_swPackages_{{ forloop.counter }}" value="{{ software }}">
+                         <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                    </li>
+                {% empty %}
+                    <li><input type='text' id="swExposure_swPackages_1">
+                {% endfor %}
+             </ul>   
+             <input type='button'  onClick="addNew('packages');" value='Add Another'>  
          </ul>
 </div>
 <div id = 'tabs-6'>
