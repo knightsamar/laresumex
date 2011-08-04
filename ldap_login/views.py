@@ -1,5 +1,5 @@
 #comment this line when you ARE OUTSIDE SICSR!
-#from ldapAuthBackend import authenticate;
+from ldapAuthBackend import authenticate;
 from django.http import HttpResponse;
 #from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
@@ -30,9 +30,9 @@ def login(request):
             print 'processing login attempt';
             try:
                 #comment this line when you ARE OUTSIDE SICSR!
-                #status = authenticate(request.POST['username'],request.POST['password']);
+                status = authenticate(request.POST['username'],request.POST['password']);
                 #UNCOMMENT the next line when you are outside SICSR!
-                status = True;
+                #status = True;
                 print status;
                 print 'auth process completed'
             except e as Exception:

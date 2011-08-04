@@ -13,8 +13,8 @@ Hi!
 {% else %}
 <input type='button' value = 'edit your resume' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
 
-{% comment %}<input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>
-<input type='button' value = 'download your resume(PDF)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/pdf';"><br/>{% endcomment %}
+{% comment %}<input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>{% endcomment %}
+<input type='button' value = 'download your resume(PDF)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/pdf';"><br/>
 <input type='button' value='view the companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
 {% endif %}
 <input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>

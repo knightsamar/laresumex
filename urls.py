@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     # actually our urls START FROM NOW
     #(r'^/$',"generate_resume.views.index"),    
 
-    # generate_Resume
+    # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
     (r'^generate_resume/(?P<prn>\d+)/html',"generate_resume.views.html"),
     #(r'^generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),

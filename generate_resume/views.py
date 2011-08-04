@@ -30,8 +30,10 @@ def index(request):
     # see whether user has logged in...
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
-    prn = request.session['username'] 
+    prn = request.session['username']
+    print "hamra prnwa hai ",prn;
     if prn.isdigit():
+        print "found prn"
         try:
             s=student.objects.get(pk=prn);
             #Form already exists
@@ -50,6 +52,7 @@ def index(request):
             );
         return HttpResponse(t.render(c));
     else:
+        print "staff"
         return staff_index(request);
 
 def latex(request,prn):

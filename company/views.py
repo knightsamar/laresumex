@@ -91,7 +91,7 @@ def get_students_name(request):
             print "Writing data %s at %d %d" % (data,x,y);
             ws0.write(x+1,y,data);
     
-    spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name);
+    spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name.replace(' ','-'));
     wb.save('/tmp/%s' % (spreadsheet_name));
     copy_spreadsheet_command = "cp -v /tmp/%s %s" % (spreadsheet_name,MEDIA_ROOT);
     get_done(copy_spreadsheet_command);
@@ -100,6 +100,7 @@ def get_students_name(request):
     c = Context({'company':com,
         'students_applied':name_list,
         'spreadsheet_link':MEDIA_URL+'/'+spreadsheet_name,
+        'ROOT':ROOT,
         })
     return HttpResponse(t.render(c))    
     
