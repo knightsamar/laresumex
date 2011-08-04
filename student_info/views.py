@@ -293,7 +293,8 @@ def showform(request):
 
         print "student does not exist" 
         prn=request.session['username'];
-        yr=prn[5:7]; 
+        yr=prn[5:7];
+        print yr
         t=loader.get_template('student_info/form.html')
         c=RequestContext(request,
             {
