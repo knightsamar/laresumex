@@ -203,7 +203,8 @@ function mandatoryCheck()
 
                 input[i].focus();
                 //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
-                alert("Please check your form! " + input[i].name);
+                alertmsg=input[i].name.split('_')
+                alert( alertmsg[1] + ' in the ' + alertmsg[0] + '  section may not be filled');
                 return false;
             }
     }  
@@ -230,7 +231,9 @@ function mandatoryCheck()
                 {
                     
                     if ((o[j].children[k].tagName=="INPUT" || o[j].children[k].tagName=="SELECT" || o[j].children[k].tagName=="TEXTAREA") && ((filled && !o[j].children[k].value)|| (!filled && o[j].children[k].value)))
-                    {alert('Please fill properly '+select[i].id+"because "+o[j].children[k].id+"is not fileed"); return false;}
+                    {
+                        alertmsg=o[j].children[j].id.split('_');
+                        alert('Check your '+ alertmsg[0] +'  entry...' + alertmsg[1] +' is not filled properly'); return false;}
 
                 }
 
@@ -246,7 +249,6 @@ function changeName()
     //check mandatoriness!
     if (!mandatoryCheck())
     {
-        alert('mandatory Check is False')
         return false;
     }
     select=document.getElementsByTagName('select');
