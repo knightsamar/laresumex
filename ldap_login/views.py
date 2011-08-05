@@ -1,5 +1,4 @@
 #comment this line when you ARE OUTSIDE SICSR!
-from ldapAuthBackend import authenticate;
 from django.http import HttpResponse;
 #from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
@@ -9,7 +8,8 @@ from django.core.mail import send_mail
 from student_info.utility import our_redirect
 
 from laresumex.settings import ROOT
-
+if ROOT == "/laresumex":
+    from ldapAuthBackend import authenticate;
 #from django_auth_ldap.config import LDAPSearch
 #ldap_login
 
@@ -30,7 +30,10 @@ def login(request):
             print 'processing login attempt';
             try:
                 #comment this line when you ARE OUTSIDE SICSR!
-                status = authenticate(request.POST['username'],request.POST['password']);
+                if ROOT == "/laresumex":
+                    status = authenticate(request.POST['username'],request.POST['password']);
+                else:
+                    status =True
                 #UNCOMMENT the next line when you are outside SICSR!
                 #status = True;
                 print status;
