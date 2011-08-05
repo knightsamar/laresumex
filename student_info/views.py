@@ -95,6 +95,7 @@ def submit(request, prn):
             dest=RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
+            print "i got the file handle as ",destination
             for chunk in f.chunks():
                 destination.write(chunk)
             destination.close()
@@ -222,6 +223,7 @@ def submit(request, prn):
         #print "=====>MVSD<======"
         print mvsd
     except Exception as e:
+        print "======EXCEPTION....while submitting-============" , e;
         return our_redirect('/form')
     
     # ============>>> MVSD <<<====================
