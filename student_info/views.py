@@ -215,6 +215,8 @@ def submit(request, prn):
              
         p.save();
         print "P saved"
+        s.save();
+        print "s saved, s.yeardrop == ", s.yeardrop
     
         print "=========>>>> The Main list : <=============="    
         pprint(table_dict)
@@ -266,8 +268,10 @@ def submit(request, prn):
                     c="endDate"
                 else:
                     c="fromDate"
-            #if d is string
-            t.__setattr__(c,d);
+            if str(d) is d:
+                t.__setattr__(c,smart_unicode(d));
+            else:
+                t.__setattr__(c,d)
             print r[0],".",c,"======>",d;    
         t.save();    
         print "Saved"
@@ -275,13 +279,8 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
+    print s.yeardrop;
     return our_redirect('/student_info/Submitted/done');
-
-
-def ajaxRequest(request):
-    '''for processing any ajax request for a field data'''
-    '''will accept data in XML (ok?) and return data in XML '''
-    pass;
 
 def showform(request):
     if 'username' not in request.session:
@@ -304,6 +303,7 @@ def showform(request):
                 'flag':'form',
                 'prn':prn,
                 'ROOT':ROOT,
+                'media':MEDIA_URL,
                 'yr':yr
             }
             );
