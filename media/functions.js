@@ -232,7 +232,7 @@ function mandatoryCheck()
                     
                     if ((o[j].children[k].tagName=="INPUT" || o[j].children[k].tagName=="SELECT" || o[j].children[k].tagName=="TEXTAREA") && ((filled && !o[j].children[k].value)|| (!filled && o[j].children[k].value)))
                     {
-                        alertmsg=o[j].children[j].id.split('_');
+                        alertmsg=o[j].children[k].id.split('_');
                         alert('Check your '+ alertmsg[0] +'  entry...' + alertmsg[1] +' is not filled properly'); return false;}
 
                 }

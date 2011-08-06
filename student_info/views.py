@@ -12,7 +12,7 @@ from datetime import datetime
 from student_info.utility import our_redirect,errorMaker, debugger;
 from pprint import pprint
 from os import path;
-
+from django.utils.encoding import smart_unicode 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -142,13 +142,13 @@ def submit(request, prn):
                 continue;
             elif len(field_name) is 1: # for student model
                 print "=====>Setting ", field_name[0] , "of student with ",data
-                s.__setattr__(field_name[0],data)
+                s.__setattr__(field_name[0],smart_unicode(data))
                 continue;
             elif field_name[0] == 'personal':  
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
                     print "=====> adding", data , "to attribute", index, "of Personal";
-                    p.__setattr__(index,data);     
+                    p.__setattr__(index,smart_unicode(data));     
             if field_name[0]=="birthdate":
                 date=data.split(',')
                 print "=====>DATE<=====",date
@@ -203,7 +203,7 @@ def submit(request, prn):
               else:
                 index=field_name[0]+'_'+field_name[1];
                 if index not in mvsd:
-                    mvsd[index]=data;
+                   mvsd[index]=data;
                 else:
                    mvsd[index]+=','+data
  
@@ -242,7 +242,7 @@ def submit(request, prn):
         print "table-->",table;
         print "we have a column called __%s__" % (tablerow[1]);
         print "value--->",value;
-        table.__setattr__(tablerow[1], value);
+        table.__setattr__(tablerow[1], smart_unicode(value));
         table.save();
         print "table value====>>>", table.__getattribute__(tablerow[1])
         print table,".",tablerow[1]," value set to ", table.__getattribute__(tablerow[1]);
@@ -266,6 +266,7 @@ def submit(request, prn):
                     c="endDate"
                 else:
                     c="fromDate"
+            #if d is string
             t.__setattr__(c,d);
             print r[0],".",c,"======>",d;    
         t.save();    
