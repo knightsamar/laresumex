@@ -112,18 +112,18 @@ def submit(request, prn):
     print s, len(s)
     if len(s) is 1:
         print " ======>>> editing original <<<======="
-        s[0].delete() #delete to create a new one.
-    
-    try:
-
+        #s[0].delete() #delete to create a new one.
+        s=s[0]
+    else: 
         s = student.objects.create(
             pk=prn,
             fullname=post['fullname'],
             career_objective=post['career_objective'],
             phone_number=post['phone_number'],
             )
-    
-        s.save(); #will also update the timestamp;
+        s.save(); 
+    try:
+
         p = personal.objects.get_or_create(primary_table=s)[0];
         table_dict=dict();
         mvsd=dict();
@@ -216,6 +216,10 @@ def submit(request, prn):
         p.save();
         print "P saved"
         s.save();
+        for v in l:
+            dummyrow=eval(v).objects.filter(primary_table=s);
+            for runningoutofvariables in dummyrow:
+                runningoutofvariables.delete();
         print "s saved, s.yeardrop == ", s.yeardrop
     
         print "=========>>>> The Main list : <=============="    
