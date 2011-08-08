@@ -283,7 +283,7 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    print s.yeardrop;
+    print "Yeardrop is now ", s.yeardrop;
     return our_redirect('/student_info/Submitted/done');
 
 def showform(request):

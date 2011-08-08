@@ -4,14 +4,15 @@ from datetime  import datetime, date; #for django
 # Create your models here.
 
 class student(models.Model):
-    gender=(('m',"Male"),('f',"female"))
+    gender=(('m',"Male"),('f',"Female"))
+    yesno=(('y',"Yes"),('n',"NO"))
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.CharField(max_length=12);
-    backlogs  = models.BooleanField(help_text='do u have backlogs ?');
-    yeardrop = models.BooleanField()
+    backlogs  = models.CharField(choices=yesno,max_length=1,help_text='do u have backlogs ?');
+    yeardrop = models.CharField(choices=yesno,max_length=1)
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
