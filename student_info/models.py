@@ -5,14 +5,14 @@ from datetime  import datetime, date; #for django
 
 class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
-    yesno=(('y',"Yes"),('n',"NO"))
+    yesno=(('1',"Yes"),('0',"NO"))
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.CharField(max_length=12);
-    backlogs  = models.CharField(choices=yesno,max_length=1,help_text='do u have backlogs ?');
-    yeardrop = models.CharField(choices=yesno,max_length=1)
+    backlogs  = models.BooleanField();
+    yeardrop = models.BooleanField()
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
