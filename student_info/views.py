@@ -220,7 +220,6 @@ def submit(request, prn):
             dummyrow=eval(v).objects.filter(primary_table=s);
             for runningoutofvariables in dummyrow:
                 runningoutofvariables.delete();
-        print "s saved, s.yeardrop == ", s.yeardrop
     
         print "=========>>>> The Main list : <=============="    
         pprint(table_dict)
@@ -283,7 +282,6 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    print "Yeardrop is now ", s.yeardrop;
     return our_redirect('/student_info/Submitted/done');
 
 def showform(request):
