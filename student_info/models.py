@@ -81,7 +81,7 @@ class swExposure(models.Model):
     OS = models.CharField(max_length=100)
     swPackages = models.CharField(max_length=100)
     webTools = models.CharField(max_length=100)
-    
+  
     def __str__(self):
         return "Software Exposure of %s(%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -91,11 +91,11 @@ class swExposure(models.Model):
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student');
     title=models.CharField(blank=False,max_length=20);
-    desc = models.CharField(blank=False,max_length=100);
+    desc = models.TextField(blank=False);
     fromDate = models.DateField(null=True,blank=True);
     endDate = models.DateField(null=True,blank=True);
     def __str__(self):
-        return "Details about %s -%s of %s" % (self.title,self.desc,self.primary_table.fullname);
+        return "Details about %s - %s of %s" % (self.title,self.desc,self.primary_table.fullname);
 
     class Meta:
         verbose_name_plural = 'ExtraField info about students';
