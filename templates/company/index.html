@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<html>
+<h3> Select the company </h3>
+<form action = '{{ROOT}}/company/get_student_name' method='post'>
+{% for company in c %}
+    <li> {{ company }} <input type="radio" name = "company_name" value = "{{company}}"><BR>
+{% empty %}
+<i> NO Companies </i>
+{% endfor%}
+<hr><br><BR>
+<h3> Select the fields if students, the companies have asked for... </h3>
+{% for t,v in list.items %}
+<li> {{ v }} <input type = 'checkbox' value = "{{ t }}" name ="criteria_{{ t }}"><br> 
+
+{% endfor %}
+
+{% csrf_token %}
+<input type='submit' value="fetch all">
+<input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>
+</html>
+{% endblock %}
