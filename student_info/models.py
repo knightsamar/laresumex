@@ -95,7 +95,7 @@ class ExtraField(models.Model):
     fromDate = models.DateField(null=True,blank=True);
     endDate = models.DateField(null=True,blank=True);
     def __str__(self):
-        return "Details about %s - %s of %s" % (self.title,self.desc,self.primary_table.fullname);
+        return "Details about %s -%s  of %s" % (self.title,"wdqqwd",self.primary_table.fullname);
 
     class Meta:
         verbose_name_plural = 'ExtraField info about students';

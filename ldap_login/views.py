@@ -46,6 +46,7 @@ def login(request):
             #update last_login timestamp
             #store encrypted password
             #start session
+            request.session.set_expiry(1800)
             request.session['username'] = request.POST['username']; 
             userName=request.session['username']
         	    #check for user existance... and/or add the use in our feedback database..!!
@@ -116,12 +117,6 @@ def logout(request):
     #are we actually logged in ?
     if 'username' in request.session:
         print 'logging you out';
-		#yes,#then log us out!
-        #if len(request.session['unfilled']) is not 0:
-            # the person has unfillwd forms
-         #   emailid=[request.session['username']+"@sicsr.ac.in"]
-         #   print "Sending mail to ",emailid
-            #send_mail("unfilled forms", "You have unfilled forms left.. please fill it before the deadline..!!","info@gnunify.in", emailid)
         request.session.flush();
     else:
 		#no,
