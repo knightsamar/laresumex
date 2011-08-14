@@ -13,9 +13,8 @@ Home
 {% endfor%}
 <hr><br><BR>
 <h3> Select the fields if students, the companies have asked for... </h3>
-{% for t,v in list.items %}
-<li> {{ v }} <input type = 'checkbox' value = "{{ t }}" name ="criteria_{{ t }}"><br> 
-
+{% for l in  list|dictsort:"id" %}
+<li> {{ l.display_name }} <input type = 'checkbox' value = "{{ l.name }}" name ="criteria_{{ l.id }}"><br> 
 {% endfor %}
 
 {% csrf_token %}

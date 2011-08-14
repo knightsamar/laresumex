@@ -118,7 +118,6 @@ class extracurricular(ExtraField):
 
 
 
-full_list={'student_prn':'Prn', 'student_fullname':'Full Name','student_function_age':'Age','marks_Xth_marks':'10th Marks','marks_XIIth_marks':'12th Marks','workex_function_workex':'Years of Workex'}
 
 
 
