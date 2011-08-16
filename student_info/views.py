@@ -132,7 +132,7 @@ def submit(request, prn):
         table_dict=dict();
         mvsd=dict();
         extra_fields = dict()
-        l = ['marks', 'extracurricular','academic','certification','project','workex'] #list of model names other than personal.
+        l = ['marks', 'extracurricular','academic','certification','project','workex','ExtraField'] #list of model names other than personal.
 
         post_keys = post.keys();
         post_keys.sort();
@@ -159,7 +159,8 @@ def submit(request, prn):
                 print datetime(int(date[2]),int(date[1]),int(date[0]))
                 p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
                 #if it's an ExtraField
-            elif 'ExtraField' in field_name[0]:
+            '''elif 'ExtraField' in field_name[0]:
+                print "found ExtraFile"
                 field_name=field.split('_');
                 column_dict=dict();
                 column_dict[field_name[1]]=data;
@@ -169,7 +170,7 @@ def submit(request, prn):
                 if index not in table_dict:
                    i='ExtraField_title_'+field_name[0].lstrip('ExtraField');
                    table_dict[index]={'title':post[i]}
-                table_dict[index].update(column_dict);
+                table_dict[index].update(column_dict);'''
 
 
             if str(field_name[0]) in l:
@@ -177,7 +178,10 @@ def submit(request, prn):
                 column_dict[field_name[1]]=data;
            
                 if "title" not in column_dict:
-                    column_dict['title']=field_name[0]
+                    if field_name[0]=="ExtraField":
+                        column_dict['title']=post['ExtraField_title_1']
+                    else:    
+                        column_dict['title']=field_name[0]
            
                 index=field_name[0]+'_'+field_name[2];
            
@@ -248,10 +252,7 @@ def submit(request, prn):
     for table, row_values in table_dict.iteritems():
         r=table.split('_')
         print "=======> table ", r[0];
-        if "ExtraField" in r[0]:
-            t=ExtraField();
-        else:    
-            t=eval(r[0])();
+        t=eval(r[0])();
         t.primary_table=s
         print "Creating new row for ", r[0];
         if "desc" in row_values and row_values["desc"] == "":
