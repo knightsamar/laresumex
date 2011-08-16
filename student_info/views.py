@@ -45,8 +45,24 @@ def edit(request,prn):
             debugger("Resume found! Using it");
         
         #get all the records and tell us whether they were creatd or retrieved
-        tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
+        tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex', 'e':'extracurricular'}
         #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
+        ex=list(ExtraField.objects.filter(primary_table=s));
+        print ex
+        k=0
+        for ee in range(len(ex)):
+                print k
+                print "got", ex[k].title 
+                if str(ex[k].title) in tables.values():
+                    ex.remove(ex[k])
+                    
+                    k = k-1
+                k = k+1
+                print 'k ===',k
+                print 'ee==',ee
+                print ex       
+ 
+
         for t,v in tables.iteritems():
             print "=========>>", v  ,"<<======="
             if (t is not 'p') and (t is not 'sw'):
@@ -58,6 +74,7 @@ def edit(request,prn):
                     pass;
         tables['s']=s;   
         tables['flag']='edit'
+        tables['ex']=ex
         tables['prn']=prn
         tables['ROOT']=ROOT
         c = RequestContext(request,tables);

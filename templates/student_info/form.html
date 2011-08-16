@@ -459,7 +459,7 @@ function addNew(elName,val)
             <tr id = 'projects'>
              <td><input type='text' id="project_heading_1"></td>
              <td><textarea id="project_desc_1" rows=2 cols=30></textarea></td>
-
+ 
              <td>
                   <select name = "month" id="project_startmonth_1" onFocus="fillOptions(this);"> </select>
                   <select name = "year"  id="project_startyear_1" onFocus="fillOptions(this);" onBlur="concat(this);"> </select>  </td>
@@ -518,7 +518,7 @@ function addNew(elName,val)
             </tr>    
          {% endfor %}   
 </table>
-             <input type='button'  onClick="addNew('extracurricular','{{extra}}');" value='Add Another'> 
+             <input type='button'  onClick="addNew('extracurricular','{{e}}');" value='Add Another'> 
 </div>
 </div>
 
@@ -529,20 +529,25 @@ function addNew(elName,val)
         <table>
             <tr><th>Description</th><th>YEar</th></tr>
             {% for A in ex %}
-            <td><textarea rows=2 cols=50 id="ExtraField_desc_1">{{A.desc}}</textarea></td>
-             
-            <td><select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);" onBlur=concat(this)><option>{{A.fromDate.year}}</option> </select>  </td>
+             <tr id = 'extrafield'>
 
+            <td><textarea rows=2 cols=50 id="ExtraField_desc_{{forloop.counter}}">{{A.desc}}</textarea></td>
+             
+            <td><select name = "year"  id="ExtraField_year_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur=concat(this)><option>{{A.fromDate.year}}</option> </select>  </td>
+            <td>
+                <input type='button' value='remove' onClick="remove(this.parentNode)">
+            </td> 
             {%empty%}
             <tr id = 'extrafield'>
                <td><textarea rows=2 cols=50 id="ExtraField_desc_1"></textarea></td>
              
             <td>
             <select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);" onBlur=concat(this)> </select>  </td>
+            </tr>
             {% endfor %}
 </table>
         
-        <input type='button'  onClick="addNew('extrafield','{{ExtraField}}');" value='Add Another'>  
+        <input type='button'  onClick="addNew('extrafield','{{ ex }}');" value='Add Another'>  
         <br><BR>
 </div>
 </div>
