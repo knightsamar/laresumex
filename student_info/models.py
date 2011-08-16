@@ -5,6 +5,7 @@ from datetime  import datetime, date; #for django
 
 class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
+    graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);

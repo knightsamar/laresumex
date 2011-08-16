@@ -521,12 +521,11 @@ function addNew(elName,val)
              <input type='button'  onClick="addNew('extracurricular','{{extra}}');" value='Add Another'> 
 </div>
 </div>
-</div><!-- end of accordion -->
-</div>
-{% comment %}
-   <div id='section'>
-   Add Another Section<br><br>
-   <div id='ExtraField'>
+
+<div>
+<h3><a class='sectionlinks' href='#'>Any other field</a></h3>
+<div>
+<div id='ExtraField'>
    <li>Section Title <input type='text' id='ExtraField_title_1'><br>
         <table>
             <tr><th>Description</th><th>YEar</th></tr>
@@ -535,15 +534,18 @@ function addNew(elName,val)
                <td><textarea rows=2 cols=50 id="ExtraField1_desc_1"></textarea></td>
              
             <td>
-            <select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);"> </select>  </td>
+            <select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);" onBlur=concat(this)> </select>  </td>
 </table>
         <input type='button'  onClick="addNew('extrafield_1');" value='Add Another'>  
         <br><BR>
  </div>       
 
 <input type='button'  onClick="addNew('ExtraField');" value='Add Another Section'>  
+
 </div>
-{% endcomment %}
+</div>
+</div><!-- end of accordion -->
+</div>
 <div id='tabs-10'>
         <ul>
              <li>Mother's Name   <input type='text' id="personal_mother_name" value="{{ p.mother_name }}">

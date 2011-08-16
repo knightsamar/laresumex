@@ -144,11 +144,11 @@ def submit(request, prn):
             #we are using this long branch of IF and ELIFs because Python doesn't have switch case!!!
             if field == 'csrfmiddlewaretoken':
                 continue;
-            elif len(field_name) is 1: # for student model
+            if len(field_name) is 1: # for student model
                 print "=====>Setting ", field_name[0] , "of student with ",data
                 s.__setattr__(field_name[0],data)
                 continue;
-            elif field_name[0] == 'personal':  
+            if field_name[0] == 'personal':  
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
                     print "=====> adding", data , "to attribute", index, "of Personal";
@@ -158,32 +158,20 @@ def submit(request, prn):
                 print "=====>DATE<=====",date
                 print datetime(int(date[2]),int(date[1]),int(date[0]))
                 p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
-            #if it's an ExtraField
+                #if it's an ExtraField
             elif 'ExtraField' in field_name[0]:
-                #if it's a title
-                if field_name[1] == 'title':
-                    #create a new object and push it to the ExtraFields dictionary
-                    e = ExtraField();
-                    e.primary_table = s;
-                    e.title = data;
-                    extra_fields[''.join(field_name)] = e;
-                #if it's a description
-                elif field_name[1] == 'desc' or 'year':
-                    pass;
-                    #take the number at the end of the fieldname
-                    #find objects from the ExtraFields dictionary which has this number in it's title or name
-                    #for all such objects
-                        #does it have the description/year already filled ?
-                            #if no,
-                                #fill the info.
-                                #save
-                            #if yes,
-                                #go to next object
-                        
-                         #if still can't find
-                            #create a duplicate object of this object but without the description/year.
-                            #fill it.
-                #elif field_name[0]=="
+                field_name=field.split('_');
+                column_dict=dict();
+                column_dict[field_name[1]]=data;
+                index=field_name[0]+'_'+field_name[2];
+                if field_name[0].lstrip('ExtraField') == '':
+                    continue             
+                if index not in table_dict:
+                   i='ExtraField_title_'+field_name[0].lstrip('ExtraField');
+                   table_dict[index]={'title':post[i]}
+                table_dict[index].update(column_dict);
+
+
             if str(field_name[0]) in l:
                 column_dict=dict();
                 column_dict[field_name[1]]=data;
@@ -229,7 +217,7 @@ def submit(request, prn):
         pprint(table_dict)
         #print "======> s/w Exposure====="
         #print sw_exposure 
-        #print "=====>MVSD<======"
+        print "=====>MVSD<======"
         print mvsd
     except Exception as e:
         print "======EXCEPTION....while submitting-============" , e;
@@ -260,7 +248,10 @@ def submit(request, prn):
     for table, row_values in table_dict.iteritems():
         r=table.split('_')
         print "=======> table ", r[0];
-        t=eval(r[0])();
+        if "ExtraField" in r[0]:
+            t=ExtraField();
+        else:    
+            t=eval(r[0])();
         t.primary_table=s
         print "Creating new row for ", r[0];
         if "desc" in row_values and row_values["desc"] == "":
