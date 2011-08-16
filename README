@@ -1,0 +1,13 @@
+Please read the README inside all directories.
+They are VITAL for the program to work and you to understand how it works.
+
+
+REQUIREMENTS:
+    1. LaTeX - tetex with lmodern and etoolbox
+    2. tex4ht - for html preview generation
+    3. pyxcerlarator - for generating xls file containing the list of students who have applied.
+
+SETTING UP:
+    1. Create a symbolic link to media/ in Apache's docroot with the name 'laresumex' for serving static files.
+    2. Create a symbolic link to all latex templates inside /home_of_effective_user/texmf/tex
+    

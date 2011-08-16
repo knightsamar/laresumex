@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<html>
+<h3> Select the company </h3>
+<form action = '{{ROOT}}/company/get_student_name' method='post'>
+{% for company in c %}
+    <!-- <a class = 'tooltip' href ='#'>{{ company.name }}<span class='tooltip'> <em>{{company.name}}</em>{{ company.info }}</span></a> -->
+    <li> {{ company }} <input type="radio" name = "company_name" value = "{{company}}"><BR>
+{% empty %}
+<i> NO Companies </i>
+{% endfor%}
+<hr><br><BR>
+<h3> Select the fields of students, that the companies have asked for... </h3>
+{% for l in  list|dictsort:"id" %}
+<li> {{ l.display_name }} <input type = 'checkbox' value = "{{ l.name }}" name ="criteria_{{ l.id }}"><br> 
+{% endfor %}
+
+{% csrf_token %}
+<input type='submit' value="fetch all">
+<input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>
+</html>
+{% endblock %}

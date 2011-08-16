@@ -1,0 +1,24 @@
+syntax: glob
+*~
+*.pyc
+.*swp
+settings.py
+templates/*.zip
+templates/*.log
+templates/moderncv/*.out
+templates/moderncv/*.log
+templates/moderncv/*.aux
+ldap_login/views.py
+apache2/django.wsgi
+*.sqlite*
+.DS_Store*
+*.orig
+*.png
+media/jquery*
+*.log
+media/*.xls
+
+syntax: regexp
+#we need the directory STORE because it is looked for when creating the subdirs 
+#but we don't need every individual's data in it :)
+^\STORE/[0-9]*/
