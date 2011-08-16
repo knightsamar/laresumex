@@ -47,7 +47,7 @@ def edit(request,prn):
         #get all the records and tell us whether they were creatd or retrieved
         tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex', 'e':'extracurricular'}
         #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
-        ex=list(ExtraField.objects.filter(primary_table=s));
+        '''ex=list(ExtraField.objects.filter(primary_table=s));
         print ex
         k=0
         for ee in range(len(ex)):
@@ -60,8 +60,8 @@ def edit(request,prn):
                 k = k+1
                 print 'k ===',k
                 print 'ee==',ee
-                print ex       
- 
+                print ex       '''
+        ex=ExtraField.objects.exclude(title__in=tables.values())
 
         for t,v in tables.iteritems():
             print "=========>>", v  ,"<<======="
