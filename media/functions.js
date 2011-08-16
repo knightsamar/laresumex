@@ -95,7 +95,9 @@ function change(o)
       { 
          prev.value=o.value;
          prev.disabled=true;
+         o.nextElementSibling.value=o.value;
          o.nextElementSibling.disabled=true;
+
          
        // o.parentNode.removeChild(o.previousElementSibling);
       }

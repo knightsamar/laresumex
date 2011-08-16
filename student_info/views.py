@@ -114,6 +114,10 @@ def submit(request, prn):
         print " ======>>> editing original <<<======="
         #s[0].delete() #delete to create a new one.
         s=s[0]
+        s.fullname=post['fullname']
+        s.career_objective=post['career_objective']
+        s.phone_number=post['phone_number']
+
     else: 
         s = student.objects.create(
             pk=prn,
@@ -142,13 +146,13 @@ def submit(request, prn):
                 continue;
             elif len(field_name) is 1: # for student model
                 print "=====>Setting ", field_name[0] , "of student with ",data
-                s.__setattr__(field_name[0],smart_unicode(data))
+                s.__setattr__(field_name[0],data)
                 continue;
             elif field_name[0] == 'personal':  
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
                     print "=====> adding", data , "to attribute", index, "of Personal";
-                    p.__setattr__(index,smart_unicode(data));     
+                    p.__setattr__(index,data);     
             if field_name[0]=="birthdate":
                 date=data.split(',')
                 print "=====>DATE<=====",date
@@ -247,7 +251,7 @@ def submit(request, prn):
         print "table-->",table;
         print "we have a column called __%s__" % (tablerow[1]);
         print "value--->",value;
-        table.__setattr__(tablerow[1], smart_unicode(value));
+        table.__setattr__(tablerow[1], value);
         table.save();
         print "table value====>>>", table.__getattribute__(tablerow[1])
         print table,".",tablerow[1]," value set to ", table.__getattribute__(tablerow[1]);
@@ -271,11 +275,7 @@ def submit(request, prn):
                     c="endDate"
                 else:
                     c="fromDate"
-            if str(d) is d:
-                t.__setattr__(c,smart_unicode(d));
-            else:
-                t.__setattr__(c,d)
-            print r[0],".",c,"======>",d;    
+            t.__setattr__(c,d);
         t.save();    
         print "Saved"
     s.save();
