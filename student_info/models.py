@@ -11,15 +11,17 @@ class student(models.Model):
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.CharField(max_length=12);
-    backlogs  = models.BooleanField();
-    yeardrop = models.BooleanField()
+    backlogs  = models.CharField(max_length=1);
+    yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
+    workex=models.BooleanField();
     Extra_field=models.BooleanField();
     last_update=models.DateTimeField(auto_now=True);
+    
 
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
