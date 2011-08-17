@@ -83,10 +83,16 @@ def get_students_name(request):
             elif si[0] == 'workex':
                 data=s.total_workex();
             else:
-                table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
-                print "we are using table ", table
-                data = str(table.__getattribute__(si[2]));
-                
+                if si[1] == 'graduation':
+                    table=marks.get_graduation_course(s)
+                    data = str(table.__getattribute__(si[2]))
+                else:    
+                    try:
+                        table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
+                        print "we are using table ", table
+                        data = str(table.get_percentage());
+                    except Exception as e:
+                        data  = "-"
             #data = eval("name_list[%d].%s" % (x,fields_to_get[y]));
             print "Writing data %s at %d %d" % (data,x,y);
             ws0.write(x+1,y,data);
