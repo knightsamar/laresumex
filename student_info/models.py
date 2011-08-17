@@ -63,10 +63,10 @@ class marks(models.Model):
     SADLY: this staticmethod thingy doesn't work with django. So we can't use it.
     '''
     @staticmethod
-    def get_graduation_marks(prn):
+    def get_graduation_course(prn):
         '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
-        ms = marks.objects.exclude(course__in=['Xth','XIIth','X','XII']).exclude(course__istartswith='M').filter(pimary_table=prn);
-        return ms;
+        ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
+        return ms[0];
 
     class Meta:
         verbose_name_plural = 'Marks of Students';
