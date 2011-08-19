@@ -11,14 +11,14 @@ Hi!
 <br><BR>
 {% if create_form %}
 
-    <input type='button' value = 'fill your details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
+    <input type='button' value = 'fill your resume details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
 
 {% else %}
 
-    <input type='button' value = 'edit your details' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
+    <input type='button' value = 'edit your resume details' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
     {% comment %}<input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>{% endcomment %}
 
-    <input type='button' value='apply to companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
+    <input type='button' value='view/apply to companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
     <input type='button' value = 'generate resume(PDF) BETA version' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/pdf';"><br/>
     <br/>
 {% endif %}
