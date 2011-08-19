@@ -98,14 +98,22 @@ def submit(request, prn):
     print "I have got files called ", request.FILES;
 
     photo_file=RESUME_STORE+"/photos/"+prn+".png";
-
+    
     if path.exists(photo_file):
         photo_exists = True;  
+        print "Photo already existed";
     else:
         photo_exists = False;
+        print "Photo doesn't exist already";
+    
+    if len(request.FILES) is 0:
+        print "No photo was submitted!";
+    else:
+        print "A photo was submitted!";
 
-    if not photo_exists and len(request.FILES) is 0:
-        return our_redirect('/form')
+    #let's make photo file non-mandatory.
+    #if not photo_exists and len(request.FILES) is 0:
+    #    return our_redirect('/form')
 
     #TODO: check whether the photo is a photo or something else ?
     for f in request.FILES.values():
