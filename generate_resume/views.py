@@ -10,6 +10,7 @@ from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from company.views import staff_index;
 from student_info.utility import *; 
+from student_info import tables
 from pprint import pprint
 
 ''' import vars '''
@@ -73,25 +74,12 @@ def latex(request,prn):
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
             
-            pprint(tables);
-            student_data = dict();
-            pprint(tables.items());
 
-            #get all related objects
-            for tbl,v in tables.iteritems():
-                print 'Getting for %s and %s' % (tbl,v)
-                print "=========>>", v  ,"<<======="
-                student_data[tbl]=eval(v).objects.filter(primary_table=s)
 
             #add the basic info wala original object also
-            student_data['s'] = s;
-            student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
-            student_data['sw']=student_data['sw'][0]
-            #do we have the photo ? if yes, then include it.
+            student_data=get_tables(s)
             #student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
             student_data['photo'] = "%s.png" % (prn);
-            #else, store None
-            student_data['ROOT'] = ROOT
 
             pprint(student_data);
             c = Context(student_data);
@@ -238,6 +226,25 @@ def html(request,prn):
         try:
            s = student.objects.get(pk=prn);
         except:
+           output = "<h3>Student details for PRN %s not found! <input type = 'button' value='Click to fill your details' onClick='%s/form'></h3>" % (prn,ROOT);
+           return HttpResponse(output);
+
+    data = tables.get_tables(s);
+    t=loader.get_template('moderncv/htmlview.html')
+    c=Context(data)
+    return HttpResponse(t.render(c))
+           
+    
+'''
+def html(request,prn):
+    if 'username' not in request.session:
+           return our_redirect('/ldap_login')
+    if prn != request.session['username']:
+          return HttpResponse('Not urs..!!')
+    if prn is not None:
+        try:
+           s = student.objects.get(pk=prn);
+        except:
            output = "<h3>Student details for PRN %s not found! Can't give you HTML</h3>" % (prn);
            return HttpResponse(output);
 
@@ -257,4 +264,4 @@ def html(request,prn):
         #tell them can't do it.
         return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
         
-
+'''
