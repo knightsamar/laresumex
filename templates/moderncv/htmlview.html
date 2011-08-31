@@ -24,22 +24,20 @@ h3{
 </head>
 <div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}">
 <div style="{float:left}">
-<img src="/Users/apoorva/Desktop/screenshots/itgirl.tiff" height='134' width=434>
+<img src="{{MEDIA_URL}}/photos/{{s.prn}}.png" height='134' width='434'>
 </div>
 <div style="{float:'right';position:relative}">
-<h2> Apoorva Srinivasan</h2>
+<h2> {{ s.fullname }}</h2>
 <pre>
-    21Yrs, Female
-<b> Tel(M) </b>: +91-9561443515
-<b>       (R) </b>: 011-22230810
+    {{ p.get_age() }}Yrs, {{s.sex}}
+<b> Tel(M) </b>: +91-{{s.phone_number}}
 </pre>
 </div>
 <br>
 <div>
 <br>
 <h3>Career Objective</h3>
-<b><i>To implement my creative skills so as to achieve the organizational goals and to grow with the 
-growth of the organization </b></i>
+<b><i>{{s.career_objective}}</b></i>
 </div>
 
 
@@ -47,12 +45,9 @@ growth of the organization </b></i>
 <br>
 <h3>Personality Traits</h3>
 <ul>
-<li>sundar
-<li> susheel
-<li>Enthusiastic, energetic  
-<li> Sincere and Reliable 
-<li> Have the potential and willingness to learn 
-<li> Impatient 
+	{% for per in p.strength|split:',' %} 
+        <li> {{per}}</li>
+     {% endfor %}   
 </div>
 
 
@@ -61,10 +56,9 @@ growth of the organization </b></i>
 <h3> Academic Qualifications</h3>
 
 <table cellpadding=10 >
-<tr><td>MSc(CA)<td>Symbiosis Institute of Computer Studies and Research, SIU<td>Appearing<td>2012</tr>
-<tr><td>Bsc(H) Computer Science<td>DU<td>62.6%<td>2010</tr>
-<tr><td>XII<sup>th</sup><td>Sardar Patel Vidhyalaya, CBSE<td>72.2%<td>2007</tr>
-<tr><td>X<sup>th</sup><td>Sardar Patel Vidhyalaya, CBSE<td>81.8%<td>2005</tr>
+{% for marks in m %}
+<tr><td>{{marks.course}}<td>{{marks.uni}}<td>{{marks.marks}}<td>{{marks.fromDate|date:'Y'}}</tr>
+{% endfor %}
 </table>
 </div>
 
