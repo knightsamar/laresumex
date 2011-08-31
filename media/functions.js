@@ -206,7 +206,7 @@ function mandatoryCheck()
                 input[i].focus();
                 //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
                 alertmsg=input[i].name.split('_')
-                alert( alertmsg[1] + ' in the ' + alertmsg[0] + '  section may not be filled');
+                alert( alertmsg[1] + ' in the ' + alertmsg[0] + '  section is not filled');
                 return false;
             }
     }  

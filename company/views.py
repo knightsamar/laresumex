@@ -51,42 +51,48 @@ def get_students_name(request):
     wb = Workbook();
     ws0 = wb.add_sheet('Applicants from SICSR');
     #actually, this is going to come from the person who is selecting the list of students.
-    fields_to_get=list()
+    fields_to_get=dict()
     for f,v in request.POST.iteritems():
         if f.startswith('criteria'):
-                fields_to_get.append(v)
-    print fields_to_get
+                fields_to_get[int(f[9:])]=v
+    print "Fields ro get", fields_to_get
     if len(fields_to_get) is 0:
         return HttpResponse('Check Some Fields to be sent to the company')
     #print headings in the spreadsheet
-    for f in range(len(fields_to_get)):
-        print "title == ", full_list[fields_to_get[f]];
-        ws0.write(0,f,full_list[fields_to_get[f]]);
+    for f in fields_to_get.keys():
+        print "title == ", full_list[f]['display_name'];
+        ws0.write(0,f,full_list[f]['display_name']);
 
     #print data in the spreadsheet
     
     for x in range(len(name_list)):
+        print "X is ...", x, "and s is ...",
         # x is the students name list ka index
         s=name_list[x]
         print "for student", s
-        for y in range(len(fields_to_get)): #hardcoding 4 fields currently
+        for y in fields_to_get.keys(): #hardcoding 4 fields currently
             # y is the fields ka index
             print "fields to get. ....",fields_to_get[y]            
             si=fields_to_get[y].split('_');
             if si[0] == 'student':
-                if si[1] == "function":
-                    p=personal.objects.get(primary_table=s)
-                    data = p.get_age() # hardcoded nw.. need ot expand this later
-                else:
-                    data = s.__getattribute__(si[1])
+                data = s.__getattribute__(si[1])
                 print "==data===",data    
+            elif si[0] == "personal" or si[0] == "swExposure":
+                table= eval(si[0]).objects.get(primary_table=s); 
+                data = str(table.__getattribute__(si[1]))
             elif si[0] == 'workex':
                 data=s.total_workex();
             else:
-                table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
-                print "we are using table ", table
-                data = str(table.__getattribute__(si[2]));
-                
+                if si[1] == 'graduation':
+                    table=marks.get_graduation_course(s)
+                    data = str(table.__getattribute__(si[2]))
+                else:    
+                    try:
+                        table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
+                        print "we are using table ", table
+                        data = str(table.get_percentage());
+                    except Exception as e:
+                        data  = "-"
             #data = eval("name_list[%d].%s" % (x,fields_to_get[y]));
             print "Writing data %s at %d %d" % (data,x,y);
             ws0.write(x+1,y,data);
