@@ -40,7 +40,7 @@ def index(request):
         placement_staff_student[0]=1;
     elif prn.isdigit():
         print "student"
-        placemenet_staff_student[2]=1;
+        placement_staff_student[2]=1;
     else:
         print "staff"
         placement_staff_student[1]=1;
