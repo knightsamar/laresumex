@@ -68,6 +68,25 @@ class marks(models.Model):
         ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
         return ms[0];
 
+
+    def get_percentage(self):
+        '''returns percentage on good data and returns false on bad data or exceptions'''
+        try:
+            percentage = (self.marks / self.outof) * 100;
+            return round(percentage,2);
+        except:
+            print "Can't get percentage because : ",e;
+            return false;
+
+    '''Using syntactic sugar :D ref: http://docs.python.org/library/functions.html#staticmethod 
+    SADLY: this staticmethod thingy doesn't work with django. So we can't use it.
+    '''
+    @staticmethod
+    def get_graduation_course(prn):
+        '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
+        ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
+        return ms[0];
+
     class Meta:
         verbose_name_plural = 'Marks of Students';
 
