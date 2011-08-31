@@ -12,7 +12,8 @@ from datetime import datetime
 from student_info.utility import our_redirect,errorMaker, debugger;
 from pprint import pprint
 from os import path;
-from django.utils.encoding import smart_unicode 
+from django.utils.encoding import smart_unicode;
+
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -112,22 +113,18 @@ def submit(request, prn):
     print s, len(s)
     if len(s) is 1:
         print " ======>>> editing original <<<======="
-        #s[0].delete() #delete to create a new one.
-        s=s[0]
-        s.fullname=post['fullname']
-        s.career_objective=post['career_objective']
-        s.phone_number=post['phone_number']
+        s[0].delete() #delete to create a new one.
+    
+    try:
 
-    else: 
         s = student.objects.create(
             pk=prn,
             fullname=post['fullname'],
             career_objective=post['career_objective'],
             phone_number=post['phone_number'],
             )
-        s.save(); 
-    try:
-
+    
+        s.save(); #will also update the timestamp;
         p = personal.objects.get_or_create(primary_table=s)[0];
         table_dict=dict();
         mvsd=dict();
@@ -207,7 +204,7 @@ def submit(request, prn):
               else:
                 index=field_name[0]+'_'+field_name[1];
                 if index not in mvsd:
-                   mvsd[index]=data;
+                    mvsd[index]=data;
                 else:
                    mvsd[index]+=','+data
  
@@ -219,11 +216,6 @@ def submit(request, prn):
              
         p.save();
         print "P saved"
-        s.save();
-        for v in l:
-            dummyrow=eval(v).objects.filter(primary_table=s);
-            for runningoutofvariables in dummyrow:
-                runningoutofvariables.delete();
     
         print "=========>>>> The Main list : <=============="    
         pprint(table_dict)
@@ -276,6 +268,7 @@ def submit(request, prn):
                 else:
                     c="fromDate"
             t.__setattr__(c,d);
+            print r[0],".",c,"======>",d;    
         t.save();    
         print "Saved"
     s.save();
@@ -283,6 +276,12 @@ def submit(request, prn):
     p.save();
     print "P saved"
     return our_redirect('/student_info/Submitted/done');
+
+
+def ajaxRequest(request):
+    '''for processing any ajax request for a field data'''
+    '''will accept data in XML (ok?) and return data in XML '''
+    pass;
 
 def showform(request):
     if 'username' not in request.session:
@@ -305,7 +304,6 @@ def showform(request):
                 'flag':'form',
                 'prn':prn,
                 'ROOT':ROOT,
-                'media':MEDIA_URL,
                 'yr':yr
             }
             );
