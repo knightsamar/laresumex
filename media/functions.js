@@ -196,10 +196,11 @@ function change(o)
 
 
 /* check whether mandatory values are filled or not */
-function mandatoryCheck()
+function mandatoryCheck(i)
 { 
     //clientside mandatoriness checking
     var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks')
+    if (i == 'all')
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
     {
