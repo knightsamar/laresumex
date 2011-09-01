@@ -4,18 +4,22 @@
 '''import data models '''
 from student_info.models import *;
 from generate_resume.models import resume;
+from ldap_login.models import *
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
+from company.views import staff_index;
 from student_info.utility import *; 
+from student_info import tables
 from pprint import pprint
 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from datetime import datetime
 
 ''' import process helpers '''
 import subprocess 
-from os import mkdir,chdir #for changing directories
+from os import mkdir,chdir,path #for changing directories
 from student_info.utility import our_redirect;
 from time import sleep
 
@@ -24,37 +28,51 @@ def index(request):
     if 'username' not in request.session:
         print "from home to login as No session"
         return our_redirect('/ldap_login')
-    # see whether user has logged in....
+    # see whether user has logged in...
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
-    prn = request.session['username'] 
-    s=student.objects.filter(pk=prn);
-    if len(s) is 0:
-        #it means there is no entry
-        create_form=True;
+    prn = request.session['username']
+    print "hamra prnwa hai ",prn;
+    u=user.objects.get(username=prn);
+    g=group.objects.get(name='placement committee')
+    placement_staff_student=[0,0,0];
+    if u in g.user_set.all():
+        print 'placement_committe'
+        placement_staff_student[0]=1;
+    elif prn.isdigit():
+        print "student"
+        placement_staff_student[2]=1;
     else:
-        #Form already exists
-        create_form=False
-    
+        print "staff"
+        placement_staff_student[1]=1;
+
+    print "found prn"
+    try:
+            s=student.objects.get(pk=prn);
+            #Form already exists
+            create_form=False
+    except Exception as e:
+            #it means there is no entry
+            create_form=True;
+       
     t=loader.get_template('index.html')
     
     c=Context({
-        'prn':request.session['username'],
-        'create_form':create_form,
-        'MEDIA_URL' : MEDIA_URL,
-        'ROOT':ROOT
+            'prn':request.session['username'],
+            'create_form':create_form,
+            'p_s_st':placement_staff_student,
+            'MEDIA_URL' : MEDIA_URL,
+            'ROOT':ROOT
              }
-        );
+            );
     return HttpResponse(t.render(c));
-
-
 def latex(request,prn):
     if 'username' not in request.session:
             return our_redirect('/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
     if prn != request.session['username']:
-        return HttpResponse('Please mind your own resume..')
+        return HttpResponse('Please mind your own resume...')
     if prn is not None:
     	try:
 	        s = student.objects.get(pk=prn)
@@ -66,24 +84,12 @@ def latex(request,prn):
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
             
-            pprint(tables);
-            student_data = dict();
-            pprint(tables.items());
 
-            #get all related objects
-            for tbl,v in tables.iteritems():
-                print 'Getting for %s and %s' % (tbl,v)
-                print "=========>>", v  ,"<<======="
-                student_data[tbl]=eval(v).objects.filter(primary_table=s)
 
             #add the basic info wala original object also
-            student_data['s'] = s;
-            student_data['p'] = student_data['p'][0]; #because we hv only one personal info row.
-            student_data['sw']=student_data['sw'][0]
-            #do we have the photo ? if yes, then include it.
-            student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
-            #else, store None
-            student_data['ROOT'] = ROOT
+            student_data=get_tables(s)
+            #student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
+            student_data['photo'] = "%s.png" % (prn);
 
             pprint(student_data);
             c = Context(student_data);
@@ -105,7 +111,18 @@ def latex(request,prn):
                
                 f.write(t.render(c));
                 f.close();
-              
+                
+                #now update the .tex generation timestamp
+                print "Updating the resume details timestamp with what has been done";
+                print s;
+                print "Now is ", datetime.now();
+                r = resume.objects.get_or_create(prn=s);
+                print "r is ",r
+                #because we called get_or_create, we will get a tuple containing the record and a bool value telling whether it was created or fetched
+                r[0].last_tex_generated = datetime.now();
+                print r[0].last_tex_generated
+                r[0].save();
+
                 """#for now postponed to next release
                 #now add this file to version control
 
@@ -133,53 +150,102 @@ def pdf(request,prn):
     if 'username' not in request.session:
             return out_redirect('/ldap_login/')
     if prn != request.session['username']:
-        return HttpResponse('Nor ur resume')
+        return HttpResponse('Not your resume!')
+    if prn is not None:
+        try:
+           s = student.objects.get(pk=prn);
+           print "We have got a student ",s
+           try:
+              r = resume.objects.get(prn=s);
+           except Exception as e:
+              #no resume was ever created for this user, hence we need to generate atleast latex once.
+              print "Resume record doesn't exist...calling latex()";
+              latex(request,prn);
+           finally:
+              r = resume.objects.get(prn=s);
+              print "Ok, now we have ",r
+        except Exception as e:
+           output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
+           print e;
+           return HttpResponse(output);
+        
+        print "Last TEX generated ", r.last_tex_generated;
+        print "Last PDF generated ", r.last_pdf_generated;
+        #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
+        tex_file = "%s/%s/%s.tex" % (RESUME_STORE,prn,prn);
+        #do we have a fresher .TEX file compared to the infromation filled by the student ?
+        if (r.last_tex_generated is not None) and (r.last_tex_generated < s.last_update) or (not(path.exists(tex_file))):
+            #oh no! it isn't fresher! generate it again!
+            print "we have got a stale .TEX file! regenerating it by calling latex"
+            latex(request,prn);
+        else:
+            #ok, there is no need to regenerate latex
+            pass; 
+        
+        #Now...is the pdf file fresher ?
+        pdf_file = "%s/%s/%s.pdf" % (RESUME_STORE, prn, prn);
+        if (r.last_pdf_generated is not None) and (r.last_pdf_generated > r.last_tex_generated) and (path.exists(pdf_file)):
+            #the pdf file is fresher, so we don't need to regenerate it! let's just give it back.       
+            print "PDF file for %s is already fresher, so giving it back directly!" % (r.prn);
+        else:
+            print "PDF file is stale!";
+            #the pdf file is stale, get a fresh copy!
+            #generate it's pdf
+            pdf_file = "/tmp/%s.pdf" % (prn);
+            return_status = False;
+            #find the tex file
+            try:
+              #generate the pdf 
+              copy_photo_command = "cp -v %s/photos/%s.* %s/%s/" % (RESUME_STORE,prn,RESUME_STORE,prn);
+              get_done(copy_photo_command);
+              pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
+              for i in range(0,3): #run the pdflatex command min 2 and max 3 times -- Manjusha Mam, Bhaskaracharya Pratishthana
+                   print "===========>PASS %d<===========" % (i);
+                   return_status = get_done(pdf_generation_command)
+                
+              #print "Return status is ",return_status; #doesn't matter now...after get done.
+              pdf_file = "/tmp/%s.pdf" % prn;
+              copy_pdf_command = "cp -v /tmp/%s.pdf %s/%s/" % (prn, RESUME_STORE,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
+              get_done(copy_pdf_command);
+              print "Updating timestamp for the PDF generation in our records"
+              r.last_pdf_generated = datetime.now();
+              r.save();
+            except Exception as e:
+              response = HttpResponse("Some problem!");
+              print 'Exception was ', e;
+         
+        #open the generated pdf file
+        resume_pdf = open(pdf_file);
+        #prepare the file to be sent
+        response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
+        resume_pdf.close();
+        #name the file properly
+        response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
+    else:
+        output = "<h3>Hey, pass me a PRN man!</h3>";
+        response = HttpResponse(output);
+
+    return response;
+
+def html(request,prn):
+    if 'username' not in request.session:
+           return our_redirect('/ldap_login')
+    if prn != request.session['username']:
+          return HttpResponse('Not urs..!!')
     if prn is not None:
         try:
            s = student.objects.get(pk=prn);
         except:
-           output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
+           output = "<h3>Student details for PRN %s not found! <input type = 'button' value='Click to fill your details' onClick='%s/form'></h3>" % (prn,ROOT);
            return HttpResponse(output);
 
-        #compare generate_resume.models.resume.last_tex_generated with student_info.models.student_last_updated and decide!
-        #is it fresher ?
-            #oh no! it isn't. generate it again!
-        
-        #ok, it is no need to regenerate
-            #call the generate_latex function with the prn
-
-        #if no record of this prn exists anywhere, tell the idiot!
+    data = tables.get_tables(s);
+    t=loader.get_template('moderncv/htmlview.html')
+    c=Context(data)
+    return HttpResponse(t.render(c))
+           
     
-    #generate it's pdf
-        pdf_file = "/tmp/%s.pdf" % (prn);
-        return_status = False;
-        #find the tex file
-        try:
-          #generate the pdf 
-          pdf_generation_command = "pdflatex --interaction=nonstopmode -etex -output-directory=/tmp %s/%s/%s.tex" % (RESUME_STORE,prn,prn);
-          return_status = get_done(pdf_generation_command)
-          print "Return status is ",return_status;
-          pdffile = "/tmp/%s.pdf" % prn;
-          resume_pdf = open(pdffile);
-          #prepare the file to be sent
-          response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
-          resume_pdf.close();
-          #name the file properly
-          response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
-        
-        except Exception as e:
-          response = HttpResponse("Some problem!");
-          print 'Exception was ', e;
-    ################because pdflatex can return 1 or 0 and still generate the file
-#          if return_status is not 0:
-#             output = "<h3>Couldn't generate your .PDF file! Return code was %s </h3>" % return_status;
-#          else:
-#             output = "<h3>Done!</h3>";
-    else:
-       output = "<h3>Hey, pass me a PRN man!</h3>";
-    
-    return response;
-
+'''
 def html(request,prn):
     if 'username' not in request.session:
            return our_redirect('/ldap_login')
@@ -208,32 +274,4 @@ def html(request,prn):
         #tell them can't do it.
         return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
         
-def get_done(cmd,path=RESUME_STORE):
-    '''handles all panga of executing a command on linux shell'''
-    #where do we want to execute this ?
-    print "changing path to %s", path
-    chdir(path);
-
-    print "Got total --> ", cmd
-    cmds = cmd.split(';'); #split multiple commands
-    print 'total ',len(cmds);
-    for c in cmds:
-        try:
-           #cmd_with_arguments=c.split();
-           print 'Executing ',c
-
-           #connect the pipes in the processes and make the stdin and stdout flow through them properly
-           #because Popen doesn't handle pipes properly itself
-
-           sleep(3);
-           r = subprocess.Popen(c,shell=True,stdout=None);
-           if r is not 0:
-               chdir(FULL_PATH); #so that no stupid problem are caused
-               return False;    #no need of executing further commands
-        except Exception as e:
-          print 'Exception was ', e
-          chdir(FULL_PATH);
-          return False;
-
-    return True;
-
+'''

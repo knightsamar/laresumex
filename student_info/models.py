@@ -1,43 +1,74 @@
 from django.db import models
+from datetime  import datetime, date; #for django
 
 # Create your models here.
 
 class student(models.Model):
-    gender=(('m',"Male"),('f',"female"))
-    
+    gender=(('m',"Male"),('f',"Female"))
+    graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
-    phone_number=models.PositiveIntegerField(max_length=12);
+    phone_number=models.CharField(max_length=12);
+    backlogs  = models.CharField(max_length=1);
+    yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
+    workex=models.BooleanField();
     Extra_field=models.BooleanField();
-   
+    last_update=models.DateTimeField(auto_now=True);
+    
+
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
-    
-    def duration(self):
-        '''calculate and return duration of workex'''
-        workex_objects 
+ 
 
+    def total_workex(self):
+        '''returns the total workex in months'''
+        duration =0
+        workex_objs = workex.objects.filter(primary_table=self);
+       
+        for w in workex_objs:
+            duration +=  ((w.endDate - w.fromDate).days)/12; #will return the number of days;
+
+        return duration; 
  
 class marks(models.Model):
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
-    marks=models.DecimalField(max_digits=5,decimal_places=2, blank=True, null=True);
+    marks=models.DecimalField(max_digits=7,decimal_places=3, blank=True, null=True);
     markstype=models.CharField(max_length=10)
-    outof=models.IntegerField(null=True, blank=True)
+    outof=models.DecimalField(max_digits=8,decimal_places=3, blank=True, null=True);
     fromDate=models.DateField(null=True, blank=True);
     
     def __str__(self):
         if self.marks is None:
             return "%s in %s at %s" %(self.markstype,self.course,self.uni)
         return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
+
+
+    def get_percentage(self):
+        '''returns percentage on good data and returns false on bad data or exceptions'''
+        try:
+            percentage = (self.marks / self.outof) * 100;
+            return round(percentage,2);
+        except:
+            print "Can't get percentage because : ",e;
+            return false;
+
+    '''Using syntactic sugar :D ref: http://docs.python.org/library/functions.html#staticmethod 
+    SADLY: this staticmethod thingy doesn't work with django. So we can't use it.
+    '''
+    @staticmethod
+    def get_graduation_course(prn):
+        '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
+        ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
+        return ms[0];
 
     class Meta:
         verbose_name_plural = 'Marks of Students';
@@ -47,6 +78,7 @@ class personal(models.Model):
      mother_name=models.CharField(max_length=50);
      father_name=models.CharField(max_length=50);
      birthdate=models.DateField(null=True);
+     areasofinterest=models.CharField(max_length=100,null=True)
      mother_occupation=models.CharField(max_length=50); 
      father_occupation=models.CharField(max_length=50);
      languages=models.CharField(max_length=200);
@@ -54,6 +86,10 @@ class personal(models.Model):
      strength=models.CharField(max_length=200);
      per_address=models.TextField(max_length=200,help_text='Permanent Address');
      corr_address=models.TextField(max_length=200, help_text='Correspondence Address');
+     def get_age(self):
+        '''returns age'''
+        age=date.today()-self.birthdate
+        return (age.days /365)
      def __str__(self):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -67,7 +103,7 @@ class swExposure(models.Model):
     OS = models.CharField(max_length=100)
     swPackages = models.CharField(max_length=100)
     webTools = models.CharField(max_length=100)
-    
+  
     def __str__(self):
         return "Software Exposure of %s(%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -77,18 +113,18 @@ class swExposure(models.Model):
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student');
     title=models.CharField(blank=False,max_length=20);
-    desc = models.CharField(blank=False,max_length=100);
+    desc = models.TextField(blank=False);
     fromDate = models.DateField(null=True,blank=True);
     endDate = models.DateField(null=True,blank=True);
     def __str__(self):
-        return "Details about %s -%s of %s" % (self.title,self.desc,self.primary_table.fullname);
+        return "Details about %s  of %s" % (self.title,self.primary_table.fullname);
 
     class Meta:
         verbose_name_plural = 'ExtraField info about students';
 
 class workex(ExtraField):
-    pass;   
-       
+    pass;
+        
 class certification(ExtraField):
     pass;
 
@@ -101,16 +137,23 @@ class academic(ExtraField):
 class extracurricular(ExtraField):
     pass;
 
-class other(model.Model):
-'''for storing inforamtion which is not actually printed in resume but used for other details'''
-    backlogs=models.BooleanField(help_text='Whether you have any backlogs currently ?');
-    yeardrop=models.BooleanField(help_text='Whether you had any yeardrop ?');
-    gap=models.BooleanField(help_text='Whether you had any gaps between your years of education ?');
- 
-class calculateFields(models.Model):
-'''for storing info 
-    years_of_workex
-    prefereable_cities
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #for references inside various views
@@ -133,4 +176,6 @@ class ExtraTable(models.Model):
 class ExtraTableKaData(models.Model):
     field = models.ForeignKey('ExtraTable');
     data = models.TextField();"""
+
+
 

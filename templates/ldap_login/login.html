@@ -10,13 +10,14 @@
     {% if message != None %}
         <h4 align='center' style='color: red' size='10'> {{ message }} </h4><br/><br/>
     {% endif %}
+    <p align='center' style="{font-size: 13pt;}"> Please login using your Windows Active Directory Logins (the one you use for Cyberoam, Moodle, <a href='http://projects.sdrclabs.in/change_agent'>Change Agent</a>, <a href='http://live.sdrclabs.in'>SDRCLive</a>)</p>
     <table align='center'>
     <tr>
         <td><label for='username'>Username</label></td>
-        <td><input type='text' name='username' value='YOURPRN' onclick="this.value=''" maxlength='30'/></td>
+        <td><input type='text' name='username' value='YOURPRN' onFocus="this.value=''" maxlength='30'/></td>
     </tr><tr>
         <td><label for='password'>Password</label></td>
-        <td><input type='password' name='password' value='PASSWORD' onclick="this.value=''" maxlength='255'/></td>
+        <td><input type='password' name='password' value='PASSWORD' onFocus="this.value=''" maxlength='255'/></td>
     </tr>
     <tr>
         <td><td><input type='submit' value='Login!'/></td>

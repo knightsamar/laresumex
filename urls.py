@@ -17,21 +17,25 @@ urlpatterns = patterns('',
     # actually our urls START FROM NOW
     #(r'^/$',"generate_resume.views.index"),    
 
-    # generate_Resume
+    # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
     (r'^generate_resume/(?P<prn>\d+)/html',"generate_resume.views.html"),
-    (r'^generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
+    #(r'^generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
     
     #ldap_login
     (r'^ldap_login/$','ldap_login.views.login'), #for authentication
     (r'^ldap_login/logout$','ldap_login.views.logout'), #for loggin out
     (r'^home/$',"generate_resume.views.index"),
+    (r'^$','ldap_login.views.login'),
     
     # company
     (r'^company/getResume',"company.views.getResume"),
     (r'^company/list',"company.views.company_list"),
+    (r'^company/get_student_name',"company.views.get_students_name"),
     (r'^company/apply',"company.views.apply"),
-
+    (r'^PT/admin',"company.views.admin_index"),
+    (r'^PT/fetch',"company.views.staff_index"),
+    (r'^PT/got_placed',"company.views.got_placed"),
     # student_info
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),

@@ -8,7 +8,6 @@ templates/*.log
 templates/moderncv/*.out
 templates/moderncv/*.log
 templates/moderncv/*.aux
-ldap_login/views.py
 apache2/django.wsgi
 *.sqlite*
 .DS_Store*
@@ -16,6 +15,7 @@ apache2/django.wsgi
 *.png
 media/jquery*
 *.log
+media/*.xls
 
 syntax: regexp
 #we need the directory STORE because it is looked for when creating the subdirs 

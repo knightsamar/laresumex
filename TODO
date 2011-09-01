@@ -2,12 +2,12 @@
 
 
 URGENT:
-    * Add backlogs wali field in form -- inside the photo wala section.
+    * Add backlogs wali field in form -- inside the photo wala section. - Done by Apoorva
     * Migrate the database changes according to father's occupation etc...using South or intelligent queries.
 
 ==== To be done
     * HTML preview for the latex - DONE by Samar
-    * Validation - Client and server side for the form and student info - REMAINS
+    * Validation - Client and server side for the form and student info - Done  Client
     * Uploading photograph - DONE by Apoorva.
     * Extra Field wala thngie. - REMAINS
     * Changing the latex template acc to abhay sudhakaran -- DONE, Partially
@@ -24,8 +24,8 @@ URGENT:
     - Storing user info into DB
     - Editing
     - generating rudimentary Tex file from it
-    - generating PDF copy of the tex File.
+    - generating PDF copy of the tex File. -- wih bugs
 
 ====Bugs
-    - prn not unique wala error - FIXED...?
+    - prn not unique wala error - FIXED!
     - the edit html doesnt print the full name of the user whereas its correctly written in the db - FIXED!

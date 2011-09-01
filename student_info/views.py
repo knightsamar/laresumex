@@ -1,7 +1,7 @@
 #Create your views here.
 ''' impmrt data models '''
 from student_info.models import *;
-
+from student_info import tables
 ''' import generator helpers '''
 from django.template import Context, loader
 from django.template import Context, loader, RequestContext
@@ -12,7 +12,7 @@ from datetime import datetime
 from student_info.utility import our_redirect,errorMaker, debugger;
 from pprint import pprint
 from os import path;
-
+from django.utils.encoding import smart_unicode 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
@@ -45,45 +45,11 @@ def edit(request,prn):
             debugger("Resume found! Using it");
         
         #get all the records and tell us whether they were creatd or retrieved
-        tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
         #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
-        for t,v in tables.iteritems():
-            print "=========>>", v  ,"<<======="
-            tables[t]=eval(v).objects.filter(primary_table=s)
-
-            for l in tables[t]:
-                print l
-        tables['s']=s;   
-        try:
-            tables['p']=tables['p'][0] 
-            tables['sw']=tables['sw'][0];
-        except Exception as e:    
-          pass;
-            
-        
-        '''        
-        #for storing record objects 
-        table_data = {'s' : s}
-
-        for t in tables:
-             status,data = eval('%s' % t[1]).objects.get_or_create(primary_table=s); #like calling student.objects.get
-             table_data = {'[%s]' % t[0]:data};
-             table_status = {'%s' % t[0]:status}; #if False, was retrieved else WAS created
-             if status:
-                 debugger('No %s found, creating a new one' % t[1] );
-             else:
-                 debugger("%s found! Using it" % t[1]);
-             
-        
-        debugger(table_data);
-        debugger(table_data_status); '''
-        tables['flag']='edit'
-        tables['prn']=prn
-        tables['ROOT']=ROOT
-        c = RequestContext(request,tables);
+        table=tables.get_tables(s)
+        c = RequestContext(request,table);
         t = loader.get_template('student_info/form.html');
         
-        print "dsfasdfasdafsdf"
         return HttpResponse(t.render(c));
 
 
@@ -116,6 +82,7 @@ def submit(request, prn):
             dest=RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
+            print "i got the file handle as ",destination
             for chunk in f.chunks():
                 destination.write(chunk)
             destination.close()
@@ -132,23 +99,27 @@ def submit(request, prn):
     print s, len(s)
     if len(s) is 1:
         print " ======>>> editing original <<<======="
-        s[0].delete() #delete to create a new one.
-    
-    try:
+        #s[0].delete() #delete to create a new one.
+        s=s[0]
+        s.fullname=post['fullname']
+        s.career_objective=post['career_objective']
+        s.phone_number=post['phone_number']
 
+    else: 
         s = student.objects.create(
             pk=prn,
             fullname=post['fullname'],
             career_objective=post['career_objective'],
-            phone_number=post['phone_number']
+            phone_number=post['phone_number'],
             )
-    
-        s.save();
+        s.save(); 
+    try:
+
         p = personal.objects.get_or_create(primary_table=s)[0];
         table_dict=dict();
         mvsd=dict();
         extra_fields = dict()
-        l = ['marks', 'extracurricular','academic','certification','project','workex'] #list of model names other than personal.
+        l = ['marks', 'extracurricular','academic','certification','project','workex','ExtraField'] #list of model names other than personal.
 
         post_keys = post.keys();
         post_keys.sort();
@@ -160,11 +131,11 @@ def submit(request, prn):
             #we are using this long branch of IF and ELIFs because Python doesn't have switch case!!!
             if field == 'csrfmiddlewaretoken':
                 continue;
-            elif len(field_name) is 1: # for student model
+            if len(field_name) is 1: # for student model
                 print "=====>Setting ", field_name[0] , "of student with ",data
                 s.__setattr__(field_name[0],data)
                 continue;
-            elif field_name[0] == 'personal':  
+            if field_name[0] == 'personal':  
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
                     print "=====> adding", data , "to attribute", index, "of Personal";
@@ -174,45 +145,37 @@ def submit(request, prn):
                 print "=====>DATE<=====",date
                 print datetime(int(date[2]),int(date[1]),int(date[0]))
                 p.__setattr__("birthdate",datetime(int(date[2]),int(date[1]),int(date[0])));
-            #if it's an ExtraField
-            elif 'ExtraField' in field_name[0]:
-                #if it's a title
-                if field_name[1] == 'title':
-                    #create a new object and push it to the ExtraFields dictionary
-                    e = ExtraField();
-                    e.primary_table = s;
-                    e.title = data;
-                    extra_fields[''.join(field_name)] = e;
-                #if it's a description
-                elif field_name[1] == 'desc' or 'year':
-                    pass;
-                    #take the number at the end of the fieldname
-                    #find objects from the ExtraFields dictionary which has this number in it's title or name
-                    #for all such objects
-                        #does it have the description/year already filled ?
-                            #if no,
-                                #fill the info.
-                                #save
-                            #if yes,
-                                #go to next object
-                        
-                         #if still can't find
-                            #create a duplicate object of this object but without the description/year.
-                            #fill it.
-                #elif field_name[0]=="
+                #if it's an ExtraField
+            '''elif 'ExtraField' in field_name[0]:
+                print "found ExtraFile"
+                field_name=field.split('_');
+                column_dict=dict();
+                column_dict[field_name[1]]=data;
+                index=field_name[0]+'_'+field_name[2];
+                if field_name[0].lstrip('ExtraField') == '':
+                    continue             
+                if index not in table_dict:
+                   i='ExtraField_title_'+field_name[0].lstrip('ExtraField');
+                   table_dict[index]={'title':post[i]}
+                table_dict[index].update(column_dict);'''
+
+
             if str(field_name[0]) in l:
                 column_dict=dict();
                 column_dict[field_name[1]]=data;
            
                 if "title" not in column_dict:
-                    column_dict['title']=field_name[0]
+                    if field_name[0]=="ExtraField":
+                        column_dict['title']=post['ExtraField_title_1']
+                    else:    
+                        column_dict['title']=field_name[0]
            
                 index=field_name[0]+'_'+field_name[2];
            
                 if index not in table_dict:
                     table_dict[index]=dict()
            
-                    table_dict[index].update(column_dict)
+                table_dict[index].update(column_dict)
            
             '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=s);
             row[field_name[1]] = data;'''
@@ -223,7 +186,7 @@ def submit(request, prn):
               else:
                 index=field_name[0]+'_'+field_name[1];
                 if index not in mvsd:
-                    mvsd[index]=data;
+                   mvsd[index]=data;
                 else:
                    mvsd[index]+=','+data
  
@@ -235,14 +198,20 @@ def submit(request, prn):
              
         p.save();
         print "P saved"
+        s.save();
+        for v in l:
+            dummyrow=eval(v).objects.filter(primary_table=s);
+            for runningoutofvariables in dummyrow:
+                runningoutofvariables.delete();
     
         print "=========>>>> The Main list : <=============="    
         pprint(table_dict)
         #print "======> s/w Exposure====="
         #print sw_exposure 
-        #print "=====>MVSD<======"
+        print "=====>MVSD<======"
         print mvsd
     except Exception as e:
+        print "======EXCEPTION....while submitting-============" , e;
         return our_redirect('/form')
     
     # ============>>> MVSD <<<====================
@@ -286,7 +255,6 @@ def submit(request, prn):
                 else:
                     c="fromDate"
             t.__setattr__(c,d);
-            print r[0],".",c,"======>",d;    
         t.save();    
         print "Saved"
     s.save();
@@ -294,12 +262,6 @@ def submit(request, prn):
     p.save();
     print "P saved"
     return our_redirect('/student_info/Submitted/done');
-
-
-def ajaxRequest(request):
-    '''for processing any ajax request for a field data'''
-    '''will accept data in XML (ok?) and return data in XML '''
-    pass;
 
 def showform(request):
     if 'username' not in request.session:
@@ -314,14 +276,16 @@ def showform(request):
 
         print "student does not exist" 
         prn=request.session['username'];
-        print "sdfsd"
-    
+        yr=prn[5:7];
+        print yr
         t=loader.get_template('student_info/form.html')
         c=RequestContext(request,
             {
                 'flag':'form',
                 'prn':prn,
-                'ROOT':ROOT
+                'ROOT':ROOT,
+                'media':MEDIA_URL,
+                'yr':yr
             }
             );
     

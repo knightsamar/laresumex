@@ -4,7 +4,16 @@
        For day, month and year, fills with values.
        For courses, fills with degrees.
     */
-    function fillOptions(o)
+function validation(o,what)
+{
+    if (what == 'string')
+    {
+        isNAN(o.value)
+
+    }
+}
+
+function fillOptions(o)
     {
         if (o.children.length >1) return false;
         //o=document.getElementById('month');
@@ -50,9 +59,9 @@
 
             }
            } 
-        else  if (o.name == 'course')
+        else  if (o.name == 'course-g')
         {
-          var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com', 'MBA', 'MSc(CA)');
+          var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com');
             for (var i =0;i<course.length;i++)
             //o.innerHTML += "<option>"+months[i]+"</option>";
             {
@@ -61,6 +70,18 @@
                  o.add(option,null)
             }
         } 
+          else  if (o.name == 'course-pg')
+        {
+          var course=new Array('MSc(CA) SEM I','MSc(CA) SEM II','MSc(CA) SEM III','MSc(CA) SEM IV','MBA(IT) SEM I','MBA(IT) SEM II','MBA(IT) SEM III','MBA(IT) SEM IV');
+            for (var i =0;i<course.length;i++)
+            //o.innerHTML += "<option>"+months[i]+"</option>";
+            {
+                 var option=document.createElement("option");
+                 option.text=course[i];
+                 o.add(option,null)
+            }
+        } 
+
     }
      
     
@@ -72,7 +93,7 @@
    
     TODO: for leap year, it should make February right.
  */
- function change(o)
+function change(o)
  {
      id0=o.id.split('_')[0];
      id1=o.id.split('_')[1];
@@ -83,7 +104,9 @@
       { 
          prev.value=o.value;
          prev.disabled=true;
+         o.nextElementSibling.value=o.value;
          o.nextElementSibling.disabled=true;
+
          
        // o.parentNode.removeChild(o.previousElementSibling);
       }
@@ -180,44 +203,69 @@ function mandatoryCheck()
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
     {
-
-        // if this value is same as the previous value then do not submit. 
-       //for all such fields who have month or year 
         
         if(input[i].id!="")
         {   
                 input[i].name=input[i].id;
         }
         a=input[i].name.split('_')[0]
-        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0) )
+        if ((input[i].value=="")&&(compulsory.indexOf(a)>=0)&&(input[i].disabled==false) )
             {
 
                 input[i].focus();
                 //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
-                alert("Please check your form! " + input[i].name.split('_')[0]);
+                alertmsg=input[i].name.split('_')
+                alert( alertmsg[1] + ' in the ' + alertmsg[0] + '  section is not filled');
                 return false;
             }
+    }  
+    var tables = new Array('marks','workex','certification','projects','academic','extracurricular')
+    
+    
+    //dependency checking -- if content is filled and the month-year isn't OR if month-year is filled and content isn't.
+    select=document.getElementsByTagName('select');
+    for (var i=0;i<select.length;i++)
+    {
+        a=select[i].id.split('_')[0]
+        if (tables.indexOf(a)>=0)
+        {
+            o=select[i].parentNode.parentNode.children;
+            if (select[i].value)
+               var filled=true;
+            else
+                var filled = false;
+        
+            for(var j=0;j<o.length;j++)
+            {
+                
+                for (var k=0;k<o[j].children.length;k++)
+                {
+                    
+                    if ((o[j].children[k].tagName=="INPUT" || o[j].children[k].tagName=="SELECT" || o[j].children[k].tagName=="TEXTAREA") && ((filled && !o[j].children[k].value)|| (!filled && o[j].children[k].value)))
+                    {
+                        alertmsg=o[j].children[k].id.split('_');
+                        alert('Check your '+ alertmsg[0] +'  entry...' + alertmsg[1] +' is not filled properly'); return false;}
+
+                }
+
+            } 
+        }
     }
-   select=document.getElementsByTagName('select');
-   for(var i=0;i<select.length;i++)
-   {
-    }
+    
  return true;
 }
-
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
 function changeName()
 {
     //check mandatoriness!
     if (!mandatoryCheck())
     {
-        alert('mandatory Check is False')
         return false;
     }
     select=document.getElementsByTagName('select');
     for (var i=0;i<select.length;i++)
     {
-        //for all eleemtns who are named 'month' OR 'year'
+        //for all    eleemtns who are named 'month' OR 'year'
        if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
        {
            if (select[i].id.indexOf('year')>=0)
@@ -233,19 +281,18 @@ function changeName()
        if (select[i].value=="")
             {select[i].focus();return false;}
     }
-
     textarea=document.getElementsByTagName('textarea');
     for (var i=0;i<textarea.length;i++)
         //if(tablearea[i].value=="")
             textarea[i].name=textarea[i].id;
-   // return false;
-
     //now tell in the form submission the secret
     document.getElementById('allok').value = 1;
+    return true;
 }
 
 function remove(o)
 {
+    // IF extra fields can be entered as blank, then students have write to remove all their pre-wriiten fields
     if (o.tagName=='TD')
     {
         p=o.parentNode;
