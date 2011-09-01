@@ -11,15 +11,17 @@ class student(models.Model):
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.CharField(max_length=12);
-    backlogs  = models.BooleanField();
-    yeardrop = models.BooleanField()
+    backlogs  = models.CharField(max_length=1);
+    yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
+    workex=models.BooleanField();
     Extra_field=models.BooleanField();
     last_update=models.DateTimeField(auto_now=True);
+    
 
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
@@ -48,25 +50,6 @@ class marks(models.Model):
         if self.marks is None:
             return "%s in %s at %s" %(self.markstype,self.course,self.uni)
         return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
-
-
-    def get_percentage(self):
-        '''returns percentage on good data and returns false on bad data or exceptions'''
-        try:
-            percentage = (self.marks / self.outof) * 100;
-            return percentage;
-        except:
-            print "Can't get percentage because : ",e;
-            return false;
-
-    '''Using syntactic sugar :D ref: http://docs.python.org/library/functions.html#staticmethod 
-    SADLY: this staticmethod thingy doesn't work with django. So we can't use it.
-    '''
-    @staticmethod
-    def get_graduation_course(prn):
-        '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
-        ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
-        return ms[0];
 
 
     def get_percentage(self):

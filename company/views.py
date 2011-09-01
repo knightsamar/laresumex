@@ -18,13 +18,26 @@ from pyExcelerator import *
 
 #TODO: We have to check the licensing restrictions imposed by it.
 
+def admin_index(request):
+     t=loader.get_template('company/admin_index.html');
+    
+     c=RequestContext(request,{
+        
+        'ROOT':ROOT,
+        'MEDIA_URL':MEDIA_URL,
+        
+        })
+     return HttpResponse(t.render(c))
+
+
 def staff_index(request):
     com=company.objects.all();
-    t=loader.get_template('company/index.html');
+    t=loader.get_template('company/fetch_students.html');
     
     c=RequestContext(request,{
         'c':com,
         'ROOT':ROOT,
+        'MEDIA_URL':MEDIA_URL,
         'list':full_list
         })
     return HttpResponse(t.render(c))
