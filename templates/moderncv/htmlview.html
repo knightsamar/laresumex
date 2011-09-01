@@ -1,4 +1,4 @@
-{% load some_tags %}
+
 <html>
 <head>
 <style type="text/css">
@@ -29,7 +29,7 @@ h3{
 <div style="{float:'right';position:relative}">
 <h2> {{ s.fullname }}</h2>
 <pre>
-    {{ p.get_age }}Yrs,{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
+    {{ p.get_age() }}Yrs, {{s.sex}}
 <b> Tel(M) </b>: +91-{{s.phone_number}}
 </pre>
 </div>
@@ -53,7 +53,6 @@ h3{
 
 <div>
 <br>
-
 <h3> Academic Qualifications</h3>
 
 <table cellpadding=10 >
@@ -66,14 +65,11 @@ h3{
  
 <div>
 <br>
-{% if c %}
 <h3> Certifications</h3>
 
 <table cellpadding=10>
-{% for certi in c %}
-    <tr><td><li><td>{{ certi.desc }}<td>{{ certi.fromDate|date:'MY' }}
-{% endfor %}
-{% endif %}
+<tr><td><li><td>Project on Efficient Cancellable Biometric Key Generation Scheme for Cryptography  <td>April 2010
+<tr><td><li><td>Participated in 3 day National Workshop: QCISM '09 on "Futuristic Trends of Quality Control in Information Security Management" -CSIR <td>Oct 2009
 </table>
 </div>
 
@@ -82,78 +78,51 @@ h3{
 <br>
 <h3>Software Exposure</h3>
 <table>
-{% if sw.programming %}
-<tr><td><b>Programming Languages</b><td>:<td> {{sw.programming}}
-{% endif %}
-{% if sw.databases %}
-<tr><td><b>Database</b>  <td>           :<td>   {{sw.databases}}
-{% endif %}
-{% if sw.OS %}
-<tr><td><b>Operating system</b>    <td> :<td>{{sw.OS}}
-{% endif %}
-{% if sw.swPackages %}
-<Tr><td><b>Otehr software</b>       <tD>:<td>{{sw.swPackages}}
-{% endif %}
-{% if sw.webTools %}
-<tr><td><b>Web based Tools</b>      <td>:<td>{{sw.webTools}}
-{% endif %}
+<tr><td><b>Programming Languages</b><td>:<td>   C++, Java, Python
+<tr><td><b>Database</b>  <td>           :<td>   ORacle 9i, SQLite, MySql
+<tr><td><b>Operating system</b>    <td> :<td>Windows, Linux, MAc
+<Tr><td><b>Otehr software</b>       <tD>:<td>MSOffice 2003, Photoshop, Gimp
+<tr><td><b>Web based Tools</b>      <td>:<td>HTML, JS, XML, PHP, Django
 </table>
 </div>
 
 
 <div>
 <br>
-{% if p.areasofinterest %}
     <h3>Areas Of Interest</h3>
 <ul>
-{% for aoi in p.areasofinterest|split:',' %}
-    <li> {{aoi}}</li>
-{% endfor %}
-{% endif %}
+<li>Logic
+<li>Web 
+<li>c++
 </div>
 
 
  
 <div>
 <br>
-{% if pro %}
 <h3> Projects Undertaken</h3>
+
 <table cellpadding=10>
-{% for pr in pro %}
-<tr><td><li><td>{{pr.desc }}
-{% endfor %}
 <tr><td><li><td>Currently working on Laresumex , a Software to help in placements using Python in Django Framework and . (http://projects.sdrclabs.in/laresumex) 
 <tr><td><li><td>Worked on Change_Agent a Feedback Management System using Python in Django Framework, LATX for generating resumes. (http://projects.sdrclabs.in/change_agent). 
 <tr><td><li><td>Developed a module for SICSR- Admission Process for document verification 
 <tr><td><li><td>Developed a Mediawiki feature for SICSR-Wiki (http://wiki.sdrclabs.in) to mark a page for deletion. 
 <tr><td><li><td>Developed an application called aries to download files on a remote machine. <D-c>
 </table>
-{% endif %}
 </div>
+
 
 <div>
 <br>
-{% if w %}
-<h3> Work Experience</h3>
-<table cellpadding=10>
-{% for wex in w %}
-<tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'Y' }}
-{% endfor %}
-</table>
-{% endif %}
-</div>
+<h3> Academic Qualifications</h3>
 
- 
-<div>
-<br>
-{% if a %}
-<h3> Academic Achievements</h3>
 <table cellpadding=10>
-{% for ac in a %}
-<tr><td><li><td>{{ac.desc }}
-{% endfor %}
+<tr><td><li><td>Currently working on Laresumex , a Software to help in placements using Python in Django Framework and . (http://projects.sdrclabs.in/laresumex) 
+<tr><td><li><td>Worked on Change_Agent a Feedback Management System using Python in Django Framework, LATX for generating resumes. (http://projects.sdrclabs.in/change_agent). 
+<tr><td><li><td>Developed a module for SICSR- Admission Process for document verification 
+<tr><td><li><td>Developed a Mediawiki feature for SICSR-Wiki (http://wiki.sdrclabs.in) to mark a page for deletion. 
+<tr><td><li><td>Developed an application called aries to download files on a remote machine. <D-c>
 </table>
-{% endif %}
 </div>
 
 
@@ -168,17 +137,17 @@ h3{
 
 
 
- 
 <div>
 <br>
-{% if e %}
 <h3> Extra Curricular</h3>
+
 <table cellpadding=10>
-{% for ex in e %}
-<tr><td><li><td>{{ex.desc }}<td> in the year {{ ex.fromDate|date:'Y' }}
-{% endfor %}
+<tr><td><li><td>Currently working on Laresumex , a Software to help in placements using Python in Django Framework and . (http://projects.sdrclabs.in/laresumex) 
+<tr><td><li><td>Worked on Change_Agent a Feedback Management System using Python in Django Framework, LATX for generating resumes. (http://projects.sdrclabs.in/change_agent). 
+<tr><td><li><td>Developed a module for SICSR- Admission Process for document verification 
+<tr><td><li><td>Developed a Mediawiki feature for SICSR-Wiki (http://wiki.sdrclabs.in) to mark a page for deletion. 
+<tr><td><li><td>Developed an application called aries to download files on a remote machine. <D-c>
 </table>
-{% endif %}
 </div>
 
 
@@ -186,13 +155,13 @@ h3{
 <br>
 <h3>Personal dossier</h3>
 <table>
-<tr><td><b>Mother's Name</b><td>:<td>   {{p.mother_name}}
-<tr><td><b>Mother's occupation</b>  <td>           :<td>  {{p.mother_occupation }}
-<tr><td><b>Father's Name</b>    <td> :<td> {{p.father_name}}
-<Tr><td><b>Father's Occupation</b>       <tD>:<td>{{p.father_occupation}}
-<tr><td><b>Languages Known</b>      <td>:<td>{{p.languages}}
-<tr><td><b>Permanent Adress</b>      <td>:<td><pre>{{p.per_address}}</pre>
-<tr><td><b>Address of corospondance</b>      <td>:<td><pre>{{p.corr_address }}</pre>
+<tr><td><b>Mother's Name</b><td>:<td>   Mrs. Radhika Srinivasan
+<tr><td><b>Mother's occupation</b>  <td>           :<td>  Associate Proff
+<tr><td><b>Father's Name</b>    <td> :<td>Mr S. Srinivasan
+<Tr><td><b>Father's Occupation</b>       <tD>:<td>CA
+<tr><td><b>Languages Known</b>      <td>:<td>English, Hindi, Tamil (spoken)
+<tr><td><b>Permanent Adress</b>      <td>:<td>B-101 Taj Apartments<br>Gazipur<br>Delhi
+<tr><td><b>Address of corospondance</b>      <td>:<td>403-BWing, chitrakoot Apartments<br>Model Colony<br>Near SCDL<br>Pune
 </table>
 </div>
 
@@ -200,9 +169,8 @@ h3{
 <br>
     <h3>Hobbies</h3>
 <ul>
-{% for h in p.hobbies|split:','%}
-<li>{{h}}
-{% endfor %}
+<li>Dancing
+<li>Paintign
 </div>
 
 
@@ -214,7 +182,7 @@ h3{
 <br>Date
 </div>
 <div style = "{float:right;}">
-{{s.fullname}}<br>Pune
+Apoorva Srinivasan<br>Pune
 </div>
 <br><BR>
 </div> 

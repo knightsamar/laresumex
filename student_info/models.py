@@ -5,20 +5,23 @@ from datetime  import datetime, date; #for django
 
 class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
+    graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
     prn = models.CharField(max_length=12,unique=True,primary_key=True);
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
     phone_number=models.CharField(max_length=12);
-    backlogs  = models.BooleanField();
-    yeardrop = models.BooleanField()
+    backlogs  = models.CharField(max_length=1);
+    yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False);
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
+    workex=models.BooleanField();
     Extra_field=models.BooleanField();
     last_update=models.DateTimeField(auto_now=True);
+    
 
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
@@ -38,15 +41,34 @@ class marks(models.Model):
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
-    marks=models.DecimalField(max_digits=5,decimal_places=2, blank=True, null=True);
+    marks=models.DecimalField(max_digits=7,decimal_places=3, blank=True, null=True);
     markstype=models.CharField(max_length=10)
-    outof=models.DecimalField(max_digits=7,decimal_places=2, blank=True, null=True);
+    outof=models.DecimalField(max_digits=8,decimal_places=3, blank=True, null=True);
     fromDate=models.DateField(null=True, blank=True);
     
     def __str__(self):
         if self.marks is None:
             return "%s in %s at %s" %(self.markstype,self.course,self.uni)
         return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
+
+
+    def get_percentage(self):
+        '''returns percentage on good data and returns false on bad data or exceptions'''
+        try:
+            percentage = (self.marks / self.outof) * 100;
+            return round(percentage,2);
+        except:
+            print "Can't get percentage because : ",e;
+            return false;
+
+    '''Using syntactic sugar :D ref: http://docs.python.org/library/functions.html#staticmethod 
+    SADLY: this staticmethod thingy doesn't work with django. So we can't use it.
+    '''
+    @staticmethod
+    def get_graduation_course(prn):
+        '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
+        ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
+        return ms[0];
 
     class Meta:
         verbose_name_plural = 'Marks of Students';
@@ -81,7 +103,7 @@ class swExposure(models.Model):
     OS = models.CharField(max_length=100)
     swPackages = models.CharField(max_length=100)
     webTools = models.CharField(max_length=100)
-    
+  
     def __str__(self):
         return "Software Exposure of %s(%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -91,11 +113,11 @@ class swExposure(models.Model):
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student');
     title=models.CharField(blank=False,max_length=20);
-    desc = models.CharField(blank=False,max_length=100);
+    desc = models.TextField(blank=False);
     fromDate = models.DateField(null=True,blank=True);
     endDate = models.DateField(null=True,blank=True);
     def __str__(self):
-        return "Details about %s -%s of %s" % (self.title,self.desc,self.primary_table.fullname);
+        return "Details about %s  of %s" % (self.title,self.primary_table.fullname);
 
     class Meta:
         verbose_name_plural = 'ExtraField info about students';
@@ -116,9 +138,8 @@ class extracurricular(ExtraField):
     pass;
 
 
-
-
-full_list={'student_prn':'Prn', 'student_fullname':'Full Name','student_function_age':'Age','marks_Xth_marks':'10th Marks','marks_XIIth_marks':'12th Marks','workex_function_workex':'Years of Workex'}
+    
+    
 
 
 

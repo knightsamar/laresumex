@@ -5,6 +5,8 @@
 <br/>
 {% if students_applied %}
     <a href='{{ spreadsheet_link }}'>Download list in XLS format</a>
+{% else %}
+    <i>No student has applied yet! </i>
 {% endif %}
 <br>
 <input type = 'button' value = 'Back' onclick="history.go(-1)">

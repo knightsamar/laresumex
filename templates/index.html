@@ -7,23 +7,22 @@
     We will have the special hiya logic here soon ;)
 {% endcomment %}
 Hi!
-
 <br><BR>
 {% if create_form %}
-
-    <input type='button' value = 'fill your resume details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
-
+    <input type='button' value = 'start entering your details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
 {% else %}
+    <input type='button' value = 'edit your details' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
 
-    <input type='button' value = 'edit your resume details' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
-    <input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>
+<input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>
 
-    <input type='button' value='view/apply to companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
-    <input type='button' value = 'generate resume(PDF) BETA version' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/pdf';"><br/>
-    <br/>
+<input type='button' value = 'download your resume(PDF) BETA version' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/pdf';"><br/>
+{% if p_s_st.2 == 1 %}
+    <input type='button' value='view the companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
 {% endif %}
-
+{% endif %}
+{% if p_s_st.0 == 1 %}
+    <input type='button' value='Admin' onclick="javascript:location.href='{{ROOT}}/PT/admin';"><br/><br/>
+{% endif %}
 <input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>
 <input type='hidden' id = 'prn' value='{{prn}}'>
-
 {% endblock %}

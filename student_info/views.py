@@ -298,7 +298,7 @@ def showform(request):
         return HttpResponse(t.render(c));
 
     return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
-    return HttpResponse('you arent supposed to see this page. if u see this please contact samar')
+    return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 
 def done(request,msg):
