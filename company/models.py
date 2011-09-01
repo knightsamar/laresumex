@@ -21,18 +21,18 @@ class company(models.Model):
          verbose_name_plural = "companies"
 
 class placement_in(models.Model):
-    jobtype=(('i',"Internship"),('p',"placement"),('pi','placement + internship'))
+    jobtype=(('intership',"Internship"),('placement',"placement"),('placement+internship','placement + internship'))
     
     student= models.ForeignKey('student_info.student');
     comapny = models.ForeignKey('company');
     profile = models.CharField(max_length=50);
-    placementType = models.NullBooleanField(choices=jobtype)
+    placementType = models.CharField(choices=jobtype, max_length=30)
     date_of_joining = models.DateField();
     starting_stipen = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
     offered_salary = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
     place = models.CharField(max_length=100, blank=True)
     def __str__(self):
-        return "%s got %s in %s " %(self.primary_table.prn, self.placementType, self.comapny.name)
+        return "%s got %s in %s " %(self.student.prn, self.placementType, self.comapny.name)
 
     class Meta:
         verbose_name_plural = 'Which Student Got Placements';

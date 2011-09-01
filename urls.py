@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     (r'^company/apply',"company.views.apply"),
     (r'^PT/admin',"company.views.admin_index"),
     (r'^PT/fetch',"company.views.staff_index"),
-    
+    (r'^PT/got_placed',"company.views.got_placed"),
     # student_info
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),

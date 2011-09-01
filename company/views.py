@@ -132,6 +132,12 @@ def get_students_name(request):
         })
     return HttpResponse(t.render(c))    
     
+def got_placed(request):
+    placed_stu=placement_in.objects.all();
+    
+    t=loader.get_template('company/got_placed.html');
+    c=Context({'PS':placed_stu});
+    return HttpResponse(t.render(c))
 def search(request):
     t=loader.get_template('company/search.html')
     c=RequestContext(request,{})

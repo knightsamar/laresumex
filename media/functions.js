@@ -10,6 +10,8 @@ function validation(o,what)
     {
         isNAN(o.value)
 
+    }
+}
 
 function fillOptions(o)
     {
