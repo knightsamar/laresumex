@@ -137,34 +137,6 @@ function addNew(elName,val)
             clone.id=id.join('_')
             c.appendChild(clone);
         }*/
-
- }
- function lala(o)
- {
-     p=o.parentNode.previousElementSibling.children[0]
-     div=document.getElementById(p.name);
-     alert(p)
-    input=div.children;
-       for (var i=0;i<input.length;i++)
-       {
-          //if (input[i].tagName == 'input' || input[i].tagName=='select' ||)
-          if(input[i].value=="")
-          {
-              	          if(document.createEvent ) {
-            	  var evObj = document.createEvent('MouseEvents');
-	              evObj.initEvent( 'click', true, false );
-	              p.dispatchEvent(evObj);
-        	} else if( document.createEventObject ) {
-	            p.fireEvent('onclick');
-	                }
-    input[i].focus()
-      alert(input[i].name + 'is not filled');
-
-return false
-                        }
-       }
-
-  
  }
 
 		</script>
@@ -190,17 +162,17 @@ return false
 {% csrf_token %}
 <div id="tabs">
 			<ul>
-				<li class='sectionlinks'><a href="#tabs-1" name = 'tabs-1'>Getting Started</a></li>
-				<li class='sectionlinks'><a href="#tabs-2" name = 'tabs-2'onclick="return lala(this)">Qualification*</a></li>
-				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-3" name = 'tabs-3' onclick="return lala(this)">Personality Traits</a></li>
+				<li class='sectionlinks'><a href="#tabs-1">Getting Started</a></li>
+				<li class='sectionlinks'><a href="#tabs-2">Qualification*</a></li>
+				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-3">Personality Traits</a></li>
 				<!--<li><a href="#tabs-4">Certification</a></li>-->
-				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-5 "name = 'tabs-4' onclick="return lala(this)">Software Skillset</a></li>
+				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-5">Software Skillset</a></li>
 				<li><a class='sectionlinks' href="#tabs-6">Other fields</a></li>
 				{% comment %}<li><a href="#tabs-7">Projects Undertaken</a></li>
 				<li><a href="#tabs-8">Academic Achievements</a></li>
 				<li><a href="#tabs-9">Exta Curricular</a></li>{% endcomment %}
 				<li><a class='sectionlinks' href="#tabs-10">Personal*</a></li>
-				<li><a class='sectionlinks' href="#tabs-11" name = 'tabs-11' onclick="return lala(this)">Photo and other* </a></li>
+				<li><a class='sectionlinks' href="#tabs-11">Photo and other*</a></li>
 			</ul>
 
 <div id='tabs-1'>
