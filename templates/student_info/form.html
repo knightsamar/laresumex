@@ -245,7 +245,7 @@ function validate(obj)
  
 <br/><br/>
 
-<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ s.prn }}/submit'>
 {% csrf_token %}
 <div id="tabs">
 			<ul>

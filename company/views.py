@@ -107,7 +107,7 @@ def get_students_name(request):
                 else:
                     if si[1] == 'graduation':
                         table=marks.get_graduation_course(s)
-                        data = str(table.__getattribute__(si[2]))
+                        data = str(table)
                     else:    
                         try:
                             table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 

@@ -68,8 +68,10 @@ class marks(models.Model):
     def get_graduation_course(prn):
         '''get all marks objects who are graduation = (not 10,12) AND (not starting with M which is for Masters) and IS belonging to the PRN'''
         ms = marks.objects.filter(course__istartswith='B').filter(primary_table=prn);
-        return ms[0];
-
+        try:
+            return ms[0];
+        except Exception as e:
+            return 'not mentioned';
     class Meta:
         verbose_name_plural = 'Marks of Students';
 
