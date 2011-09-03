@@ -81,7 +81,25 @@ function fillOptions(o)
                  o.add(option,null)
             }
         } 
-
+        else if (o.name == "strongAreas" || o.name == "weakAreas" )
+        {
+            var h=new Array('programming','database','os','web','packages');
+            for( var i=0;i<h.length;i++)
+            {
+                c=document.getElementById(h[i]).children; //LI's
+                
+                for(var j=0;j<c.length;j++)
+                {
+                    if(c[j].children[0].value)
+                    {
+                        var option = document.createElement("option");
+                        option.text=c[j].children[0].value
+                        o.add(option,null)
+                    }
+               }
+                
+            }
+        }
     }
      
     
