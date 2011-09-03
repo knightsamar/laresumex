@@ -4,15 +4,6 @@
        For day, month and year, fills with values.
        For courses, fills with degrees.
     */
-function validation(o,what)
-{
-    if (what == 'string')
-    {
-        isNAN(o.value)
-
-    }
-}
-
 function fillOptions(o)
     {
         if (o.children.length >1) return false;
