@@ -280,7 +280,7 @@ function validate(obj)
 
   Birthdate*
   <select name = "date"  id="birthdate_date"  onBlur="change(this);" onFocus="fillOptions(this);">
-        <option>{{ p.birthdate.day }} </option>
+     <option>{{ p.birthdate.day }} </option>
   </select>
   <select name = "month" id="birthdate_month" onBlur="change(this);" onFocus="fillOptions(this);"> 
         <option>{{ p.birthdate|date:"b"|title }}</option>
@@ -307,7 +307,7 @@ function validate(obj)
   <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
   <td>
   {% if not marks.marks %}
-      <input type="text" id='marks_marks_{{ forloop.counter }}' disabled=true size='10' onblur='validate(this)'> 
+      <input type="text" id='marks_marks_{{ forloop.counter }}' value="{{marks.markstype}}" disabled=true size='10' onblur='validate(this)'> 
   {% else %}
       <input type="text" id='marks_marks_{{ forloop.counter }}' size='10' maxlength='10' value="{{marks.marks}}" onBlur='validate(this)'> 
   {% endif %}
@@ -320,7 +320,7 @@ function validate(obj)
           <option>Result Awaiting</option>
           </select>
    {% if not marks.outof %}
-       Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' disabled=true onblur='validate(this)'> 
+       Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' value="{{ marks.markstype }}" disabled=true onblur='validate(this)'> 
    {% else %}
   Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' value="{{marks.outof}}" onblur='alert("hi");validate(this);'> 
   {% endif %}
@@ -413,7 +413,7 @@ function validate(obj)
              </ul>   
              <input type='button'  onClick="addNew('programming');" value='Add Another'>   
              <li>Database
-            <ul id = 'swExposure'>
+            <ul id = 'database'>
                 {% for software in sw.databases|split:',' %}
                 <li><input type='text' id="swExposure_databases_{{ forloop.counter }}" value="{{ software }}">
                     <input type='button' value='remove' onClick="remove(this.parentNode)";>
@@ -422,7 +422,7 @@ function validate(obj)
                 <li><input type='text' id="swExposure_databases_1">
                 {% endfor %}
              </ul>   
-             <input type='button'  onClick="addNew('swExposure');" value='Add Another'>   
+             <input type='button'  onClick="addNew('database');" value='Add Another'>   
             <li>OS
             <ul id = 'os'>
                 {% for os in sw.OS|split:',' %}
@@ -705,7 +705,7 @@ Do you have any active backlogs??
 {% if s.backlogs %}
           <input type="radio"  name="backlogs" value='yes' checked = true>Yes
           <input type="radio"  name="backlogs" value=''>No<br><br>
-   {% else %}       
+   {% else %}      
 		  <input type="radio"  name="backlogs" value='yes' >Yes
           <input type="radio"  name="backlogs" value='' checked = true>No<br><BR><br>
   {% endif %} 
@@ -719,10 +719,13 @@ Did you have any year drop
           <input type="radio"  name="yeardrop" value='' checked = true>No<br><BR><br>
   {% endif %} 
 <BR><BR>
-
+{% comment %} 
+Strong Areas 
+<select  name = 'strongAreas' onFocus="fillOptions(this)" multiple =true></select>
+<select  name = 'weakAreas' onFocus="fillOptions(this)" multiple=true></select>
 </div> 
-
-</div><! -- end of the tabs div -->
+{% endcomment %}
+</div><!-- end of the tabs div -->
   <input type='hidden' value='0' name='allok' id='allok'>
 
 <div id='buttons' class='#' style='text-align:center;'>
