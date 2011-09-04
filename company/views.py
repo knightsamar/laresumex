@@ -19,6 +19,13 @@ from pyExcelerator import *
 #TODO: We have to check the licensing restrictions imposed by it.
 
 def admin_index(request):
+     if 'username' not in request.session:
+        return our_redirect('/ldap_login/login')
+        
+     g = groups.objects.get(name='placemnt_committee')
+
+     if user(request.session['username') not in g:
+         return HttpRespose('page not for u');
      t=loader.get_template('company/admin_index.html');
     
      c=RequestContext(request,{
@@ -31,7 +38,16 @@ def admin_index(request):
 
 
 def staff_index(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login/login')
+    
+    g = groups.objects.get(name='placemnt_committee')
+
+     if user(request.session['username') not in g:
+         return HttpResponse('page not for u'); 
     com=company.objects.all();
+    
+    
     t=loader.get_template('company/fetch_students.html');
     
     c=RequestContext(request,{
@@ -46,12 +62,9 @@ def staff_index(request):
 def get_students_name(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login/login')
-    a=False;
-    u=user.objects.get(username=request.session['username'])
-    for g in u.groups.all():
-        if g.name=='placement committee':
-            a=True
-    if not a:        
+    g = groups.objects.get(name='placemnt_committee')
+
+    if user(request.session['username') not in g:
         return HttpResponse('not for u');
     
     print request.POST; 
