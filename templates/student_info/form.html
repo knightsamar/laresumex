@@ -244,8 +244,11 @@ function validate(obj)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
-
+{% if flag == 'form' %}
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
+{% else %}
 <form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ s.prn }}/submit'>
+{% endif %}
 {% csrf_token %}
 <div id="tabs">
 			<ul>
@@ -742,11 +745,19 @@ Did you have any year drop
         </select>
         <BR><BR>
     {% endif %}
+{% empty %}
+Strong Areas
+<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+Weak Areas
+<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
 {% endfor %}
+<!-- company specific elements which are available only when editing existing forms -->
 {% for c in cs %}
-`<BR>
+<BR>
     <B>{{c.valueOf.displayText}}</b>
     <input type='text' id='companySpecific_{{c.valueOf.key}}' value = "{{c.value}}">
+    {%empty%}
+    <li> lalalalala CS is empty???
 {% endfor%}
 {% for c in mt %}
 `<BR>

@@ -48,6 +48,45 @@ def edit(request,prn):
         #get all the records and tell us whether they were creatd or retrieved
         #have moved this to the student_info.models, because all Model info must come from there and tomo if we add a new model, we shouldn't have to come here to provide it's functionality.
         table=tables.get_tables(s)
+        special_cases=['strongAreas','weakAreas','gradsemmarks']
+        
+        #get company specific required fields
+        '''We are segregating the company Specific thigs into 3 sequences... 
+        a) the main table, which consists all rows of the main table structurw. 
+        b) cs are the data filled by this partucular student.
+        C) CSD is a dict that contains the rows of the fields to be treated speacially in the form.the list is included in the included wala list.
+        Main table fetches all the data to be collected per student. CS is the data ctually filled by the students. this is used to prefill the foem while editing.and the maintable is required for the "form" for a new user. CSD contains muxture of both. so that the included fields can be treated specially and the maintable and CS list dont contain these entries.  
+
+        '''
+
+        maintable=list(companySpecific.objects.all());
+        cs=list(companySpecificData.objects.filter(primary_table=s))
+        print cs;
+        k=0
+        csd=dict()
+        for css in range(len(cs)):
+            if cs[k].valueOf in maintable:
+                print "found", cs[k].valueOf, "in maintable"
+                i=maintable.index(cs[k].valueOf)
+                maintable.remove(maintable[i])
+            if str(cs[k].valueOf.key) in special_cases:
+                print "found",cs[k].valueOf.key
+                csd[cs[k].valueOf.key]=cs[k];
+                cs.remove(cs[k])
+                k = k-1
+            k = k+1; 
+        for mt in maintable:
+            if mt.key in special_cases:
+                csd[mt.key]="";
+                maintable.remove(mt);
+        print "CS ====",cs
+        print "CSD====",csd
+        print "Maintable....",maintable
+        maintable.sort();
+        cs.sort();
+        table['mt']=maintable;
+        table['cs']=cs;
+        table['csd']=csd;
         c = RequestContext(request,table);
         t = loader.get_template('student_info/form.html');
         
@@ -294,12 +333,24 @@ def showform(request):
         prn=request.session['username'];
         yr=prn[5:7];
         print yr
+        special_cases=['strongAreas','weakAreas']
+        maintable=list(companySpecific.objects.all());
+        i=0
+        for m in range(len(maintable)):
+            if maintable[i].key in special_cases:
+                
+                maintable.remove(maintable[i])
+                i = i-1;
+            i = i+1;
+        print(maintable);       
+
         t=loader.get_template('student_info/form.html')
         c=RequestContext(request,
             {
                 'flag':'form',
                 'prn':prn,
                 'ROOT':ROOT,
+                'mt':maintable,
                 'yr':yr
             }
             );
