@@ -244,8 +244,11 @@ function validate(obj)
 <h3 align='center'>Resume</h3>
  
 <br/><br/>
-
+{% if flag == 'form' %}
+<form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
+{% else %}
 <form name='f' onsubmit="return changeName();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ s.prn }}/submit'>
+{% endif %}
 {% csrf_token %}
 <div id="tabs">
 			<ul>
