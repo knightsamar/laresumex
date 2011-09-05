@@ -1,6 +1,6 @@
 from company.models import *
-from django.core.mail import send_mail
 from django.contrib import admin
+#from djamgo.core.mail import send_  mail
 
 '''
 class membershipInline(admin.TabularInline):
@@ -17,15 +17,15 @@ class companyAdmin(admin.ModelAdmin):
     #for list display
     list_display = ('name','date_of_process','last_date_of_applying')
     list_filter = ['came_for_group'];
-    '''inlines = [
+'''    inlines = [
         membershipInline,
         ]
 
-    def informStudents(self, request, selected_companies):
-        for c in selected_companies:
-            for g in c.came_for_group.values():
-                students = objects.selected
-                '''
+#    def informStudents(self, request, selected_companies):
+#        for c in selected_companies:
+#            for g in c.came_for_group.values():
+#                students = objects.selected
+'''
 admin.site.register(company,companyAdmin);
 
 admin.site.register(placement_in);

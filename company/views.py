@@ -146,7 +146,13 @@ def get_students_name(request):
     return HttpResponse(t.render(c))    
     
 def got_placed(request):
-    placed_stu=placement_in.objects.all();
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login/login')
+    g = groups.objects.get(name='placemnt_committee')
+
+    if user(request.session['username']) not in g:
+        return HttpResponse('not for u');
+    laced_stu=placement_in.objects.all();
     
     t=loader.get_template('company/got_placed.html');
     c=Context({'PS':placed_stu});
