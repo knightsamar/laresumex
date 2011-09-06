@@ -726,39 +726,35 @@ Did you have any year drop
   {% endif %} 
 <BR><BR>
 
-{% for c,v in csd.items %}
-    {% if c == 'strongAreas' %}
+{% for c in cs %}
+<!-- {{ c }} -->
+   {% if c.valueOf.fieldType == 'special' %}
+   <!-- We got a special -->
+    {% if c.valueOf.key == 'strongAreas' %}
  
     Strong Areas 
         <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple>
-            {% for a in v.value|split:',' %}
+            {% for a in c.value|split:',' %}
                 <option selected >{{a}}</option>     
             {% endfor %}
         </select>
-    {% endif %}
-    {% if c == 'weakAreas' %}
+    {% endif %}<!-- end of strong areas wala if -->
+    {% if c.valueOf.key == 'weakAreas' %}
     Weak Areas
         <select  id ="companySpecific_weakAreas" name = 'weakAreas' onFocus="fillOptions(this)" multiple=true>
-            {% for a in v.value|split:',' %}
+            {% for a in c.value|split:',' %}
                 <option selected >{{a}}</option>     
             {% endfor %}
 
         </select>
         <BR><BR>
-    {% endif %}
-{% empty %}
-Strong Areas
-<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
-Weak Areas
-<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
-{% endfor %}
-
-
-<!-- company specific elements which are available only when editing existing forms -->
-{% for c in cs %}
-<BR>
+    {% endif %} <!-- end of weak areas wala if -->
+  {% else %} <!-- Not special -->
+{% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
+    <BR>
     <B>{{c.valueOf.displayText}}</b>
     {% if c.valueOf.fieldType == 'radio' %}
+        <!-- got a radio -->
         {% if c.value == 'yes' %}
          Yes  <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='yes' checked>
          No   <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='no'>
@@ -769,7 +765,18 @@ Weak Areas
      {% else %} 
         <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}'>
     {% endif %}
-    {%empty%}
+  {% endif %}
+{% empty %}
+
+{% comment %}
+This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
+{% endcomment %}
+Strong Areas
+<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+Weak Areas
+<select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+
+
 {% endfor%}
 
 <!-- unfilled items -->
@@ -800,9 +807,5 @@ Weak Areas
 </noscript>
 {% endblock %}
 
-<noscript>
-    <h3>Hey! You need to enable JavaScript. Otherwise we ain't cooperating :P </h3>
-</noscript>
-    
 </body>
 </html>
