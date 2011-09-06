@@ -8,7 +8,7 @@ from ldap_login.models import *
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from company.views import staff_index;
+from company.views import fetch_index;
 from student_info.utility import *; 
 from student_info import tables
 from pprint import pprint

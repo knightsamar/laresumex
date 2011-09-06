@@ -41,13 +41,12 @@ Please add some companies from the admin panel.
 {% for l in  list|dictsort:"id" %}
 <li> {{ l.display_name }} <input type = 'checkbox' value = "{{ l.name }}" name ="criteria_{{ l.id }}"><br> 
 {% endfor %}
-
-{% csrf_token %}
-<input type='submit' value="fetch all">
-<input type='button' onClick="javascript:location.href='{{ROOT}}/ldap_login/logout'" value='Logout!' alt='Enough of form filling!'></span> <br/>
-</div>
-</div>
 {% endif %}
 </div>
+<div>
+</div>
+{% csrf_token %}
+<input type='submit' value="fetch all">
+<input type='button' onClick="history.go(-1)" value='Back' alt='Enough of form filling!'> <br/>
 </html>
 {% endblock %}

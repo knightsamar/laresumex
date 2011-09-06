@@ -17,6 +17,58 @@ from django.utils.encoding import smart_unicode;
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 
+
+
+########################################################################
+#######################  STUDENT'S FORM  ###############################
+########################################################################
+
+def showform(request):
+    if 'username' not in request.session:
+        print "No session"
+        return our_redirect('/ldap_login')
+    
+    #the user shoud not get the form if he already has one.
+    try:
+        s=student.objects.get(pk=request.session['username'])
+        print "student Fornd...", s
+    except Exception as e:
+
+        print "student does not exist" 
+        prn=request.session['username'];
+        if prn.isdigit():
+            yr=prn[5:7];
+        else:
+            yr = "staff"
+        print yr
+        special_cases=['strongAreas','weakAreas']
+        maintable=list(companySpecific.objects.all());
+        i=0
+        for m in range(len(maintable)):
+            if maintable[i].key in special_cases:
+                
+                maintable.remove(maintable[i])
+                i = i-1;
+            i = i+1;
+        print(maintable);       
+
+        t=loader.get_template('student_info/form.html')
+        c=RequestContext(request,
+            {
+                'flag':'form',
+                'prn':prn,
+                'ROOT':ROOT,
+                'mt':maintable,
+                'yr':yr
+            }
+            );
+    
+        return HttpResponse(t.render(c));
+
+    return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
+    return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
+
+
 def edit(request,prn):
     if "username" not in request.session:
        print "no session found"
@@ -92,6 +144,10 @@ def edit(request,prn):
         
         return HttpResponse(t.render(c));
 
+
+########################################################################
+################  SUBMIT STUDENT'S FORM  ###############################
+########################################################################
 
 def submit(request, prn):
     '''processes submissions of NEW forms and also EDIT forms!'''
@@ -313,54 +369,21 @@ def submit(request, prn):
     return our_redirect('/student_info/Submitted/done');
 
 
+
+########################################################################
+###########################  OTHER  ####################################
+########################################################################
+
+
 def ajaxRequest(request):
     '''for processing any ajax request for a field data'''
     '''will accept data in XML (ok?) and return data in XML '''
     pass;
 
-def showform(request):
-    if 'username' not in request.session:
-        print "No session"
-        return our_redirect('/ldap_login')
-    
-    #the user shoud not get the form if he already has one.
-    try:
-        s=student.objects.get(pk=request.session['username'])
-        print "student Fornd...", s
-    except Exception as e:
-
-        print "student does not exist" 
-        prn=request.session['username'];
-        yr=prn[5:7];
-        print yr
-        special_cases=['strongAreas','weakAreas']
-        maintable=list(companySpecific.objects.all());
-        i=0
-        for m in range(len(maintable)):
-            if maintable[i].key in special_cases:
-                
-                maintable.remove(maintable[i])
-                i = i-1;
-            i = i+1;
-        print(maintable);       
-
-        t=loader.get_template('student_info/form.html')
-        c=RequestContext(request,
-            {
-                'flag':'form',
-                'prn':prn,
-                'ROOT':ROOT,
-                'mt':maintable,
-                'yr':yr
-            }
-            );
-    
-        return HttpResponse(t.render(c));
-
-    return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
-    return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 
+
+# A GENERC FINCTION TO PRINT ANY MESSAGE
 def done(request,msg):
   t=loader.get_template('done.html')
   c=Context(

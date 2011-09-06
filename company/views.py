@@ -18,9 +18,16 @@ from pyExcelerator import *
 
 #TODO: We have to check the licensing restrictions imposed by it.
 
+
+###############################################################################################
+##################           VIEWS THAT RENDER MENU            ################################
+###############################################################################################
+
+# Admin page for a admin. 
+
 def admin_index(request):
      if 'username' not in request.session:
-        return our_redirect('/ldap_login/login')
+        return our_redirect('/ldap_login/')
        
      g = group.objects.get(name='placement committee')
 
@@ -37,9 +44,39 @@ def admin_index(request):
      return HttpResponse(t.render(c))
 
 
-def staff_index(request):
+''' Gives the HTML output of students who have got placed ...'''
+def got_placed(request,placed_id):
     if 'username' not in request.session:
-        return our_redirect('/ldap_login/login')
+        return our_redirect('/ldap_login/')
+    g = group.objects.get(name='placement committee')
+
+    if user(request.session['username']) not in g.user_set.all():
+        return HttpResponse('not for u');
+    placed_stu=placement_in.objects.all();
+    if int(placed_id) == 1:
+        c=Context({'placed':'yes','PS':placed_stu});
+    elif int(placed_id) == 2:
+        slist=[]
+        for p in placed_stu:
+            slist.append(p.student.prn)
+        unplaced_stu=student.objects.exclude(prn__in=slist);
+        c=Context({'placed':'no','UPS':unplaced_stu});
+    t=loader.get_template('company/got_placed.html');
+    return HttpResponse(t.render(c))
+
+
+
+
+###############################################################################################
+#####################           FETCH STUDENTS           ######################################
+###############################################################################################
+
+
+''' Fetch index gives a UI to delect a company and the crieteria's to be fetched. The backend actually fetches the student and puts in a spreadsheet'''
+
+def fetch_index(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login')
     
     g = group.objects.get(name='placement committee')
 
@@ -59,9 +96,12 @@ def staff_index(request):
     return HttpResponse(t.render(c))
 
 
+''' takes in the post from fetch_students.html . It creates a spreadsheet of all the sudents those who have applied to a particular comapny, with ONLY the information givin tin the post
+'''
+
 def get_students_name(request):
     if 'username' not in request.session:
-        return our_redirect('/ldap_login/login')
+        return our_redirect('/ldap_login')
     g = group.objects.get(name='placement committee')
 
     if user(request.session['username']) not in g.user_set.all():
@@ -145,18 +185,15 @@ def get_students_name(request):
         })
     return HttpResponse(t.render(c))    
     
-def got_placed(request):
-    if 'username' not in request.session:
-        return our_redirect('/ldap_login/login')
-    g = group.objects.get(name='placement committee')
 
-    if user(request.session['username']) not in g:
-        return HttpResponse('not for u');
-    laced_stu=placement_in.objects.all();
-    
-    t=loader.get_template('company/got_placed.html');
-    c=Context({'PS':placed_stu});
-    return HttpResponse(t.render(c))
+
+##############################################################################################
+#########################           SEARCH STUDENTS           ################################
+###############################################################################################
+
+
+
+''' search  for list of student's acc to thier eligibitliyty'''
 def search(request):
     t=loader.get_template('company/search.html')
     c=RequestContext(request,{})
@@ -180,6 +217,19 @@ def getResume(request):
     print final_string
     return HttpResponse("Please wait till i fetch the resumes...\n\n"+final_string);
 
+
+
+
+###############################################################################################
+######################            STUDENTS CAN APPLY           ################################
+###############################################################################################
+
+
+
+
+''' For the student's view, This generated a lists of companies vailable for them to apply for. 
+Thisgives the company's information as a tooltip, and a check box for apllying. It also disables thecompanies that have gone.
+'''
 def company_list(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login/');
@@ -230,6 +280,9 @@ def company_list(request):
                 
             });
     return HttpResponse(t.render(c));
+
+
+'''  For student's info module, It savs the application by a student, if a person has disselected, it asaves that also ;)'''
 def apply(request):
     print request.POST
     #check for the session and our_redirect
