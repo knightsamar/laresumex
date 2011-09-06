@@ -40,7 +40,7 @@ def showform(request):
         if prn.isdigit():
             yr=prn[5:7];
         else:
-            yr == 'staff'
+            yr = 'staff'
         print yr
         maintable=list(companySpecific.objects.exclude(fieldType='special').order_by('displayText'));
         print(maintable);       

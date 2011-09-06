@@ -73,6 +73,21 @@ def got_placed(request,placed_id):
 
 
 ''' Fetch index gives a UI to delect a company and the crieteria's to be fetched. The backend actually fetches the student and puts in a spreadsheet'''
+def get_full_list():
+    full = list()
+    for f in full_list:
+        full.append(f);
+    maintable = companySpecific.objects.all().order_by('key');
+    i = len(full);
+    for mt in maintable:
+        tempdict = dict();
+        tempdict['id']=i;
+        tempdict['name']='companySpecific_'+mt.key
+        tempdict['display_name']=mt.displayText;
+        full.append(tempdict);
+        i = i+1;
+    return full;
+
 
 def fetch_index(request):
     if 'username' not in request.session:
@@ -83,15 +98,14 @@ def fetch_index(request):
     if user(request.session['username']) not in g.user_set.all():
          return HttpResponse('page not for u'); 
     com=company.objects.all();
-    
-    
+   
     t=loader.get_template('company/fetch_students.html');
-    
+    full = get_full_list();
     c=RequestContext(request,{
         'c':com,
         'ROOT':ROOT,
         'MEDIA_URL':MEDIA_URL,
-        'list':full_list
+        'list':full
         })
     return HttpResponse(t.render(c))
 
@@ -134,9 +148,10 @@ def get_students_name(request):
         if len(fields_to_get) is 0:
             return HttpResponse('Check Some Fields to be sent to the company')
         #print headings in the spreadsheet
+        full = get_full_list();
         for f in fields_to_get.keys():
-            print "title == ", full_list[f]['display_name'];
-            ws0.write(0,f,full_list[f]['display_name']);
+            print "title == ", full[f]['display_name'];
+            ws0.write(0,f,full[f]['display_name']);
 
         #print data in the spreadsheet
     
@@ -145,10 +160,13 @@ def get_students_name(request):
             # x is the students name list ka index
             s=name_list[x]
             print "for student", s
+            
             for y in fields_to_get.keys(): #hardcoding 4 fields currently
+               try:
                 # y is the fields ka index
                 print "fields to get. ....",fields_to_get[y]            
                 si=fields_to_get[y].split('_');
+                print "SI ======", si;
                 if si[0] == 'student':
                     data = s.__getattribute__(si[1])
                     print "==data===",data    
@@ -157,21 +175,29 @@ def get_students_name(request):
                     data = str(table.__getattribute__(si[1]))
                 elif si[0] == 'workex':
                     data=s.total_workex();
+                elif si[0] == 'companySpecific':
+                    cs=eval(si[0]).objects.get(key = si[1])
+                    csd = companySpecificData.objects.filter(primary_table = s).filter(valueOf = cs)[0];
+                    print "CS =====",cs,"CSD =========",csd
+                    data = csd.value;
                 else:
                     if si[1] == 'graduation':
                         table=marks.get_graduation_course(s)
                         data = str(table)
                     else:    
-                        try:
+                        
                             table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
                             print "we are using table ", table
                             data = str(table.get_percentage());
-                        except Exception as e:
-                            data  = "-"
-                #data = eval("name_list[%d].%s" % (x,fields_to_get[y]));
-                print "Writing data %s at %d %d" % (data,x,y);
-                ws0.write(x+1,y,data);
-    
+               except Exception as e:
+                            print "==========HAD GOT and EXCEPTION ;)", e
+                            data  = "---"
+                            pass;
+
+               #data = eval("name_list[%d].%s" % (x,fields_to_get[y]));
+               print "Writing data %s at %d %d" % (data,x,y);
+               ws0.write(x+1,y,data);
+                                        
         spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name.replace(' ','-'));
         wb.save('/tmp/%s' % (spreadsheet_name));
         copy_spreadsheet_command = "cp -v /tmp/%s %s" % (spreadsheet_name,MEDIA_ROOT);
