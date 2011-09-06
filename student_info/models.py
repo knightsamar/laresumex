@@ -144,8 +144,10 @@ class extracurricular(ExtraField):
  
 # strores company specific details that shd not be stored in the resume
 class companySpecific(models.Model):
-    key = models.CharField(max_length=100)
-    displayText=models.CharField(max_length=100);
+    Types=(('text','Simple Text'),('radio','Simple yes/No type'))
+    fieldType=models.CharField(max_length=50,default='text',choices=Types)
+    key = models.CharField(max_length=100, help_text="enter a key for internal purposes, WITHOUT SPACES or UNDERSCORE")
+    displayText=models.CharField(max_length=100,help_text="The text you want to appear on the form");
     def __str__(self):
         return self.displayText;
 

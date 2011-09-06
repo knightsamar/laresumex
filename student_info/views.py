@@ -19,9 +19,9 @@ from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PA
 
 
 
-########################################################################
-#######################  STUDENT'S FORM  ###############################
-########################################################################
+##########################################################################
+###################### STUDENT FORM ######################################
+##########################################################################
 
 def showform(request):
     if 'username' not in request.session:
@@ -39,11 +39,13 @@ def showform(request):
         if prn.isdigit():
             yr=prn[5:7];
         else:
-            yr = "staff"
+            yr == 'staff'
         print yr
         special_cases=['strongAreas','weakAreas']
         maintable=list(companySpecific.objects.all());
         i=0
+
+        #removing the special list from the maintable to be processes seperately ;)
         for m in range(len(maintable)):
             if maintable[i].key in special_cases:
                 
@@ -64,9 +66,6 @@ def showform(request):
             );
     
         return HttpResponse(t.render(c));
-
-    return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
-    return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 
 def edit(request,prn):
@@ -145,9 +144,10 @@ def edit(request,prn):
         return HttpResponse(t.render(c));
 
 
-########################################################################
-################  SUBMIT STUDENT'S FORM  ###############################
-########################################################################
+##########################################################################
+#################### STUDENT FORM SUBMIT #################################
+##########################################################################
+
 
 def submit(request, prn):
     '''processes submissions of NEW forms and also EDIT forms!'''
@@ -371,19 +371,18 @@ def submit(request, prn):
 
 
 ########################################################################
-###########################  OTHER  ####################################
+######################   OTHER FIELDS    ###############################
 ########################################################################
-
 
 def ajaxRequest(request):
     '''for processing any ajax request for a field data'''
     '''will accept data in XML (ok?) and return data in XML '''
     pass;
 
+    return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
+    return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 
-
-# A GENERC FINCTION TO PRINT ANY MESSAGE
 def done(request,msg):
   t=loader.get_template('done.html')
   c=Context(

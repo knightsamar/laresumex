@@ -707,8 +707,8 @@ Change the uploaded Photograph
   <input type = 'file' name='photo'>
 <br><br>
 </div>
-{% if yr != 'staff' %}
 <div id= 'tabs-12'>
+{% if yr != 'staff' %}
 Do you have any active backlogs??
 {% if s.backlogs %}
           <input type="radio"  name="backlogs" value='yes' checked = true>Yes
@@ -754,17 +754,36 @@ Strong Areas
 Weak Areas
 <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
 {% endfor %}
+
+
 <!-- company specific elements which are available only when editing existing forms -->
 {% for c in cs %}
 <BR>
     <B>{{c.valueOf.displayText}}</b>
-    <input type='text' id='companySpecific_{{c.valueOf.key}}' value = "{{c.value}}">
+    {% if c.valueOf.fieldType == 'radio' %}
+        {% if c.value == 'yes' %}
+         Yes  <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='yes' checked>
+         No   <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='no'>
+        {% else %}
+         Yes  <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='yes'>
+         No   <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='no' checked>
+         {% endif%}
+     {% else %} 
+        <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}'>
+    {% endif %}
     {%empty%}
 {% endfor%}
+
+<!-- unfilled items -->
 {% for c in mt %}
 `<BR>
     <B>{{c.displayText}}</b>
-    <input type='text' id='companySpecific_{{c.key}}'>
+    {% if c.fieldType == 'radio' %}
+         Yes  <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' value='yes'>
+         No   <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' value='no'>
+     {% else %} 
+        <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}'>
+    {% endif %}
 {% endfor%}
   
 </div> 
