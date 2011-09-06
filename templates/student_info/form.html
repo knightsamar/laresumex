@@ -625,7 +625,6 @@ function validate(obj)
 
             <td><textarea rows=2 cols=50 id="ExtraField_desc_{{forloop.counter}}">{{A.desc}}</textarea></td>
              
-            <td><select name = "year"  id="ExtraField_year_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur=concat(this)><option>{{A.fromDate.year}}</option> </select>  </td>
             <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
             </td> 
@@ -634,7 +633,6 @@ function validate(obj)
                <td><textarea rows=2 cols=50 id="ExtraField_desc_1"></textarea></td>
              
             <td>
-            <select name = "year"  id="ExtraField_year_1" onFocus="fillOptions(this);" onBlur=concat(this)> </select>  </td>
             </tr>
             {% endfor %}
 </table>
@@ -776,7 +774,7 @@ Weak Areas
 
 <!-- unfilled items -->
 {% for c in mt %}
-`<BR>
+<BR>
     <B>{{c.displayText}}</b>
     {% if c.fieldType == 'radio' %}
          Yes  <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' value='yes'>

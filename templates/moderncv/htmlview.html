@@ -36,11 +36,11 @@ h3{
 <br>
 <div>
 <br>
-<h3>Career Objective</h3>
-<b><i>{{s.career_objective}}</b></i>
+    <h3>Career Objective</h3>
+        <b><i>{{s.career_objective}}</b></i>
 </div>
 
-
+{% if p.strength %}
 <div>
 <br>
 <h3>Personality Traits</h3>
@@ -49,137 +49,118 @@ h3{
         <li> {{per}}</li>
      {% endfor %}   
 </div>
-
+{% endif %}
 
 <div>
 <br>
-
+{% if m %}
 <h3> Academic Qualifications</h3>
 
-<table cellpadding=10 >
-{% for marks in m %}
-<tr><td>{{marks.course}}<td>{{marks.uni}}<td>{{marks.marks}}<td>{{marks.fromDate|date:'Y'}}</tr>
-{% endfor %}
-</table>
+    <table cellpadding=10 >
+      {% for marks in m %}
+          <tr><td>{{marks.course}}<td>{{marks.uni}}<td>{{marks.marks}}<td>{{marks.fromDate|date:'Y'}}</tr>
+      {% endfor %}
+    </table>
 </div>
 
- 
-<div>
+ {% endif %}
 <br>
 {% if c %}
-<h3> Certifications</h3>
+<div>
+    <h3> Certifications</h3>
 
-<table cellpadding=10>
-{% for certi in c %}
-    <tr><td><li><td>{{ certi.desc }}<td>{{ certi.fromDate|date:'MY' }}
-{% endfor %}
-{% endif %}
+        <table cellpadding=10>
+            {% for certi in c %}
+                        <tr><td><li><td>{{ certi.desc }}<td>{{ certi.fromDate|date:'MY' }}
+            {% endfor %}
 </table>
 </div>
+{% endif %}
 
-
+{% if sw %}
 <div>
 <br>
-<h3>Software Exposure</h3>
-<table>
-{% if sw.programming %}
-<tr><td><b>Programming Languages</b><td>:<td> {{sw.programming}}
-{% endif %}
-{% if sw.databases %}
-<tr><td><b>Database</b>  <td>           :<td>   {{sw.databases}}
-{% endif %}
-{% if sw.OS %}
-<tr><td><b>Operating system</b>    <td> :<td>{{sw.OS}}
-{% endif %}
-{% if sw.swPackages %}
-<Tr><td><b>Otehr software</b>       <tD>:<td>{{sw.swPackages}}
-{% endif %}
-{% if sw.webTools %}
-<tr><td><b>Web based Tools</b>      <td>:<td>{{sw.webTools}}
-{% endif %}
-</table>
+    <h3>Software Exposure</h3>
+    <table>
+        {% if sw.programming %}
+            <tr><td><b>Programming Languages</b><td>:<td> {{sw.programming}}
+        {% endif %}
+        {% if sw.databases %}
+            <tr><td><b>Database</b>  <td>           :<td>   {{sw.databases}}
+        {% endif %}
+        {% if sw.OS %}
+            <tr><td><b>Operating system</b>    <td> :<td>{{sw.OS}}
+        {% endif %}
+        {% if sw.swPackages %}
+            <Tr><td><b>Otehr software</b>       <tD>:<td>{{sw.swPackages}}
+        {% endif %}
+        {% if sw.webTools %}
+            <tr><td><b>Web based Tools</b>      <td>:<td>{{sw.webTools}}
+        {% endif %}
+    </table>
 </div>
+{% endif %}
 
-
-<div>
-<br>
 {% if p.areasofinterest %}
+<div>
+<br>
     <h3>Areas Of Interest</h3>
 <ul>
 {% for aoi in p.areasofinterest|split:',' %}
     <li> {{aoi}}</li>
 {% endfor %}
-{% endif %}
 </div>
+{% endif %}
 
 
- 
-<div>
 <br>
 {% if pro %}
-<h3> Projects Undertaken</h3>
-<table cellpadding=10>
-{% for pr in pro %}
-<tr><td><li><td>{{pr.desc }}
-{% endfor %}
-<tr><td><li><td>Currently working on Laresumex , a Software to help in placements using Python in Django Framework and . (http://projects.sdrclabs.in/laresumex) 
-<tr><td><li><td>Worked on Change_Agent a Feedback Management System using Python in Django Framework, LATX for generating resumes. (http://projects.sdrclabs.in/change_agent). 
-<tr><td><li><td>Developed a module for SICSR- Admission Process for document verification 
-<tr><td><li><td>Developed a Mediawiki feature for SICSR-Wiki (http://wiki.sdrclabs.in) to mark a page for deletion. 
-<tr><td><li><td>Developed an application called aries to download files on a remote machine. <D-c>
-</table>
-{% endif %}
+  <div>   
+    <h3> Projects Undertaken</h3>
+    <table cellpadding=10>
+        {% for pr in pro %}
+            <tr><td><li><td>{{pr.desc }}
+        {% endfor %}
+    </table>
 </div>
+{% endif %}
 
-<div>
 <br>
 {% if w %}
-<h3> Work Experience</h3>
-<table cellpadding=10>
-{% for wex in w %}
-<tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'Y' }}
-{% endfor %}
-</table>
-{% endif %}
-</div>
-
- 
 <div>
+<h3> Work Experience</h3>
+    <table cellpadding=10>
+    {% for wex in w %}
+        <tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'Y' }}
+    {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+
 <br>
 {% if a %}
+<div>
 <h3> Academic Achievements</h3>
-<table cellpadding=10>
-{% for ac in a %}
-<tr><td><li><td>{{ac.desc }}
-{% endfor %}
-</table>
+    <table cellpadding=10>
+        {% for ac in a %}
+            <tr><td><li><td>{{ac.desc }}
+        {% endfor %}
+     </table>   
+</div>
 {% endif %}
-</div>
 
-
-<div>
-<br>
-    <h3>Leadership Qualities</h3>
-<ul>
-<li>Gnunify
-<li>Tech Melange
-<li>LTC/PDC
-</div>
-
-
-
- 
-<div>
-<br>
 {% if e %}
+<div>
 <h3> Extra Curricular</h3>
-<table cellpadding=10>
-{% for ex in e %}
-<tr><td><li><td>{{ex.desc }}<td> in the year {{ ex.fromDate|date:'Y' }}
-{% endfor %}
-</table>
-{% endif %}
+    <table cellpadding=10>
+        {% for ex in e %}
+            <tr><td><li><td>{{ex.desc }}<td> in the year {{ ex.fromDate|date:'Y' }}
+        {% endfor %}
+    </table>
 </div>
+{% endif %}
+
 
 
 <div>
@@ -217,4 +198,5 @@ h3{
 {{s.fullname}}<br>Pune
 </div>
 <br><BR>
-</div> 
+</div>
+<input type = 'button' onclick="javascript:location.href='/home'" value='Home'>

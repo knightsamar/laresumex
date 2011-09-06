@@ -208,7 +208,7 @@ function change(o)
 function mandatoryCheck()
 { 
     //clientside mandatoriness checking
-    var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks','companySpecific')
+    var compulsory = new Array('personal', 'fullname','birthdate','sex','career','marks')
     input=document.getElementsByTagName('input');
     for (var i=0;i<input.length;i++)
     {

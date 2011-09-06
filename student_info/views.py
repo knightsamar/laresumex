@@ -27,15 +27,16 @@ def showform(request):
     if 'username' not in request.session:
         print "No session"
         return our_redirect('/ldap_login')
+    prn=request.session['username'];    
     
     #the user shoud not get the form if he already has one.
     try:
         s=student.objects.get(pk=request.session['username'])
         print "student Fornd...", s
+        return our_redirect('/student_info/%d/edit' % prn);
     except Exception as e:
 
         print "student does not exist" 
-        prn=request.session['username'];
         if prn.isdigit():
             yr=prn[5:7];
         else:
@@ -257,17 +258,20 @@ def submit(request, prn):
                 table_dict[index].update(column_dict);'''
 
             if (field_name[0] == 'companySpecific'):
-                cs=companySpecific.objects.get(key=field_name[1])    
-                print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
-                a = str(data[0]);
-                for d in data[1:]:
-                    a += ',' + d
-                csd=companySpecificData(
-                primary_table=s,
-                valueOf=cs,
-                value=a                
-                );
-                csd.save();
+                try:
+                    cs=companySpecific.objects.get(key=field_name[1])    
+                    print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
+                    a = str(data[0]);
+                    for d in data[1:]:
+                        a += ',' + d
+                    csd=companySpecificData(
+                    primary_table=s,
+                    valueOf=cs,
+                    value=a                
+                    );
+                    csd.save();
+                except:
+                    pass;
             if str(field_name[0]) in l:
                 column_dict=dict();
                 column_dict[field_name[1]]=data[0];
