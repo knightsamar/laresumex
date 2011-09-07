@@ -36,10 +36,12 @@ def showform(request):
 
         print "student does not exist" 
         prn=request.session['username'];
+
         if prn.isdigit():
             yr = prn[5:7];
         else:
             yr = 'staff' 
+        
         print yr
         special_cases=['strongAreas','weakAreas']
         maintable=list(companySpecific.objects.all());
