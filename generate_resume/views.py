@@ -34,7 +34,7 @@ def index(request):
     prn = request.session['username']
     print "hamra prnwa hai ",prn;
     u=user.objects.get(username=prn);
-    g=group.objects.get(name='placement committee')
+    g=group.objects.get_or_create(name='placement committee')[0]
     placement_staff_student=[0,0,0];
     if u in g.user_set.all():
         print 'placement_committe'
