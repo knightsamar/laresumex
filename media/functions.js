@@ -1,13 +1,19 @@
       
-    /* Autofills the passed dropdown objet with contents based on it's value 
+var all_fields; //used for storing all obj references to all fields that need any kind of processing
+
+    /* Autofills the passed dropdown object with contents based on it's name
       
        For day, month and year, fills with values.
        For courses, fills with degrees.
     */
-function fillOptions(o)
+    function fillOptions(o)
     {
-        if (o.children.length>1) return false;
-        //o=document.getElementById('month');
+        //if options are already filled in there, we ain't gonna process it! performance :B
+                if (o.children.length>1) 
+                {
+                    return false;
+                }
+    
         if (o.name == 'month')
         {
             var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
@@ -35,7 +41,7 @@ function fillOptions(o)
         else if(o.name == 'year')
             {
                 if((o.prevElementSibling)&&(o.previousElementSibling.value=="")) o.previousElementSibling.focus()
-                var d= new Date();
+                var d = new Date(); //so that we get a dynamic year :)
 
                 if(o.id.split('_')[0] == 'birthdate')
                     { var i=d.getFullYear()-60; var j=(d.getFullYear()-18);} // need to be min 18 yrs old..!!
@@ -106,26 +112,37 @@ function change(o)
  {
      id0=o.id.split('_')[0];
      id1=o.id.split('_')[1];
+     id2=o.id.split('_')[2];
      prev=o.previousElementSibling;
+
      if (id0 == 'marks')
      {
-      if (o.value == 'Appearing' || o.value =='Result Awaiting')
+      //alert(o.value);
+      //we disable the Marks and OutOf elements for such times
+      if (o.value == 'Appearing' || o.value =='Result Awaiting') 
       { 
-         prev.value=o.value;
-         prev.disabled=true;
-         o.nextElementSibling.value=o.value;
-         o.nextElementSibling.disabled=true;
+         //alert('selecting ' + id0+'_'+'marks'+'_'+id2);
+         marksEl = document.getElementById(id0+'_marks_'+id2); //select the corresponding marks element 
 
+         marksEl.value=o.value;
+         marksEl.disabled=true;
+ 
+         outofEl = document.getElementById(id0+'_outof_'+id2); //select the corresponding outof element 
+         outofEl.value=o.value;
+         outofEl.disabled=true;
          
        // o.parentNode.removeChild(o.previousElementSibling);
       }
-      else
-       {
-         prev.disabled=false;
-         prev.value="";
-         prev.focus();
-         o.nextElementSibling.disabled=false;
-       }
+      else //if it is NOT appearing or Result Awaiting then, enable the Marks and OutOf elements
+      {
+         marksEl = document.getElementById(id0+'_marks_'+id2); //select the corresponding marks element 
+         marksEl.disabled=false;
+ 
+         outofEl = document.getElementById(id0+'_outof_'+id2); //select the corresponding outof element 
+         outofEl.disabled=false;
+
+         marksEl.focus();
+      }
      }
      else if (id1 =='month')
      {
@@ -203,60 +220,81 @@ function change(o)
 
  }
 
-
 /* check whether mandatory values are filled or not */
 function mandatoryCheck()
 { 
     //checks all those fields who have a mandatory attribute;
 
     input_fields = document.getElementsByTagName('input');
-    for (var i=0; i<input_fields.length;i++)
+    select_fields = document.getElementsByTagName('select'); //for cases like DOB
+    textarea_fields = document.getElementsByTagName('textarea'); //for cases like Career Objective
+
+    all_fields = [input_fields,select_fields,textarea_fields]; //the total set of elements that we we want to check for mandatoriness 
+
+    for (var j=0;j<all_fields.length;j++)
     {
-        if (input_fields[i].getAttribute('mandatory') == 'true')
+        fields = all_fields[j]; //select the set of fields.
+        
+        for (var i=0; i<fields.length;i++)
         {
-         if(input_fields[i].id!="")
-         {   
-                    input_fields[i].name=input_fields[i].id;
-         }
-         
-         a=input_fields[i].name.split('_')[0]
-         /* is the field enabled and still it's value is not entered */
-         if ((input_fields[i].value=="")&&(input_fields[i].disabled==false) )
-         {
+            if (fields[i].getAttribute('type') == 'hidden')
+            {
+                continue; //we don't want to touch such fields!
+            }
 
-                //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
-                input_fields[i].focus();
-                
-                alertmsg=input_fields[i].name.split('_')
-                //now that we know validity, mark so visually and attributely
-                //and tell the user
-                input_fields[i].setAttribute('class',input_fields[i].getAttribute('class')+' invalid_data');
+            if (fields[i].getAttribute('mandatory') == 'true')
+            {
 
-                if (alertmsg.length>1) //and there is more than one component in the name of the element
-                {
-                    alert(alertmsg[1] + ' in the ' + alertmsg[0] + '  section is not filled');
-                }
-                else
-                {
-                    alert(alertmsg[0] + ' is not filled!');
-                }
-                
-                return false;
-         }
-         else //if found valid, clear any existing invalidity reference!
-         {
-                styleClass = input_fields[i].getAttribute('class');
+             var field_name = fields[i].id; //because a field may or may not have a name but will always hv an ID
+        
+             //a=fields[i].name.split('_')[0]
+             /* is the field enabled and still it's value is not entered */
+             if ((fields[i].value=="")&&(input_fields[i].disabled==false) )
+             {
+               alertmsg = field_name.split('_')
+               //now that we know validity, mark so visually and attributely
+               //and tell the user
+
+               styleClass = (fields[i].getAttribute('class') == null ? ' ' : fields[i].getAttribute('class')) ;
+               fields[i].setAttribute('class',styleClass + ' invalid_data');
+               
+               if (alertmsg.length>1) //and there is more than one component in the name of the element
+               {
+                   alert(alertmsg[1] + ' in the ' + alertmsg[0] + '  section is not filled');
+               }
+               else
+               {
+                   alert(alertmsg[0] + ' is not filled!');
+               }
+               
+               //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
+               fields[i].focus();
+               return false;
+             }
+             else //if found valid, clear any existing invalidity reference!
+             {
+                styleClass = fields[i].getAttribute('class');
                 if (styleClass != null)
                 {
-                    x = input_fields[i].getAttribute('class').indexOf('invalid_data');
-                    class_without_invalid_mark = input_fields[i].getAttribute('class').slice(0,-1*x);
-                    input_fields[i].setAttribute('class',class_without_invalid_mark);
+                    x = fields[i].getAttribute('class').indexOf('invalid_data');
+                    class_without_invalid_mark = fields[i].getAttribute('class').slice(0,-1*x);
+                    fields[i].setAttribute('class',class_without_invalid_mark);
                 }
-         }
-        }
-    }
+    
+                
+             }
+           }
+           //whether it's mandatory or not, we need to replace it with proper name
+           //everything is good with this field now replace it's name with it's id.
+           if ((fields[i].id != '' || fields[i].id != null) && (fields[i].value != '' || fields[i].value != null))
+           {
+              //alert('setting name of ' + fields[i].name + ' to ' + fields[i].id);
+              fields[i].name = fields[i].id;
+           }
+       }
+  }
    
-    /* 
+     
     var tables = new Array('marks','workex','certification','projects','academic','extracurricular')
     
     //dependency checking -- if content is filled and the month-year isn't OR if month-year is filled and content isn't.
@@ -287,10 +325,11 @@ function mandatoryCheck()
 
             } 
         }
-    } */
+    } 
     //alert('returning true')
     return true;
 }
+
 /* replaces all name attributes of all input, select and textarea elements with their ids so that they can be successfull when the form is submitted. */
 function changeName()
 {
@@ -299,37 +338,64 @@ function changeName()
     //alert(x);
     if (!x)
     {
+        //alert('since mandatory check failed, we are returning false');
         return false;
     }
-    select=document.getElementsByTagName('select');
-    for (var i=0;i<select.length;i++)
+    //alert('mandatory check was passed...going ahead');
+
+    select_fields = document.getElementsByTagName('select');
+    try
     {
-        //for all eleemtns who are named 'month' OR 'year'
-       if (select[i].id.indexOf('date') >= 0 || select[i].id.indexOf('year') >= 0 || select[i].id.indexOf('month') >= 0)
-       {
-           if (select[i].id.indexOf('year')>=0)
+        for (var i=0;i<select_fields.length;i++)
+        {
+            //for all elements who are named 'month' OR 'year'
+           if (select_fields[i].id.indexOf('date') >= 0 || select_fields[i].id.indexOf('year') >= 0 || select_fields[i].id.indexOf('month') >= 0)
            {
-               concat(select[i])
+               //we havee to concat all the year fields with 
+               //their corresponding month and day AND create a new hidden element for submission
+
+               //do this only an year field...
+               if (select_fields[i].id.indexOf('year')>=0)
+               {
+                   concat(select_fields[i])
+               }
+               //now render this select field as unsuccessful by removing it's name -- it won't be submitted.
+               //thee shall deem them unsuccessfull
+                 //debugger;
+               select_fields[i].name=null;
+               continue;
            }
-         //thee shall deem them unsuccessfull
-         select[i].name=null;
-         continue;
-       }
-       select[i].name=select[i].id;
-       
-       if (select[i].value=="")
-            {select[i].focus();return false;}
+           //since this is now handled by mandatoryCheck itself :-)
+/*           else //this isn't a date or month or year field
+           {
+               select_fields[i].name=select_fields[i].id;
+               //Check whether it's filled or not ?
+               if (select_fields[i].value=="")
+               {
+                    alert("hey, " + select_fields[i].id + " is not filled");
+                    select_fields[i].focus();
+                    return false;
+               } 
+           }*/
+        }
+        //alert('done processing select_fields');
+
+       //now tell in the form submission the secret
+        document.getElementById('allok').value = 1;
+        alert('true');
+        //return confirm("Do you want to really submit the form ?");
+        return true;
+
     }
-    textarea=document.getElementsByTagName('textarea');
-    for (var i=0;i<textarea.length;i++)
-        //if(tablearea[i].value=="")
-            textarea[i].name=textarea[i].id;
-    //now tell in the form submission the secret
-    document.getElementById('allok').value = 1;
-    alert('true');
-    return true;
+    catch (e)
+    {
+        alert(e);
+    }
 }
 
+/*
+  used to remove instances of an extra field.
+*/
 function remove(o)
 {
     // IF extra fields can be entered as blank, then students have write to remove all their pre-wriiten fields

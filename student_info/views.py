@@ -8,6 +8,7 @@ from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
 from datetime import datetime
 
+
 ''' import utility functions '''
 from student_info.utility import our_redirect,errorMaker, debugger;
 from pprint import pprint
@@ -15,8 +16,12 @@ from os import path;
 from django.utils.encoding import smart_unicode;
 
 ''' import vars '''
-from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,DEBUG
 
+''' import traceback for debugging '''
+if DEBUG is True: #do not import when not needed!
+    from sys import exc_info; #for getting traceback
+    import traceback; #for printing traceback;
 
 
 ##########################################################################
@@ -105,7 +110,8 @@ def edit(request,prn):
         
         table['mt']=maintable;
         table['cs']=cs;
-        
+        table['flag']='edit';
+
         c = RequestContext(request,table);
         t = loader.get_template('student_info/form.html');
         
@@ -245,7 +251,7 @@ def submit(request, prn):
            
                 if "title" not in column_dict:
                     if field_name[0]=="ExtraField":
-                        column_dict['title']=post['ExtraField_title_1']
+                        column_dict['title']=post.get('ExtraField_title_1','') #if it's not found return a default value -- because it was raising exceptions...done using django-docs/ref/request-response.html#querydict-objects
                     else:    
                         column_dict['title']=field_name[0]
            
@@ -286,7 +292,11 @@ def submit(request, prn):
         print "=====>MVSD<======"
         print mvsd
     except Exception as e:
-        print "======EXCEPTION....while submitting-============" , e;
+        print "======EXCEPTION....while submitting============", e,;
+        print 
+        print "=====Traceback====="
+        exception_info = exc_info();
+        traceback.print_tb(exception_info[2]);
         return our_redirect('/form')
     
     # ============>>> MVSD <<<====================
