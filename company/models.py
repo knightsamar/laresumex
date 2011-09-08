@@ -46,3 +46,4 @@ full_list=[
 { 'id':5,"name":'marks_graduation_marks',"display_name":'Graduation Marks'},
 { 'id':6,"name":'workex_function_workex',"display_name":'Years of Workex'}
 ]
+

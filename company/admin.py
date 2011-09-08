@@ -1,8 +1,8 @@
 from company.models import *
 from django.contrib import admin
 from student_info.models import student; #for mailing the student on his personal mail address.
-from django.core.mail import send_mass_mail
-#from django.template import Context, loader, Request
+from django.core.mail import EmailMessage,get_connection #because this one actually let's use BCC and all.
+from django.template import Context, loader
 
 '''
 class membershipInline(admin.TabularInline):
@@ -21,24 +21,48 @@ class companyAdmin(admin.ModelAdmin):
     #inlines = [
     #    membershipInline,
     #    ]
+    
+    #add a set of actions
+    actions = ['informStudents'];
 
     def informStudents(self, request, selectedCompanies):
         print "Informing students about ",selectedCompanies;
 
         t = loader.get_template('company/informStudents_mail.html');
+        conn = get_connection(); #for mailing
         for c in selectedCompanies:
             ppltoInform = c.came_for_group.get_query_set()[0].user_set.all() 
-            context = Context(
-                    {'c' : c }
-                    )
-            mail_body = t.render(c);
-            to = [];
+
             for p in ppltoInform:
                 s = student.objects.get(prn=p.username);
-                to.append(s.email); #add secondary address
-                #whether to use it or not is the call of Placement Team
-                to.append("%s@sicsr.ac.in" % p.username); #for primary sicsrwala address
-            send_mass_mail("[Placements] %s coming on campus" % c.name,mail_body,"placements@sicsr.ac.in",to,fail_silently=True);
+                to = [s.email]; #add secondary address
+                to += ["%s@sicsr.ac.in" % p.username]; #for primary sicsrwala address
+        
+                context = Context(
+                {
+                    'company' : c,
+                    'student' : s, #khamakha templating engine usage, and ultimately more processing time.
+                })
+
+                body = t.render(context)
+
+                #send mail actually.
+                email = EmailMessage();
+                email.from_email = 'knightsamar@ssiknight';
+                email.subject = '[Placements] %s coming to campus' % c.name;
+                #email.from = 'root@sdrcserver.sdrc'; #left for automatic putting
+                email.connection = conn;
+                email.body = body;
+                email.bcc = to; #so as to maintain privacy.
+                email.to = ['samar@sicsr.ac.in'];
+                email.content_subtype='html';
+                email.send();
+                dir(email)
+                print email.bcc;
+                print body; 
+                print "Done with %s" % (c);
+
+    informStudents.short_description = "Inform students about companies"
 
 admin.site.register(company,companyAdmin);
 admin.site.register(placement_in);
