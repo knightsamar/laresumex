@@ -1,0 +1,23 @@
+{% comment %}
+<!-- this letter is to be edited through a text area by ashwini mam/ptm...so we have to use something like jquery Ricompany. text editor -->
+{% endcomment %}
+
+<b>Dear {{ student.fullname }}</b>,
+This is to inform you that <b>{{ company.name }}</b>, is coming to SICSR campus.
+
+{% if company.eligibility %}
+    The eligibility criteria is as follows:<br/>
+    <p>{{ company.eligibility }}</p>
+{% else %}
+    The eligibility criteria and other details will be disclosed soon.
+{% endif %}
+      
+{% if company.date_of_process %}
+   Please apply at <a href = 'http://projects.sdrclabs.in/laresumex'>LaResume-X</a> before <b>{{ c.date_of_process }}</b>.
+{% else %}
+   Please apply at <a href = 'http://projects.sdrclabs.in/laresumex'>LaResume-X</a>.
+{% endif %}
+
+
+<p>Regards,<br/>
+The Placement Team</p>
