@@ -382,7 +382,6 @@ function changeName()
 
        //now tell in the form submission the secret
         document.getElementById('allok').value = 1;
-        alert('true');
         //return confirm("Do you want to really submit the form ?");
         return true;
 

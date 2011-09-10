@@ -695,12 +695,13 @@ function validate(obj)
 <div id= 'tabs-11'>
 {% if flag == "edit" %}
        <img id='photo' src="{{MEDIA_URL}}/STORE/photos/{{ s.prn }}.png" height=150 width=180>
+      <input type = 'file' id='photo' name='photo'>
 Change the uploaded Photograph
 {% else %}
       <span id='photo'><i>No photo uploaded!</i></span>
     Upload your recent passport sized photograph.
+     <input type = 'file' id='photo' name='photo' mandatory='true'>
 {% endif %}
-      <input type = 'file' id='photo' name='photo' mandatory='true'>
 <br><br>
 </div>
 

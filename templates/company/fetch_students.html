@@ -16,23 +16,71 @@ Home
                     autoHieght: false,
                     navigation: true
                     });
-				});
+					$('#tabs').tabs();
+
+                });
+                // Tabs
+function check()
+{
+    company = document.forms.f.company_name;
+    l = company.length;
+    companyTicked = false;
+    if ( l == 0 )
+       companyTicked= company.checked
+    else
+    {
+    for ( var i = 0;i<l;i++)
+        if (company[i].checked)
+            {companyTicked = true; break;}
+    }
+    groupTicked = false;
+    {% for i in g %}
+        group = document.forms.f.groups_{{ i.name }}
+        if (group.checked)
+            { groupTicked = true; }
+    {% endfor %}
+    if (companyTicked && groupTicked)
+    {
+        alert('Please select only one of company or group')
+        document.forms.f.reset();
+        return false;
+    }
+    if (!(companyTicked || groupTicked))
+    {
+        alert('please enter either if company OR group');
+        return false;
+    }
+}
 </script>
 <html>
+<form name = 'f' onsubmit = 'return check()' action = '{{ROOT}}/company/get_student_name' method='post'>
+
 <div id ='accordion'>
     <div>
-        <h3><a href = '#'> Select the company </a></h3>
-     <div>   
-<form action = '{{ROOT}}/company/get_student_name' method='post'>
-{% for company in c %}
-    <!-- <a class = 'tooltip' href ='#'>{{ company.name }}<span class='tooltip'> <em>{{company.name}}</em>{{ company.info }}</span></a> -->
-    <li> {{ company }} <input type="radio" name = "company_name" value = "{{company}}"><BR>
-{% empty %}
-<i> NO Companies </i>
-<br><BR>
-Please add some companies from the admin panel.
-{% endfor%}
-</div>
+        <h3><a href = '#'> Select the set of students</a></h3>
+        <div id= "tabs">
+			<ul>
+				<li class='sectionlinks'><a href="#tabs-1">Select By Company</a></li>
+				<li class='sectionlinks'><a href="#tabs-2">Select by Groups</a></li>
+            </ul>
+            <div id = 'tabs-1'>
+
+            {% for company in c %}
+                <!-- <a class = 'tooltip' href ='#'>{{ company.name }}<span class='tooltip'> <em>{{company.name}}</em>{{ company.info }}</span></a> -->
+                <li> {{ company }} <input type="radio" name = "company_name" value = "{{company}}"><BR>
+            {% empty %}
+                <i> NO Companies </i>
+                <br><BR>
+                Please add some companies from the admin panel.
+            {% endfor%}
+            </div><! -- and of tab -company -->
+            <div id = 'tabs-2'>
+            {% for groups in g %}
+                <li> {{ groups}}<input type='checkbox' name = 'groups_{{groups.name}}' value = '{% for g in groups.user_set.all %}{{g.username}},{% endfor %}'><BR>
+            {% endfor %}
+            </div><!-- and of tab groups-->
+        </div><!-- end of tabs -->
+    </div> <!-- end of acc wala div -->
 {% if c %}
 <div>
 <div>
