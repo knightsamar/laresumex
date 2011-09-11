@@ -27,7 +27,7 @@ def get_tables(s):
         for t,v in tables.iteritems():
             print "=========>>", v  ,"<<======="
             if (t is not 'p') and (t is not 'sw'):
-                tables[t]=eval(v).objects.filter(primary_table=s).order_by('fromDate');
+                tables[t]=eval(v).objects.filter(primary_table=s).order_by('-fromDate');
             else:
                 try:
                   tables[t]=eval(v).objects.get(primary_table=s)

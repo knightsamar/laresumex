@@ -42,7 +42,7 @@ class marks(models.Model):
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
     marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
-    markstype=models.CharField(max_length=10)
+    markstype=models.CharField(max_length=15)
     outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
     fromDate=models.DateField(null=True, blank=True);
     

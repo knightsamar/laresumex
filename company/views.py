@@ -92,17 +92,21 @@ def get_full_list():
 def fetch_index(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login')
-    
-    g = group.objects.get(name='placement committee')
+    try:
+        g = group.objects.get(name='placement committee')
 
-    if user(request.session['username']) not in g.user_set.all():
-         return HttpResponse('page not for u'); 
+        if user(request.session['username']) not in g.user_set.all():
+             return HttpResponse('page not for u'); 
+    except Exception as e:
+        return HttpResponse("nly for group, placement committee.. please create group, or add users to it.")
     com=company.objects.all();
-   
+    a = ['staff','placement committee']
+    g=group.objects.exclude(name__in = a);
     t=loader.get_template('company/fetch_students.html');
     full = get_full_list();
     c=RequestContext(request,{
         'c':com,
+        'g':g,
         'ROOT':ROOT,
         'MEDIA_URL':MEDIA_URL,
         'list':full
@@ -121,19 +125,32 @@ def get_students_name(request):
     if user(request.session['username']) not in g.user_set.all():
         return HttpResponse('not for u');
     
-    print request.POST; 
-    
-    try:
-        com=company.objects.get(name=request.POST['company_name']);
-    except Exception as e:
-        return HttpResponse('Select COmpany NAme');
-    name_list=list();
-    for g in com.students_applied.all():
-        s = student.objects.filter(prn=g.prn)
+    post = request.POST;
+    print post.lists();
+    for a,v in post.iteritems():
+        print a,"======",v,"===",type(v)
+    name_list=[]
+    if 'company_name' in post:
+        com=company.objects.get(name=post['company_name']);
+        print "COMPANY ======",com
+        name_list=list();
+        for g in com.students_applied.all():
+            name_list.append(g);
+        spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name.replace(' ','-'));
+    else:
+        p =[]
+        for g,v in post.iteritems():
+            if g.startswith('groups_'):
+                
+                s = v.split(',');
+                for prn in s:
+                    if prn is not "":
+                        p.append(prn)
+        print p
+        s = student.objects.filter(prn__in = p);
         name_list.extend(s);
- 
+        spreadsheet_name = "SICSR-students.xls";
     print "List of students is ",name_list;
-    spreadsheet_name=""
     if  name_list:
         
         #now we will make a spreadsheet of this data.
@@ -198,18 +215,18 @@ def get_students_name(request):
                print "Writing data %s at %d %d" % (data,x,y);
                ws0.write(x+1,y,data);
                                         
-        spreadsheet_name = "SICSR-%s-applicants.xls" % (com.name.replace(' ','-'));
         wb.save('/tmp/%s' % (spreadsheet_name));
         copy_spreadsheet_command = "cp -v /tmp/%s %s" % (spreadsheet_name,MEDIA_ROOT);
         get_done(copy_spreadsheet_command);
 
     t = loader.get_template('company/students_list.html')
-    c = Context({'company':com,
+    c = Context({
         'students_applied':name_list,
         'spreadsheet_link':MEDIA_URL+'/'+spreadsheet_name,
         'ROOT':ROOT,
         })
-    return HttpResponse(t.render(c))    
+    return HttpResponse(t.render(c))   
+    #return HttpResponse('f');
     
 
 

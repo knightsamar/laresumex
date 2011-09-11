@@ -1,5 +1,8 @@
 <<<-------Release I-------->>>
 
+CHANGES TO DATABASE
+    * length if result awaited to be increased
+    * add validation for emailanf name and all the fields
 
 URGENT:
     * Add backlogs wali field in form -- inside the photo wala section. - Done by Apoorva

@@ -210,7 +210,7 @@ def submit(request, prn):
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
                     print "=====> adding", data , "to attribute", index, "of Personal";
-                    p.__setattr__(index,data);     
+                    p.__setattr__(index,data[0]);     
             if field_name[0]=="birthdate":
                 date=data[0].split(',')
                 print "=====>DATE<=====",date

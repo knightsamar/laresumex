@@ -87,7 +87,7 @@ def latex(request,prn):
 
 
             #add the basic info wala original object also
-            student_data=get_tables(s)
+            student_data=tables.get_tables(s)
             #student_data['photo'] = RESUME_STORE + "photos/" + prn + ".png"  
             student_data['photo'] = "%s.png" % (prn);
 
