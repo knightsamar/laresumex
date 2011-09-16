@@ -15,7 +15,10 @@ urlpatterns = patterns('',
      (r'^admin/', include(admin.site.urls)),
 
     # actually our urls START FROM NOW
-    #(r'^/$',"generate_resume.views.index"),    
+
+    #contact
+    #(r'^/$',"generate_resume.views.index"),   
+    (r'^contact',"common.views.contact"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
@@ -36,6 +39,8 @@ urlpatterns = patterns('',
     (r'^PT/admin',"company.views.admin_index"),
     (r'^PT/fetch',"company.views.fetch_index"),
     (r'^PT/(?P<placed_id>\d+)/got_placed',"company.views.got_placed"),
+    
+    
     # student_info
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),

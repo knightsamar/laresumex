@@ -34,7 +34,7 @@ def index(request):
     prn = request.session['username']
     print "hamra prnwa hai ",prn;
     u=user.objects.get(username=prn);
-    g=group.objects.get_or_create(name='placement committee')[0]
+    g=group.objects.get(name='placement committee')
     placement_staff_student=[0,0,0];
     if u in g.user_set.all():
         print 'placement_committe'
@@ -55,7 +55,7 @@ def index(request):
             #it means there is no entry
             create_form=True;
        
-    t=loader.get_template('index.html')
+    t=loader.get_template('common/index.html')
     
     c=Context({
             'prn':request.session['username'],
@@ -75,16 +75,19 @@ def latex(request,prn):
         return HttpResponse('Please mind your own resume...')
     if prn is not None:
     	try:
-	        s = student.objects.get(pk=prn)
+            s = student.objects.get(pk=str(prn))
+            print "=============== inside Latex.. found S .....",s
         except Exception as e:
+            print "======inside latex... exception",e
             output = "<h3>Student details for PRN %s not found! Can't generate a LaTeX file!</h3>" % (prn);
             return HttpResponse(output);
         
         if s is not None:
+            print "==latex====s is not NOne"
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
             
-
+            print "=====latex ===t ",t
 
             #add the basic info wala original object also
             student_data=tables.get_tables(s)
@@ -95,14 +98,17 @@ def latex(request,prn):
             c = Context(student_data);
              
             try:
+                print " =latex==== inside the try"
                 #every latex file goes into that prn's directory
                 destination_dir = '%s/%s/' % (RESUME_STORE, prn)
 
                 try:
                     chdir(destination_dir) #if we can't change into it, create it!
                 except OSError:
+                    print "===latex === Os Error aya tha.. making dIr"
                     mkdir(destination_dir);
                 finally:
+                    print "=== inside chdir ka finally"
                     chdir(FULL_PATH);
                  
                 resume_file = '%s/%s.tex' % (destination_dir, prn)
@@ -117,7 +123,8 @@ def latex(request,prn):
                 print s;
                 print "Now is ", datetime.now();
                 r = resume.objects.get_or_create(prn=s);
-                print "r is ",r
+
+                print "====latex======== resume made  ",r
                 #because we called get_or_create, we will get a tuple containing the record and a bool value telling whether it was created or fetched
                 r[0].last_tex_generated = datetime.now();
                 print r[0].last_tex_generated
@@ -131,7 +138,7 @@ def latex(request,prn):
                 """
                 return_status = True;
             except Exception as e:
-               print 'Exception was ', e;
+               print '=====latex============ Exception was ', e;
                return_status = False;
             finally:
                 if return_status is False:
@@ -148,7 +155,7 @@ def latex(request,prn):
 
 def pdf(request,prn):
     if 'username' not in request.session:
-            return out_redirect('/ldap_login/')
+            return our_redirect('/ldap_login/')
     if prn != request.session['username']:
         return HttpResponse('Not your resume!')
     if prn is not None:
@@ -159,14 +166,14 @@ def pdf(request,prn):
               r = resume.objects.get(prn=s);
            except Exception as e:
               #no resume was ever created for this user, hence we need to generate atleast latex once.
-              print "Resume record doesn't exist...calling latex()";
+              print "====pdf==== Resume record doesn't exist...calling latex()";
               latex(request,prn);
            finally:
               r = resume.objects.get(prn=s);
-              print "Ok, now we have ",r
+              print "======pdf======= Ok, now we have ",r
         except Exception as e:
            output = "<h3>Student details for PRN %s not found! Can't generate a PDF!</h3>" % (prn);
-           print e;
+           print "=======pdf ========", e;
            return HttpResponse(output);
         
         print "Last TEX generated ", r.last_tex_generated;

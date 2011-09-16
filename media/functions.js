@@ -80,7 +80,7 @@ var all_fields; //used for storing all obj references to all fields that need an
         } 
         else if (o.name == "strongAreas" || o.name == "weakAreas" )
         {
-            var h=new Array('programming','database','os','web','packages');
+            var h=new Array('programming','database','os','web','packages','areasofinterest');
             for( var i=0;i<h.length;i++)
             {
                 c=document.getElementById(h[i]).children; //LI's
@@ -96,6 +96,8 @@ var all_fields; //used for storing all obj references to all fields that need an
                }
                 
             }
+           opt = o.options ; 
+           if(opt.length  == 0) alert ('Please enter either of your software skill sets or Areas of interest to proceed');
         }
     }
      
