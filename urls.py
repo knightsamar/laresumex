@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     #contact
     #(r'^/$',"generate_resume.views.index"),   
     (r'^contact',"common.views.contact"),
+    (r'^common/(?P<msg>\D+)/done',"common.views.done"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
@@ -45,6 +46,5 @@ urlpatterns = patterns('',
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),
     (r'^student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
-    (r'^student_info/(?P<msg>\D+)/done',"student_info.views.done"),
     (r'^form',"student_info.views.showform"),
 )
