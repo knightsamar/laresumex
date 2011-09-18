@@ -20,7 +20,9 @@ urlpatterns = patterns('',
     #(r'^/$',"generate_resume.views.index"),   
     (r'^common/(?P<msg>\D+)/done',"common.views.done"),
     (r'^contact',"common.views.contact"),
-    (r'^jobposting',"jobposting.views.posting"),
+    
+    #jobposting
+    (r'^jobposting/add',"jobposting.views.add"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
