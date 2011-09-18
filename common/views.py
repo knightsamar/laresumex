@@ -1,6 +1,8 @@
 # Create your views here.
 from student_info.models import student;
 from common.forms import ContactForm
+from ldap_login.models import *
+
 
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
@@ -14,6 +16,49 @@ from pprint import pprint
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 from datetime import datetime
 
+
+def index(request):
+    if 'username' not in request.session:
+        print "from home to login as No session"
+        return our_redirect('/ldap_login')
+    # see whether user has logged in...
+    # if yes, see whether the user has already filled resume, then remove the create button.
+    # if no.. then remove the edit and the viw resume button.
+    prn = request.session['username']
+    print "hamra prnwa hai ",prn;
+    u=user.objects.get(username=prn);
+    g=group.objects.get(name='placement committee')
+    placement_staff_student=[0,0,0];
+    if u in g.user_set.all():
+        print 'placement_committe'
+        placement_staff_student[0]=1;
+    elif prn.isdigit():
+        print "student"
+        placement_staff_student[2]=1;
+    else:
+        print "staff"
+        placement_staff_student[1]=1;
+
+    print "found prn"
+    try:
+            s=student.objects.get(pk=prn);
+            #Form already exists
+            create_form=False
+    except Exception as e:
+            #it means there is no entry
+            create_form=True;
+       
+    t=loader.get_template('common/index.html')
+    
+    c=Context({
+            'prn':request.session['username'],
+            'create_form':create_form,
+            'p_s_st':placement_staff_student,
+            'MEDIA_URL' : MEDIA_URL,
+            'ROOT':ROOT
+             }
+            );
+    return HttpResponse(t.render(c));
 
 
 def contact(request):

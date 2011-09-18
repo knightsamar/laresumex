@@ -18,8 +18,9 @@ urlpatterns = patterns('',
 
     #contact
     #(r'^/$',"generate_resume.views.index"),   
-    (r'^contact',"common.views.contact"),
     (r'^common/(?P<msg>\D+)/done',"common.views.done"),
+    (r'^contact',"common.views.contact"),
+    (r'^jobposting',"jobposting.views.posting"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
@@ -29,7 +30,7 @@ urlpatterns = patterns('',
     #ldap_login
     (r'^ldap_login/$','ldap_login.views.login'), #for authentication
     (r'^ldap_login/logout$','ldap_login.views.logout'), #for loggin out
-    (r'^home/$',"generate_resume.views.index"),
+    (r'^home/$',"common.views.index"),
     (r'^$','ldap_login.views.login'),
     
     # company
