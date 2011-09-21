@@ -3,17 +3,16 @@ from student_info.models import student;
 from common.forms import ContactForm
 from ldap_login.models import *
 
-
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect;
 from django.shortcuts import render_to_response
-from django.core.mail import EmailMessage, get_connection;
+from django.core.mail import EmailMessage;
 from student_info.utility import *; 
 from pprint import pprint
 
 ''' import vars '''
-from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import MANAGERS,ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 from datetime import datetime
 
 
@@ -60,7 +59,6 @@ def index(request):
             );
     return HttpResponse(t.render(c));
 
-
 def contact(request):
         if 'username' not in request.session:
             return HttpResponse('please signup first ;)')
@@ -75,24 +73,29 @@ def contact(request):
                print "=======POST======",post;
 
                # sending the email NOW...
-               to= ['10030142031@sisr.ac.in',' samar@sicsr.ac.in']
-               body=post['message'];
-               conn = get_connection();
+               to = []
+               for m in MANAGERS:
+                   to.append(list(m)[1])
+               
                email=EmailMessage();
+               for f in request.FILES.values() :
+                   dest=RESUME_STORE+"/error/"+request.session['username']+".png";
+                   destination = open(dest,'wb+')
+                   for c in f.chunks():
+                       destination.write(c)
+                   destination.close()
+                   email.attach_file(dest); 
+               
+               body=post['message'];
                email.from_email=request.session['username']+'@sicsr.ac.in';
-               email.subject='[Laresumex %s]%s %(post["messageType"],post["subject"]';
+               email.subject='[Laresumex'+ post['messageType']+']'+ post['subject'];
                email.to=to;
-               email.connection=conn;
                email.body=body;
-               try:
-                email.send();
-               except Exception as e:
-                print e;
-                pass;
+               email.send();
 
                
                
-               return HttpResponseRedirect('/common/successful/done/') # Redirect after POST
+               return our_redirect("/common/Thank you/done") # Redirect after POST
         else:     
            form = ContactForm() # An unbound form
          
@@ -106,6 +109,7 @@ def contact(request):
 
 
 def done(request,msg):
+  
   t=loader.get_template('common/done.html')
   c=Context(
             {

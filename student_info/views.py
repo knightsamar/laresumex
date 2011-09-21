@@ -347,7 +347,7 @@ def submit(request, prn):
     print "S,saved"
     p.save();
     print "P saved"
-    return our_redirect('/student_info/Submitted/done');
+    return our_redirect('/common/Submitted/done');
 
 
 

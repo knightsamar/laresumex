@@ -4,7 +4,6 @@
 '''import data models '''
 from student_info.models import *;
 from generate_resume.models import resume;
-#from ldap_login.models import *
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
@@ -23,7 +22,7 @@ from os import mkdir,chdir,path #for changing directories
 from student_info.utility import our_redirect;
 from time import sleep
 
-    
+
 def latex(request,prn):
     if 'username' not in request.session:
             return our_redirect('/ldap_login/')
