@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+{% if placed == 'yes'%}
+<title> Placed Students</title>
+{% else %}
+<title> Studrnts left to be placed</title>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if placed == 'yes' %}
+<table>
+<tr>
+<th> Student name<th> Company <th> job type
+{% for p in PS %}
+<tr>
+<td> {{ p.student.fullname }} <td> {{ p.company.name }}<td>{{ p.placementType }}
+{% endfor %}
+</table>
+{% else %}
+
+{% for p in UPS %}
+<li> {{p}}
+{% endfor %}
+{% endif %}
+<input type = 'button' value='back' onClick='history.go(-1)'>
+{% endblock %}
