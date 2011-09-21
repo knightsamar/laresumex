@@ -34,10 +34,12 @@ def add(request):
 
 
            #insert code here to set the values for fields which aren't show in the form but are required to save the instance.
-           posted_by = "Samar"; #to be made django-socialauthorized OR ldap_loginized in future
 
            #now actually save everything
-           form.save()
+           postedby=form.save(commit=False);
+           postedby.posted_by="samar";
+           postedby.save();
+
            return HttpResponseRedirect('/common/Thanks/done/') # Redirect after POST
     else:     
       form = JobPostingForm(); # An unbound form
