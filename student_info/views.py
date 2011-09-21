@@ -364,12 +364,4 @@ def ajaxRequest(request):
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 
-def done(request,msg):
-  t=loader.get_template('done.html')
-  c=Context(
-            {
-                'msg':msg,
-                'ROOT':ROOT
-            }
-            )
-  return HttpResponse(t.render(c)) 
+
