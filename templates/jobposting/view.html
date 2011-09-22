@@ -22,24 +22,41 @@
 <script>
 function toggle(o,j)
 {
-    switch(o.value)
+   input = document.getElementById("input_"+j)
+   if (!input)
+   {
+        input= document.createElement('input');
+        input.setAttribute('type','hidden');
+        input.id = "input_"+j;
+    }
+    alert(input);
+   switch(o.value)
     {
         case "I am interested in this.":
         {   o.value  = 'Not interested'
-            o.name = j;
+            input.name = "interested";
+            input.value = j;
+            o.parentNode.appendChild(input);
             break;
         }
         case "Not interested" :
         {
+             
             o.value = "I am interested in this."
-            o.name=j;
+            input.name = "not interested"
+            input.value=j;
+            o.parentNode.appendChild(input);
+
             break;
         }
         case "Hide":
         {
-            o.name = "hidden";
+            input.name = "hidden";
+            input.value = j;
             p=document.getElementById('p_'+j);
             p.setAttribute('class','hidden');
+            o.parentNode.appendChild(input);
+
                     
         }
             

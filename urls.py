@@ -53,4 +53,11 @@ urlpatterns = patterns('',
     (r'^student_info/form',"student_info.views.showform"),
     (r'^student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
     (r'^form',"student_info.views.showform"),
+
+    #trying out django social auth
+    #(r'^socialauth/sample/',"socialauth.views.sampleView"),
+    #(r'^socialauth/login-handler/',"socialauth.views.loginHandler"),
+    #(r'^socialauth/logout/',"socialauth.views.logout"), 
+    #url(r'', include('social_auth.urls')),
+    
 )

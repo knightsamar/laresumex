@@ -84,8 +84,30 @@ def do(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login');
     post = request.POST;
-    for p,o in post.iteritems():
+    for p,o in post.lists():
+        if p == 'csrfmiddlewaretoken':
+            continue;
         print p , "=============" , o;
+        j = personalised_posting.objects.filter(post__in = o).filter(prn = request.session['username']);
+        #print len(j) , len(o);
+        print 'j',j;
+        print 'o',o;
+        for existing_posts in j:
+              
+              existing_posts.is_interested=( p == 'interested' or p != 'not interested' );
+              existing_posts.is_hidden = (p == 'hidden' );
+              existing_posts.save();
+              print existing_posts.post.id
+              o.remove(unicode(existing_posts.post.id));
+        print "oooooo==",o; 
+        for new_post in o:
+            j = personalised_posting(
+                post = posting.objects.get(pk=new_post),
+                is_interested = (p == 'interested' or p != 'not interested' ),
+                is_hidden = (p == 'hidden' ),
+                prn = student.objects.get(prn=request.session['username'])
+            )
+            j.save();
     return HttpResponse('hi') 
     #get all items by post, i.e job_posting id to the change (interested, hide) theyve made
     #and then update the personalized_post wala table with these changed values. 
