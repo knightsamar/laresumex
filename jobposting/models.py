@@ -15,8 +15,12 @@ class posting(models.Model):
     tally  = models.IntegerField(default=0);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(max_length=1,choices=post_status, default = 'p');
-
     
+    def test(self):
+        self.company_name = "ha ha ha ";
+        self.save();
+        return "hooooohooooo"
+
     def __str__(self):
         return "posting for %s by %s " % (self.company_name, self.posted_by);
 

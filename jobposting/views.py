@@ -73,19 +73,23 @@ def view(request):
     else:
         return HttpResponse('not for u')
     t=loader.get_template('jobposting/view.html');
-    c=Context({
+    c=RequestContext(request,{
         'ROOT':ROOT,
         'job':j,
         'role':role
         })
     return HttpResponse(t.render(c));
-'''
- def do(request,posting_id):
+
+def do(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login');
-     get all items by post, i.e job_posting id to the change (interested, hide) theyve made
-     and then update the personalized_post wala table with these changed values. 
+    post = request.POST;
+    for p,o in post.iteritems():
+        print p , "=============" , o;
+    return HttpResponse('hi') 
+    #get all items by post, i.e job_posting id to the change (interested, hide) theyve made
+    #and then update the personalized_post wala table with these changed values. 
         
         
-'''
+
 
