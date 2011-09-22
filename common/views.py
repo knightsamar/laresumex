@@ -30,9 +30,11 @@ def index(request):
     placement_staff_student=[0,0,0];
     if u in g.user_set.all():
         print 'placement_committe'
+        request.session['role']='admin'
         placement_staff_student[0]=1;
     elif prn.isdigit():
         print "student"
+        request.session['role']='student'
         placement_staff_student[2]=1;
     else:
         print "staff"

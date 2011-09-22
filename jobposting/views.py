@@ -1,6 +1,7 @@
 ## Create your views here.
 from student_info.models import student;
 from jobposting.forms import JobPostingForm;
+from jobposting.models import *
 from ldap_login.models import *
 
 ''' import generator helpers '''
@@ -15,6 +16,8 @@ from pprint import pprint
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 from datetime import datetime
 
+
+##### for jobposting #####
 def add(request):
     '''
     for adding a new Job Posting 
@@ -37,7 +40,7 @@ def add(request):
 
            #now actually save everything
            postedby=form.save(commit=False);
-           postedby.posted_by="samar";
+           postedby.posted_by=request.session['username'];
            postedby.save();
 
            return HttpResponseRedirect('/common/Thanks/done/') # Redirect after POST
@@ -52,4 +55,37 @@ def add(request):
                   'ROOT':ROOT,
                   })
     return HttpResponse(t.render(c));
+
+#####  view  #####
+
+def view(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+    prn=request.session['username'];
+    if 'role' in request.session:
+        print "role fornf", request.session['role']
+        if request.session['role'] == 'admin':
+            j = posting.objects.filter(status='p')
+            role ="admin"
+        else:
+            role = "student"
+            j = posting.objects.filter(status='a');
+    else:
+        return HttpResponse('not for u')
+    t=loader.get_template('jobposting/view.html');
+    c=Context({
+        'ROOT':ROOT,
+        'job':j,
+        'role':role
+        })
+    return HttpResponse(t.render(c));
+'''
+ def do(request,posting_id):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+     get all items by post, i.e job_posting id to the change (interested, hide) theyve made
+     and then update the personalized_post wala table with these changed values. 
+        
+        
+'''
 

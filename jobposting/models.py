@@ -1,5 +1,5 @@
 from django.db import models
-
+from student_info.models import student
 # Create your models here.
 
 class posting(models.Model):
@@ -12,6 +12,20 @@ class posting(models.Model):
     how_to_apply=models.TextField(blank=False,help_text='Please tell how students can apply');
     posted_by=models.CharField(max_length=12,blank=False);
     posted_on=models.DateTimeField(auto_now_add=True,editable=False);
+    tally  = models.IntegerField(default=0);
+    post_status=(('p','pending'),('a','approved'),('d','disapproved'));
+    status=models.CharField(max_length=1,choices=post_status, default = 'p');
 
+    
     def __str__(self):
         return "posting for %s by %s " % (self.company_name, self.posted_by);
+
+class personalised_posting(models.Model):
+    post= models.ForeignKey('posting');
+    is_interested = models.BooleanField();
+    is_hidden = models.BooleanField();
+    prn = models.ForeignKey('student_info.student')
+
+    def __str__(self):
+        return "job posting of %s for %s" % (self.prn , self.post.company_name)
+    
