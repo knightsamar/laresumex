@@ -62,6 +62,7 @@ def view(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login');
     prn=request.session['username'];
+    s = student.objects.get(pk = prn);
     if 'role' in request.session:
         print "role fornf", request.session['role']
         if request.session['role'] == 'admin':
@@ -69,13 +70,30 @@ def view(request):
             role ="admin"
         else:
             role = "student"
-            j = posting.objects.filter(status='a');
+            j = list(posting.objects.filter(status='a'));
+            a = personalised_posting.objects.filter(prn = s ).filter(post__in = j).exclude(is_hidden = True).order_by('-is_interested');
+            b = personalised_posting.objects.filter(prn = s ).filter(is_hidden = True);
+            print a
+            print b
+            print j
+            for al,bl in map(None,a,b):
+                print "SDF",al,bl;
+                if al:
+                    j.remove(al.post);
+                if bl:    
+                    j.remove(bl.post);
+           
+            
     else:
         return HttpResponse('not for u')
+    print "J======",j;    
+    print "P ======", a;
     t=loader.get_template('jobposting/view.html');
     c=RequestContext(request,{
         'ROOT':ROOT,
-        'job':j,
+        'MEDIA_URL':MEDIA_URL,
+        'defalut_job':j,
+        'personalized_job':a,
         'role':role
         })
     return HttpResponse(t.render(c));
