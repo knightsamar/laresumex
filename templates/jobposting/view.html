@@ -30,14 +30,20 @@ function toggle(o,j)
         input.setAttribute('type','hidden');
         input.id = "input_"+j;
     }
-    alert(input);
+    image = document.createElement('img')
+    image.src="{{MEDIA_URL}}/Green_tick.png";
+    image.height=30
+    image.width=40
+    image.id = "img_"+j
    switch(o.value)
     {
         case "I am interested in this.":
         {   o.value  = 'Not interested'
             input.name = "interested";
             input.value = j;
+            o.parentNode.appendChild(image)
             o.parentNode.appendChild(input);
+
             break;
         }
         case "Not interested" :
@@ -46,6 +52,8 @@ function toggle(o,j)
             o.value = "I am interested in this."
             input.name = "not interested"
             input.value=j;
+            d=document.getElementById('img_'+j);
+            o.parentNode.removeChild(d);
             o.parentNode.appendChild(input);
 
             break;
@@ -57,8 +65,26 @@ function toggle(o,j)
             p=document.getElementById('p_'+j);
             p.setAttribute('class','hidden');
             o.parentNode.appendChild(input);
-
+            break;
                     
+        }
+        case "Approve":
+        {
+            o.parentNode.appendChild(image);
+            o.type = 'hidden'
+            o.name = 'approved'
+            o.value = j;
+            break;
+        
+        }
+        case "Reject":
+        {
+            d = document.getElementById('img_'+j);
+            if (d) o.parentNode.removeChild(d);
+            o.type = 'hidden';
+            o.name = 'disapprove'
+            o.value = j;
+            break;
         }
             
     }
@@ -71,7 +97,7 @@ function toggle(o,j)
 <form action = '{{ROOT}}/jobposting/do' method = 'post'>
 {% csrf_token %}
 {% for j in personalized_job %}
-<p class = "posting" id = 'p_{{ j.id }}' >
+<p class = "posting" id = 'p_{{ j.post.id }}' >
  <b> {{ j.post.company_name  }}</b><br>
  {{ j.post.description }}<br><BR>
  <b>Apply : </b>
@@ -79,7 +105,7 @@ function toggle(o,j)
  For more details, visit <a href = "{{ j.post.company_url }}">{{ j.post.company_url }}</a>
 <BR><BR>
     {% if j.is_interested %}
-    <img src = "{{MEDIA_URL}}/Untitled" height=30 width = 40>
+    <img src = "{{MEDIA_URL}}/Green_tick.png" height=30 width = 40 id = "img_{{j.post.id}}">
     <input type = 'button' value = 'Not interested' onclick = 'toggle(this, "{{j.post.id}}")'>
     {% else %}
     <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.post.id}}")'>
@@ -99,17 +125,19 @@ function toggle(o,j)
  For more details, visit <a href = "{{ j.company_url }}">{{ j.company_url }}</a>
 <BR><BR>
 {% if role == 'admin' %}
-    <input type = 'button' value = 'Approve' >
-    <input type = 'button' value = 'Reject'>
+    <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
+    <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
 {% else %}
     <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
     <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.id}}')">
 {% endif %}
+
 </p>
 <BR><BR>
 {% endfor %}
 <input type = 'button' value = 'back' onclick = 'history.go(-1)'>
 <input type = 'submit' value = 'Done'>
+<input type = 'button' value = 'Home' onclick = 'javascript:location.href="{{ROOT}}/home"'>
 </form>
 </html>
 {% endblock %}

@@ -43,7 +43,7 @@ def add(request):
            postedby.posted_by=request.session['username'];
            postedby.save();
 
-           return HttpResponseRedirect('/common/Thanks/done/') # Redirect after POST
+           return HttpResponseRedirect('/common/Thanks. posting has been sent for approval/done/') # Redirect after POST
     else:     
       form = JobPostingForm(); # An unbound form
       #print form
@@ -62,14 +62,15 @@ def view(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login');
     prn=request.session['username'];
-    s = student.objects.get(pk = prn);
+    a="";
     if 'role' in request.session:
         print "role fornf", request.session['role']
         if request.session['role'] == 'admin':
-            j = posting.objects.filter(status='p')
+            j = posting.objects.filter(status='p').order_by('-status')
             role ="admin"
         else:
             role = "student"
+            s = student.objects.get(pk = prn);
             j = list(posting.objects.filter(status='a'));
             a = personalised_posting.objects.filter(prn = s ).filter(post__in = j).exclude(is_hidden = True).order_by('-is_interested');
             b = personalised_posting.objects.filter(prn = s ).filter(is_hidden = True);
@@ -86,8 +87,6 @@ def view(request):
             
     else:
         return HttpResponse('not for u')
-    print "J======",j;    
-    print "P ======", a;
     t=loader.get_template('jobposting/view.html');
     c=RequestContext(request,{
         'ROOT':ROOT,
@@ -101,8 +100,11 @@ def view(request):
 def do(request):
     if 'username' not in request.session:
         return our_redirect('/ldap_login');
+    if 'role' in request.session:
+            role = request.session['role'];
     post = request.POST;
-    for p,o in post.lists():
+    if role == 'student':
+     for p,o in post.lists():
         if p == 'csrfmiddlewaretoken':
             continue;
         print p , "=============" , o;
@@ -126,7 +128,16 @@ def do(request):
                 prn = student.objects.get(prn=request.session['username'])
             )
             j.save();
-    return HttpResponse('hi') 
+
+    elif role == 'admin':
+     for p,o in post.lists():
+         if p == 'csrfmiddlewaretoken':
+             continue;
+         j = posting.objects.filter(pk__in = o);
+         j.update(status=p[:1]);
+         
+            
+    return view(request); 
     #get all items by post, i.e job_posting id to the change (interested, hide) theyve made
     #and then update the personalized_post wala table with these changed values. 
         
