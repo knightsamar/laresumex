@@ -8,13 +8,35 @@
 {% endcomment %}
 Hi!
 <br><BR>
+<style type = 'text/css'>
+
+#right{
+    float : right;
+    background-image : url('{{MEDIA_URL}}/post-it.png');
+    background-repeat :no-repeat;
+    background-position:top center;
+    width : 25%;
+    height: 40%;
+    padding:5%;
+    text-align:center;
+
+}
+</style>
+
+<div id = 'right'>
+<B> Job postings</b><BR><BR><BR>
+<input type='button' value = 'Add new Jobposting' onclick="javascript:location.href='{{ROOT}}/jobposting/add';"><BR>
+<input type='button' value = 'View Jobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/view';"><BR>
+<input type='button' value = 'View HiddenJobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/view_hidden';"><BR>
+
+</div>
+
+
 {% if create_form %}
     <input type='button' value = 'start entering your details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
 {% else %}
     <input type='button' value = 'edit your details' onclick="javascript:location.href='{{ROOT}}/student_info/{{ prn }}/edit';"><BR>
 
-
-<input type='button' value = 'Jobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/view';"><BR>
 
 
 <input type='button' value = 'view your resume(HTML)' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>

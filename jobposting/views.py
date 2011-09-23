@@ -1,5 +1,4 @@
 ## Create your views here.
-from student_info.models import student;
 from jobposting.forms import JobPostingForm;
 from jobposting.models import *
 from ldap_login.models import *
@@ -63,14 +62,17 @@ def view(request):
         return our_redirect('/ldap_login');
     prn=request.session['username'];
     a="";
+    s = user.objects.get(username = prn);
+    last_login = s.last_login;
+    print "last login =============", last_login;
     if 'role' in request.session:
         print "role fornf", request.session['role']
         if request.session['role'] == 'admin':
             j = posting.objects.filter(status='p').order_by('-status')
             role ="admin"
         else:
+            
             role = "student"
-            s = student.objects.get(pk = prn);
             j = list(posting.objects.filter(status='a').order_by('-posted_on'));
             a = personalised_posting.objects.filter(prn = s ).filter(post__in = j).exclude(is_hidden = True).order_by('-is_interested');
             b = personalised_posting.objects.filter(prn = s ).filter(is_hidden = True);
@@ -93,6 +95,7 @@ def view(request):
         'ROOT':ROOT,
         'MEDIA_URL':MEDIA_URL,
         'defalut_job':j,
+        'last_login':last_login,
         'personalized_job':a,
         'role':role
         })
@@ -143,5 +146,10 @@ def do(request):
     #and then update the personalized_post wala table with these changed values. 
         
         
-
+def hidden(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+    u = user.objects.get(username = request.session['username']);
+    j = personalised_posting.objects.filter(prn = u).filter(is_hidden =True);
+    return HttpResponse(j);
 

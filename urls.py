@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     #jobposting
     
     (r'^jobposting/add$',"jobposting.views.add"),
+    (r'^jobposting/view_hidden$',"jobposting.views.hidden"),
     (r'^jobposting/view$',"jobposting.views.view"),
     (r'^jobposting/do$',"jobposting.views.do"),
 

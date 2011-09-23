@@ -31,7 +31,7 @@ class group(models.Model):
 class user(models.Model): 
     username = models.CharField(max_length=30,primary_key=True); #without the domain suffix
     #password = models.CharField(max_length=255,blank=True,null=True); #we may or many not store the password;
-    #last_login = models.DateTimeField(auto_now=True);
+    last_login = models.DateTimeField(auto_now_add=True,editable=False);
     created_on = models.DateTimeField(auto_now_add=True);
     groups = models.ManyToManyField(group);
     

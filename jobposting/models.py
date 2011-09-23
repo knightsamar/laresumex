@@ -1,5 +1,5 @@
 from django.db import models
-from student_info.models import student
+from ldap_login.models import user
 # Create your models here.
 
 class posting(models.Model):
@@ -28,8 +28,8 @@ class personalised_posting(models.Model):
     post= models.ForeignKey('posting');
     is_interested = models.BooleanField();
     is_hidden = models.BooleanField();
-    prn = models.ForeignKey('student_info.student')
+    prn = models.ForeignKey('ldap_login.user')
 
     def __str__(self):
-        return "job posting of %s for %s" % (self.prn , self.post.company_name)
+        return "job posting of %s for %s" % (self.username , self.post.company_name)
     
