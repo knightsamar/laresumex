@@ -5,20 +5,64 @@
 {% block content %}
 <html>
 <head>
-<style>
+<style type="text/css">
 
 .posting{
-    margin-left:25%;
+    float: left;
+    clear: none;
+    display: block;
+    list-style-position: outside;
+    top: 3px;
+    word-wrap: normal;
+   
+    
+    text-overflow: ellipsis;
+    margin-left: 6%;
     width:25%;
     /*border:2px dotted;*/
     padding:3%;
     /*background-color:#ffef79;*/
-    background-image : url('{{MEDIA_URL}}/post-it.png');
+    background-image : url('{{MEDIA_URL}}/post-it-pin.png');
+    background-repeat:no-repeat;
+    background-position:top center;
+    z-index:4;
+    background-color:#fae977;
+    -moz-border-radius: 3em 1em;
+    -moz-box-shadow:-3px 5px #afafaf;
+/*http://www.the-art-of-web.com/css/border-radius/
+http://css-tricks.com/snippets/css/css-box-shadow/
+*/
+
+}
+/*@bgimg{
+    background-image:abc;
+    width:100%
+    height:100%
+    position:top center;
+}*/
+.posting b{
+   font-family:Trebuchet MS;
+   font-size:large;
+   font-variant:small-caps;
+   text-decoration:underline;
+   float:left;
 }
 .hidden{
     display:none;
 
 }
+#a{
+	top: 45%;
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-image: url('{{MEDIA_URL}}/post-it-pin-small.png');
+	right: 2%;
+	float: right;
+	display: block;
+	background-color: #fdfd8c;
+	position: fixed;
+}
+
 </style>
 <script>
 function toggle(o,j)
@@ -62,6 +106,8 @@ function toggle(o,j)
         {
             input.name = "hidden";
             input.value = j;
+            d = document.getElementById('div_'+j)
+            d.setAttribute('class','posting');
             p=document.getElementById('p_'+j);
             p.setAttribute('class','hidden');
             o.parentNode.appendChild(input);
@@ -89,15 +135,47 @@ function toggle(o,j)
             
     }
 }
+function a(o,j)
+{
+    p  = document.getElementById('p_'+j);
+    d  = document.getElementById('div_'+j);
 
+    p.setAttribute('class','posting')
+    d.setAttribute('class','hidden');
+}
 
 </script>
 </head>
 <body>
 <form action = '{{ROOT}}/jobposting/do' method = 'post'>
 {% csrf_token %}
+
+
+{% for j in defalut_job %}
+<p class = "posting" id = 'p_{{ j.id }}'  >
+ <b> {{ j.company_name  }}</b><br>
+ {{ j.description }}<br><BR>
+ <b>Apply   : </b>
+ {{ j.how_to_apply }}<BR><BR>
+ For more details, visit <a href = "{{ j.company_url }}">{{ j.company_url }}</a>
+<BR><BR>
+{% if role == 'admin' %}
+    <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
+    <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
+{% else %}
+    <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
+    <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.id}}')">
+{% endif %}
+<div class = 'hidden' id = 'div_{{j.id}}'>
+
+    <input type = 'button' value = 'Show {{j.company_name}}' onclick = "a(this, '{{j.id}}')">
+</div>
+</p>
+<BR><BR>
+{% endfor %}
+
 {% for j in personalized_job %}
-<p class = "posting" id = 'p_{{ j.post.id }}' >
+<p class = "posting" id = 'p_{{ j.post.id }}' style="{float:left}" >
  <b> {{ j.post.company_name  }}</b><br>
  {{ j.post.description }}<br><BR>
  <b>Apply : </b>
@@ -111,33 +189,23 @@ function toggle(o,j)
     <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.post.id}}")'>
     {% endif %}
     <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.post.id}}')">
-</p>
-<BR><BR>
-{% endfor %}
+<div class = 'hidden' id = 'div_{{j.post.id}}'>
 
-
-{% for j in defalut_job %}
-<p class = "posting" id = 'p_{{ j.id }}' >
- <b> {{ j.company_name  }}</b><br>
- {{ j.description }}<br><BR>
- <b>Apply : </b>
- {{ j.how_to_apply }}<BR><BR>
- For more details, visit <a href = "{{ j.company_url }}">{{ j.company_url }}</a>
-<BR><BR>
-{% if role == 'admin' %}
-    <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
-    <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
-{% else %}
-    <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
-    <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.id}}')">
-{% endif %}
+    <input type = 'button' value = 'Show {{j.post.company_name}}' onclick = "a(this, '{{j.post.id}}')">
+</div>
 
 </p>
 <BR><BR>
 {% endfor %}
+
+
+
+<div id = 'a'>
+<BR><BR>
 <input type = 'button' value = 'back' onclick = 'history.go(-1)'>
 <input type = 'submit' value = 'Done'>
 <input type = 'button' value = 'Home' onclick = 'javascript:location.href="{{ROOT}}/home"'>
+</div>
 </form>
 </html>
 {% endblock %}

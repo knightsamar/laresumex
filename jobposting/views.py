@@ -71,7 +71,7 @@ def view(request):
         else:
             role = "student"
             s = student.objects.get(pk = prn);
-            j = list(posting.objects.filter(status='a'));
+            j = list(posting.objects.filter(status='a').order_by('-posted_on'));
             a = personalised_posting.objects.filter(prn = s ).filter(post__in = j).exclude(is_hidden = True).order_by('-is_interested');
             b = personalised_posting.objects.filter(prn = s ).filter(is_hidden = True);
             print a
@@ -79,10 +79,11 @@ def view(request):
             print j
             for al,bl in map(None,a,b):
                 print "SDF",al,bl;
-                if al:
-                    j.remove(al.post);
-                if bl:    
-                    j.remove(bl.post);
+                try:   
+                   j.remove(al.post);
+                   j.remove(bl.post);
+                except:
+                    pass;
            
             
     else:
