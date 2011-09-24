@@ -25,8 +25,8 @@ urlpatterns = patterns('',
     
     (r'^jobposting/add$',"jobposting.views.add"),
     (r'^jobposting/view_hidden$',"jobposting.views.hidden"),
-    (r'^jobposting/view$',"jobposting.views.view"),
-    (r'^jobposting/do$',"jobposting.views.do"),
+    (r'^jobposting/(?P<template>\D+)/view$',"jobposting.views.view"),
+    (r'^jobposting/(?P<template>\D+)/do$',"jobposting.views.do"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
