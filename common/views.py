@@ -25,13 +25,14 @@ def index(request):
     # if no.. then remove the edit and the viw resume button.
     prn = request.session['username']
     print "hamra prnwa hai ",prn;
+    ll = request.session['last_login'];
     u=user.objects.get(username=prn);
     g=group.objects.get(name='placement committee')
     placement_staff_student=[0,0,0];
     new_posting =False;
     if u in g.user_set.all():
         print 'placement_committe'
-        j = posting.objects.filter(posted_on__gt = u.last_login).filter(status = 'p');
+        j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
         request.session['role']='admin'
         placement_staff_student[0]=1;
         if j:
@@ -39,7 +40,7 @@ def index(request):
     elif prn.isdigit():
         print "student"
         request.session['role']='student'
-        j = posting.objects.filter(posted_on__gt = u.last_login).filter(status = 'a');
+        j = posting.objects.filter(approved_on__gt = ll).filter(status = 'a');
         placement_staff_student[2]=1;
         if j:
             new_posting = True;
@@ -64,7 +65,8 @@ def index(request):
             'p_s_st':placement_staff_student,
             'new_posting':new_posting,
             'MEDIA_URL' : MEDIA_URL,
-            'ROOT':ROOT
+            'ROOT':ROOT,
+            'last_login':ll
              }
             );
     return HttpResponse(t.render(c));

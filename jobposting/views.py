@@ -63,7 +63,7 @@ def view(request,template):
     prn=request.session['username'];
     a="";
     s = user.objects.get(username = prn);
-    last_login = s.last_login;
+    last_login = request.session['last_login'];
     print "last login =============", last_login;
     if 'role' in request.session:
         print "role fornf", request.session['role']
@@ -144,20 +144,27 @@ def do(request,template):
              if p == 'csrfmiddlewaretoken':
                  continue;
              j = posting.objects.filter(pk__in = o);
-             j.update(status=p[:1]);
+             j.update(status=p[:1], approved_on = datetime.now());
      return view(request,"DO"); 
     
     
     
     elif template == 'hidden':
         print "post==", post, "post.list",post.lists();
-        i = post.lists().index('un-hidden');
-
-        return HttpResponse(post);
+        #i = post.lists().index(u'un-hidden');
+        #o = post.lists()[i];
         
-        '''
-             j = personalised_postng.objects.filter(pk__in = post[p]);
-             j.update(is_hidden = False);'''
+        for p,o in post.lists():
+             print p 
+             print o
+             print "======"
+             if p == 'un-hidden':    
+                 j = personalised_posting.objects.filter(pk__in = o);
+                 print j
+                 j.update(is_hidden = False);
+             print p
+             
+        return HttpResponse(post.lists());
 
         
         #get all items by post, i.e job_posting id to the change (interested, hide) theyve made

@@ -13,6 +13,7 @@ class posting(models.Model):
     posted_by=models.CharField(max_length=12,blank=False);
     posted_on=models.DateTimeField(auto_now_add=True,editable=False);
     tally  = models.IntegerField(default=0, verbose_name = "No of Students that have shown interest in this company", editable = False);
+    approved_on = models.DateTimeField(editable = False,null = True , blank =True);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(max_length=1,choices=post_status, default = 'p');
     

@@ -151,7 +151,26 @@ function a(o,j)
 {
     p  = document.getElementById('p_'+j);
     d  = document.getElementById('div_'+j);
-
+    e = document.getElementById('input_'+j);
+    if ((e.name == 'hidden') || (e.name == 'un-hidden'))
+    {
+        if (e.name == 'hidden')
+            {
+                i = document.getElementById('interest_'+j);
+                alert(i.value);
+                i.focus()
+                if ((i.value == "Not interested")&&(p.name == 'new'))
+                    {
+                      e.name = 'interested'
+                      alert('gf')
+                      value = j;
+                     
+                    }
+                 else e.parentNode.removeChild(e) 
+            }
+         else   
+                e.parentNode.removeChild(e)
+    }
     p.setAttribute('class','posting')
     d.setAttribute('class','hidden');
 }
@@ -179,7 +198,7 @@ function a(o,j)
 {% if hidden_job %}
 
 {% for j in hidden_job %}
-<p class = "posting" id = 'p_{{ j.id }}'  >
+<p class = "posting" name = 'hidden' id = 'p_{{ j.id }}'  >
 <b> {{ j.post.company_name  }}</b><br> <a href = "{{ j.post.company_url }}">{{ j.post.company_url }}</a><br><BR>
  {{ j.post.description }}<br><BR>
  <b>Apply   : </b>
@@ -202,10 +221,17 @@ function a(o,j)
 <!--  defult un personalized jobs ..!!!  -->
 {% else %}
 {% for j in defalut_job %}
-<p class = "posting" id = 'p_{{ j.id }}'  >
+<p class = "posting" name = 'new' id = 'p_{{ j.id }}'  >
+{% if role == 'admin' %}
 {% if last_login < j.posted_on %}
  <img src = '{{MEDIA_URL}}/new.gif' height= 50 width =50 align = 'left'>
  {% endif %}
+ {% else %}
+{% if last_login < j.approved_on %}
+ <img src = '{{MEDIA_URL}}/new.gif' height= 50 width =50 align = 'left'>
+ {% endif %}
+ {% endif %}
+
  <b> {{ j.company_name  }}</b><br> <a href = "{{ j.company_url }}">{{ j.company_url }}</a><br><BR>
  {{ j.description }}<br><BR>
  <b>Apply   : </b>
@@ -215,7 +241,7 @@ function a(o,j)
     <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
     <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
 {% else %}
-    <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
+    <input type = 'button' id = 'interest_{{j.id}}' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
     <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.id}}')">
 {% endif %}
 <div class = 'hidden' id = 'div_{{j.id}}'>
@@ -229,9 +255,9 @@ function a(o,j)
 
 <!--   personalized jobs ..!!!  -->
 
-
+<div id = 'existing'>
 {% for j in personalized_job %}
-<p class = "posting" id = 'p_{{ j.post.id }}' style="{float:left}" >
+<p class = "posting" name ='existing' id = 'p_{{ j.post.id }}' style="{float:left}" >
  <b> {{ j.post.company_name  }}</b><br>
   <a href = "{{ j.post.company_url }}">{{ j.post.company_url }}</a><BR><BR>
  {{ j.post.description }}<br><BR>
@@ -240,9 +266,9 @@ function a(o,j)
 <BR><BR>
     {% if j.is_interested %}
     <img src = "{{MEDIA_URL}}/Green_tick.png" height=30 width = 40 id = "img_{{j.post.id}}">
-    <input type = 'button' value = 'Not interested' onclick = 'toggle(this, "{{j.post.id}}")'>
+    <input type = 'button'  id = 'interest_{{j.post.id}}'  default = 'interested' value = 'Not interested' onclick = 'toggle(this, "{{j.post.id}}")'>
     {% else %}
-    <input type = 'button' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.post.id}}")'>
+    <input type = 'button' id = 'interest_{{j.post.id}}' default = 'Not interested' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.post.id}}")'>
     {% endif %}
     <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.post.id}}')">
 <div class = 'hidden' id = 'div_{{j.post.id}}'>
@@ -253,7 +279,7 @@ function a(o,j)
 </p>
 <BR><BR>
 {% endfor %}
-
+</div>
 {% endif %}
 
 <div id = 'a'>
