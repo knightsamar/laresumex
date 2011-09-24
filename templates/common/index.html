@@ -28,7 +28,7 @@
 {% if new_posting %}
 <img src = '{{MEDIA_URL}}/new.gif' height =20 width=20 align = 'left'>
 {% endif %}
-<input type='button' align = 'right' value = 'View Jobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/view';"><BR>
+<input type='button' align = 'right' value = 'View Jobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/views/view';"><BR>
 {% if not p_s_st.0 == 1 %}
 <input type='button' value = 'View HiddenJobpostings' onclick="javascript:location.href='{{ROOT}}/jobposting/view_hidden';"><BR>
 {% endif %}

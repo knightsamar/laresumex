@@ -31,5 +31,5 @@ class personalised_posting(models.Model):
     prn = models.ForeignKey('ldap_login.user')
 
     def __str__(self):
-        return "job posting of %s for %s" % (self.username , self.post.company_name)
+        return "job posting of %s for %s" % (self.prn.username , self.post.company_name)
     
