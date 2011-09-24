@@ -1,6 +1,6 @@
 ## Create your views here.
-from student_info.models import student;
 from jobposting.forms import JobPostingForm;
+from jobposting.models import *
 from ldap_login.models import *
 
 ''' import generator helpers '''
@@ -15,6 +15,8 @@ from pprint import pprint
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 from datetime import datetime
 
+
+##### for jobposting #####
 def add(request):
     '''
     for adding a new Job Posting 
@@ -37,10 +39,10 @@ def add(request):
 
            #now actually save everything
            postedby=form.save(commit=False);
-           postedby.posted_by="samar";
+           postedby.posted_by=request.session['username'];
            postedby.save();
 
-           return HttpResponseRedirect('/common/Thanks/done/') # Redirect after POST
+           return HttpResponseRedirect('/common/Thanks. posting has been sent for approval/done/') # Redirect after POST
     else:     
       form = JobPostingForm(); # An unbound form
       #print form
@@ -52,4 +54,102 @@ def add(request):
                   'ROOT':ROOT,
                   })
     return HttpResponse(t.render(c));
+
+#####  view  #####
+
+def view(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+    prn=request.session['username'];
+    a="";
+    s = user.objects.get(username = prn);
+    last_login = s.last_login;
+    print "last login =============", last_login;
+    if 'role' in request.session:
+        print "role fornf", request.session['role']
+        if request.session['role'] == 'admin':
+            j = posting.objects.filter(status='p').order_by('-status')
+            role ="admin"
+        else:
+            
+            role = "student"
+            j = list(posting.objects.filter(status='a').order_by('-posted_on'));
+            a = personalised_posting.objects.filter(prn = s ).filter(post__in = j).exclude(is_hidden = True).order_by('-is_interested');
+            b = personalised_posting.objects.filter(prn = s ).filter(is_hidden = True);
+            print a
+            print b
+            print j
+            for al,bl in map(None,a,b):
+                print "SDF",al,bl;
+                try:   
+                   j.remove(al.post);
+                   j.remove(bl.post);
+                except:
+                    pass;
+           
+            
+    else:
+        return HttpResponse('not for u')
+    t=loader.get_template('jobposting/view.html');
+    c=RequestContext(request,{
+        'ROOT':ROOT,
+        'MEDIA_URL':MEDIA_URL,
+        'defalut_job':j,
+        'last_login':last_login,
+        'personalized_job':a,
+        'role':role
+        })
+    return HttpResponse(t.render(c));
+
+def do(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+    if 'role' in request.session:
+            role = request.session['role'];
+    post = request.POST;
+    if role == 'student':
+     for p,o in post.lists():
+        if p == 'csrfmiddlewaretoken':
+            continue;
+        print p , "=============" , o;
+        j = personalised_posting.objects.filter(post__in = o).filter(prn = request.session['username']);
+        #print len(j) , len(o);
+        print 'j',j;
+        print 'o',o;
+        for existing_posts in j:
+              
+              existing_posts.is_interested=( p == 'interested' or p != 'not interested' );
+              existing_posts.is_hidden = (p == 'hidden' );
+              existing_posts.save();
+              print existing_posts.post.id
+              o.remove(unicode(existing_posts.post.id));
+        print "oooooo==",o; 
+        for new_post in o:
+            j = personalised_posting(
+                post = posting.objects.get(pk=new_post),
+                is_interested = (p == 'interested' or p != 'not interested' ),
+                is_hidden = (p == 'hidden' ),
+                prn = student.objects.get(prn=request.session['username'])
+            )
+            j.save();
+
+    elif role == 'admin':
+     for p,o in post.lists():
+         if p == 'csrfmiddlewaretoken':
+             continue;
+         j = posting.objects.filter(pk__in = o);
+         j.update(status=p[:1]);
+         
+            
+    return view(request); 
+    #get all items by post, i.e job_posting id to the change (interested, hide) theyve made
+    #and then update the personalized_post wala table with these changed values. 
+        
+        
+def hidden(request):
+    if 'username' not in request.session:
+        return our_redirect('/ldap_login');
+    u = user.objects.get(username = request.session['username']);
+    j = personalised_posting.objects.filter(prn = u).filter(is_hidden =True);
+    return HttpResponse(j);
 

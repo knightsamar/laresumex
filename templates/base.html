@@ -64,6 +64,8 @@ li {
 }
 
 hr {
+	clear: none;
+	float: none;
 	line-height: 6px;
 	text-shadow: 4px 8px #ca651e;
 	color: #56c72b;
@@ -83,6 +85,7 @@ hr {
 
 #footer
 {
+        position: static;
         clear: both;
         background-color: #BA99BC;
         float:center;
@@ -99,9 +102,11 @@ body
 
 contact
 {
+	float: left;
+	clear: right;
+	position: fixed;
 	font-family:Verdana;
     font-size:3em;
-    background-image:url(http://localhost:8888/laresumex/Untitled);
 }
 
 .help
@@ -115,6 +120,13 @@ contact
     font-size: 12px !important;
     color: red;
 }
+#below
+{
+	width: 100%;
+	clear: left;
+	float: none;
+	position: static;
+}
 </style>
 </head>
 <body>
@@ -122,8 +134,11 @@ contact
 <hr size=10 color='Aqua'>
 {% block content %}
 {% endblock %}
+
+<div id = 'below'>
 <hr>
 <br>
+
 <div style ="{float:right;text-align:right;}">
 This software is a creation of 
 {% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
@@ -146,5 +161,6 @@ This is a <a href='http://sdrclabs.in'><img src="http://localhost:8888/laresumex
 <br><BR><BR><BR><BR>
 <div id='footer' align='center'>Works best in <a href='http://getfirefox.com'>Firefox!</a></span></div>
 <contact><a href = '/laresumex/contact/'>Contact US</a></contact>
+</div>
 </body>
 </html>

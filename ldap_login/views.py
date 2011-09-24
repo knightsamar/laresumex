@@ -116,6 +116,10 @@ def login(request):
 def logout(request):
     #are we actually logged in ?
     if 'username' in request.session:
+        u  = user.objects.get(username = request.session['username'])
+        u.last_login = datetime.now();
+        print u.last_login
+        u.save();
         print 'logging you out';
         request.session.flush();
     else:
