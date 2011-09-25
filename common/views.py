@@ -2,7 +2,7 @@
 from student_info.models import student;
 from common.forms import ContactForm
 from ldap_login.models import *
-
+from jobposting.models import posting
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect;
@@ -25,15 +25,31 @@ def index(request):
     # if no.. then remove the edit and the viw resume button.
     prn = request.session['username']
     print "hamra prnwa hai ",prn;
+    ll = request.session['last_login'];
+    print "LLLLLLL",ll;
+    if ll is None:
+        ll = datetime(2010,12,12,3,2,3);
     u=user.objects.get(username=prn);
     g=group.objects.get(name='placement committee')
     placement_staff_student=[0,0,0];
+    new_posting =False;
     if u in g.user_set.all():
         print 'placement_committe'
+        try:
+            j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
+        except:
+            j = posting.objects.filter(status = 'p');
+        request.session['role']='admin'
         placement_staff_student[0]=1;
+        if j:
+            new_posting = True
     elif prn.isdigit():
         print "student"
+        request.session['role']='student'
+        j = posting.objects.filter(approved_on__gt = ll).filter(status = 'a');
         placement_staff_student[2]=1;
+        if j:
+            new_posting = True;
     else:
         print "staff"
         placement_staff_student[1]=1;
@@ -53,8 +69,10 @@ def index(request):
             'prn':request.session['username'],
             'create_form':create_form,
             'p_s_st':placement_staff_student,
+            'new_posting':new_posting,
             'MEDIA_URL' : MEDIA_URL,
-            'ROOT':ROOT
+            'ROOT':ROOT,
+            'last_login':ll
              }
             );
     return HttpResponse(t.render(c));
@@ -110,11 +128,15 @@ def contact(request):
 
 def done(request,msg):
   
+  if msg == "Submitted":
+      message = "Your form has been successfully submitted"
+  elif msg == "Thanks":
+        message = "Thanks. Your posting has been sent for approval"
   t=loader.get_template('common/done.html')
   c=Context(
             {
-                'msg':msg,
+                'msg':message,
                 'ROOT':ROOT
-            }
-            )
+            
+            })
   return HttpResponse(t.render(c)) 

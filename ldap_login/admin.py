@@ -8,7 +8,9 @@ class membershipInline(admin.TabularInline):
 #    fk_name = 'user'
 
 class userAdmin(admin.ModelAdmin):
-    pass; #because model will automatically ensure that ManytoManyKeisDisplayed
+    search_fields = ['username'];
+    list_filter=['groups']
+    #because model will automatically ensure that ManytoManyKeisDisplayed
 
 class groupAdmin(admin.ModelAdmin):
     inlines = [

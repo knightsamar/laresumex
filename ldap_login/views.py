@@ -3,7 +3,7 @@ from django.http import HttpResponse;
 #from django.shortcuts import redirect;
 from django.template import RequestContext, loader;
 from ldap_login.models import user,group;
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from student_info.utility import our_redirect
 
@@ -52,6 +52,12 @@ def login(request):
         	    #check for user existance... and/or add the use in our feedback database..!!
         
             userexists=user.objects.get_or_create(pk=userName)
+            if not userexists[1]:
+                request.session['last_login'] = userexists[0].last_login;
+            else:
+                request.session['last_login']=datetime.now();
+            print request.session['last_login']
+            userexists[0].last_login = datetime.now() + timedelta(minutes = 30);
             userexists[0].save();
 		    # this auto gruop assignment takes place by the logic that all students log in from thier PRN's and thier 1st 8 digit of thier PRN represents thier gruop.. to assignm a student to another group we need to do it manually..:) and we need to find out a better way of creating groups..!!! :D
 		
@@ -116,6 +122,10 @@ def login(request):
 def logout(request):
     #are we actually logged in ?
     if 'username' in request.session:
+        u  = user.objects.get(username = request.session['username'])
+        u.last_login = datetime.now();
+        print u.last_login
+        u.save();
         print 'logging you out';
         request.session.flush();
     else:
