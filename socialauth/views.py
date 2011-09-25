@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect;
 from django.contrib.auth.decorators import login_required
 from django.template import Context, loader, RequestContext
 from django.contrib.auth import logout as auth_logout
+from laresumex.settings import MEDIA_URL
 
 @login_required
 def sampleView(request):
@@ -17,6 +18,7 @@ def loginHandler(request):
     t = loader.get_template('socialauth/login_options.html');
     c = Context({
         'next':next,
+        'MEDIA_URL':MEDIA_URL,
        });
     return HttpResponse(t.render(c));
 

@@ -1,5 +1,6 @@
 from django.db import models
 from ldap_login.models import user
+from django.db.models.signals import post_save
 # Create your models here.
 
 class personalised_posting(models.Model):
@@ -39,4 +40,22 @@ class posting(models.Model):
         count = personalised_posting.objects.filter(post=posting.objects.all()[0]).filter(is_interested=True).count();
         return count;
 
+def handle_new_posting(sender, **kwargs):
+    '''Signal handler whenever a job posting is created
+       Refer: http://localhost/docs/django-docs/ref/signals.html#django.db.models.signals.post_save
+    '''
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+    print "A signal was sent by ", sender
+    print 
+    print "The instance which forced the signal to sent was ", kwargs['instance']
+    print 
+    #would be applicable if we would be processing post_save
+    print "Was a new job posting created or not ?", kwargs['created']
+    print
+    #print 'The signal id was',kwargs['dispatch_uid']
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+
+#Whenever a posting is saved, signal!
+#Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
+post_save.connect(handle_new_posting,sender=posting,weak=False,dispatch_uid='hamaraSignalwa');   
    
