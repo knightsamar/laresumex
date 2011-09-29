@@ -88,7 +88,7 @@ def contact(request):
                # ...
                print form;
                post=request.POST;
-               print "=======POST======",post;
+               #print "=======POST======",post;
 
                # sending the email NOW...
                to = []
@@ -112,7 +112,7 @@ def contact(request):
                email.to=to;
                email.body=body;
                email.send();
-               print email.subject;
+               #print email.subject;
                
                
                return our_redirect("/common/Thank-you/done") # Redirect after POST

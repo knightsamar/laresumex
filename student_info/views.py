@@ -201,15 +201,15 @@ def submit(request, prn):
             if field == 'csrfmiddlewaretoken':
                 continue;
             field_name=field.split('_');
-            print "type(field)", type(field), field, data[0]
+            print "type(field)", type(field), field
             if len(field_name) is 1: # for student model
-                print "=====>Setting ", field_name[0] , "of student with ",data[0]
+                #print "=====>Setting ", field_name[0] , "of student with ",data[0]
                 s.__setattr__(field_name[0],data[0])
                 continue;
             if field_name[0] == 'personal':  
                 if field_name[2].isdigit() is False:
                     index=field_name[1]+'_'+field_name[2];
-                    print "=====> adding", data , "to attribute", index, "of Personal";
+                    #print "=====> adding", data , "to attribute", index, "of Personal";
                     p.__setattr__(index,data[0]);     
             if field_name[0]=="birthdate":
                 date=data[0].split(',')
@@ -233,7 +233,8 @@ def submit(request, prn):
             if (field_name[0] == 'companySpecific'):
                 try:
                     cs=companySpecific.objects.get(key=field_name[1])    
-                    print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
+                    print "\n\nCOMPANY SPECIFIC....!!!!!!...."
+                    #print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
                     a = str(data[0]);
                     for d in data[1:]:
                         a += ',' + d
@@ -314,11 +315,12 @@ def submit(request, prn):
         
         print "table-->",table;
         print "we have a column called __%s__" % (tablerow[1]);
-        print "value--->",value;
+        print "value--> Can't be printed here you stiupid!"
+        #print "value--->",value;
         table.__setattr__(tablerow[1], value);
         table.save();
-        print "table value====>>>", table.__getattribute__(tablerow[1])
-        print table,".",tablerow[1]," value set to ", table.__getattribute__(tablerow[1]);
+        #print "table value====>>>", table.__getattribute__(tablerow[1])
+        #print table,".",tablerow[1]," value set to ", table.__getattribute__(tablerow[1]);
 
     #===========>>> Table Dict <<<=================
     for table, row_values in table_dict.iteritems():
@@ -340,7 +342,8 @@ def submit(request, prn):
                 else:
                     c="fromDate"
             t.__setattr__(c,d);
-            print r[0],".",c,"======>",d;    
+            #UNCOMENT BELOW ONLY IN DEV ENVIRONMENT NOT PRODUCTION - YOU HAVE BEEN WARNED
+            #print r[0],".",c,"======>",d;    
         t.save();    
         print "Saved"
     s.save();

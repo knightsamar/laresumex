@@ -262,13 +262,19 @@ function validate(obj)
 
   Birthdate*
   <select name = "date"  id="birthdate_date"  onBlur="change(this);" mandatory='true' onFocus="fillOptions(this);">
-     <option>{{ p.birthdate.day }} </option>
-  </select>
+        {% if p.birthdate.day %}
+            <option>{{ p.birthdate.day }} </option>
+        {% endif %}
+ </select>
   <select name = "month" id="birthdate_month" onBlur="change(this);" mandatory='true' onFocus="fillOptions(this);"> 
-        <option>{{ p.birthdate|date:"b"|title }}</option>
+        {% if p.birthdate.month %}
+               <option>{{ p.birthdate|date:"b"|title }}</option>
+        {% endif %}
   </select>
   <select name = "year"  id="birthdate_year" onBlur="concat(this);" mandatory='true' onFocus="fillOptions(this);">
-        <option>{{ p.birthdate.year }}</option>
+        {% if p.birthdate.year %}
+            <option>{{ p.birthdate.year }}</option>
+        {% endif %}
   </select>  
  <hr>  
  <br><BR>
@@ -287,17 +293,19 @@ function validate(obj)
   </tr>
   {% for marks in m %}
   <tr id='marks'>
-  <td> <input type="text" id="marks_course_{{forloop.counter}}" value="{{ marks.course }}" ></td>
-  <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}"></td>
+  <td> <input type="text" id="marks_course_{{forloop.counter}}" size={{ marks.course|length }} maxlength='30' value="{{ marks.course }}" ></td>
+  <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}" size={{marks.uni|length}} maxlength='100'></td>
   <td>
   {% if not marks.marks %}
-      <input type="text" id='marks_marks_{{ forloop.counter }}' value="{{marks.markstype}}" disabled=true size='10' onblur='validate(this)'> 
+      <input type="text" id='marks_marks_{{ forloop.counter }}' value="{{marks.markstype}}" disabled=true size='10' maxlength='15' onblur='validate(this)'> 
   {% else %}
       <input type="text" id='marks_marks_{{ forloop.counter }}' size='10' maxlength='10' value="{{marks.marks}}" onBlur='validate(this)'> 
   {% endif %}
 
   <select id='marks_markstype_{{forloop.counter}}' onChange="change(this);">
-          <option>{{marks.markstype }}</option>
+          {% if marks.markstype %}
+            <option>{{marks.markstype }}</option>
+          {% endif %}
           <option>Total</option>
           <option>GPA</option>
           <option>Appearing</option>
@@ -334,7 +342,11 @@ function validate(obj)
         </tr>
   <tr id='marks'>
       <td>
-      <select name="course-g" id="marks_course_3" onFocus="fillOptions(this)"></select></td>
+      {% comment %}
+      <select name="course-g" id="marks_course_3" onFocus="fillOptions(this)"></select>
+      {% endcomment %}
+      <input type='text' value='' id='marks_course_3' size=20 maxlength='30'> 
+      </td>
       <td><input type ='text' size=40 id="marks_uni_3"></td>
       <td><input type='text' size=10 id="marks_marks_3" maxlength='10' onBlur='validate(this)'>
           <select id='marks_markstype_3' onChange="change(this);" title="Total Marks">
@@ -353,7 +365,11 @@ function validate(obj)
   {% if yr == '14' %}
   <tr>
       <td>
-      <select name="course-pg" id="marks_course_4" onFocus="fillOptions(this)"></select></td>
+      {% comment %}
+         <select name="course-pg" id="marks_course_4" onFocus="fillOptions(this)"></select> 
+      {% endcomment %}
+      <input type='text' value='' id='marks_course_4' size=20 maxlength='30'>
+      </td>
       <td><input type ='text' size=40 id="marks_uni_4"></td>
       <td><input type='text' size='10' id="marks_marks_4" maxlength='10' onBlur='validate(this)'>
           <select id='marks_markstype_4'onChange="change(this);" title="Total Marks">
@@ -458,11 +474,29 @@ function validate(obj)
                 <td><textarea rows=3 cols=30 id="workex_desc_{{ forloop.counter }}">{{ wex.desc }}</textarea></td>
              
              <td>
-                  <select name = "month" id="workex_startmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> <option>{{ wex.fromDate|date:"b"|title }}</option> </select>
-                  <select name = "year"  id="workex_startyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ wex.fromDate.year }}</option> </select>  </td>
+                  <select name = "month" id="workex_startmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> 
+                  {% if wex.fromDate.month %}
+                     <option>{{ wex.fromDate|date:"b"|title }}</option> 
+                  {% endif %}
+               </select>
+               <select name = "year"  id="workex_startyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBliur="concat(this);"> 
+                  {% if wex.fromDate.year %}
+                    <option>{{ wex.fromDate.year }}</option> 
+                  {% endif %}
+               </select>  
+            </td>
             <td>
-                <select name = "month" id="workex_endmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> <option>{{ wex.endDate|date:"b"|title }}</option> </select>
-                <select name = "year"  id="workex_endyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ wex.endDate.year }}</option> </select>  </td>
+                <select name = "month" id="workex_endmonth_{{forloop.counter}}" onFocus="fillOptions(this);"> 
+                {% if wex.endDate.month %}
+                    <option>{{ wex.endDate|date:"b"|title }}</option> 
+                {% endif %}
+                </select>
+                <select name = "year"  id="workex_endyear_{{forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> 
+                   {% if wex.endDate.year %}
+                       <option>{{ wex.endDate.year }}</option> 
+                   {% endif %}
+                  </select>  
+            </td>
                 <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
                 </td>
@@ -489,13 +523,23 @@ function validate(obj)
 <div>
 
 <table cellpadding=13>
-  <tr><th>Name  and description </th><th>month/year</th>
+  <tr><th>Name and description </th><th>month/year</th>
   {% for cert in c %}
    <tr id='certi'>
     <td><textarea rows=2 cols=50 title="" id='certification_desc_{{ forloop.counter }}' >{{ cert.desc }}</textarea></td>
-    <td><select name = "month" id="certification_month_{{ forloop.counter }}" onFocus="fillOptions(this);"><option>{{ cert.fromDate|date:"b"|title }}
-</option></select>
-    <select name = "year"  id="certification_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ cert.fromDate.year }}</option></select></td>
+    <td><select name = "month" id="certification_month_{{ forloop.counter }}" onFocus="fillOptions(this);">
+    
+    {% if cert.fromDate.month %}
+        <option>{{ cert.fromDate|date:"b"|title }}</option>
+    {% endif %}
+
+    </select>
+    <select name = "year"  id="certification_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> 
+        {% if cert.fromDate.year %}
+          <option>{{ cert.fromDate.year }}</option>
+        {% endif %}    
+    </select>
+    </td>
     </tr>
    {% empty %}
    <tr id='certi'>
@@ -518,12 +562,31 @@ function validate(obj)
              <td><input type='text' id="project_heading_{{ forloop.counter }}" value="{{ pr.heading }}"></td>
              <td><textarea id="project_desc_{{ forloop.counter }}" rows=2 cols=30>{{ pr.desc }}</textarea></td>
 
-             <td>
-                  <select name = "month" id="project_startmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{ pr.fromDate|date:"b"|title }}</option> </select>
-                  <select name = "year"  id="project_startyear_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ pr.fromDate.year }}</option></select></td>
+         <td>
+              <select name = "month" id="project_startmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> 
+                    {% if pr.fromDate.month %}
+                        <option>{{ pr.fromDate|date:"b"|title }}</option> 
+                    {% endif %}
+            </select>
+      <select name = "year"  id="project_startyear_{{ forloop.counter }}" onFocus="fillOptions(this);" onBlur="concat(this);"> 
+                    {% if pr.fromDate.year %}
+                        <option>{{ pr.fromDate.year }}</option>
+                    {% endif %}    
+            </select>
+            </td>
             <td>
-                <select name = "month" id="project_endmonth_{{ forloop.counter }}" onFocus="fillOptions(this);"> <option>{{ pr.endDate|date:"b"|title}}</option></select>
-                <select name = "year"  id="project_endyear_{{ forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);"> <option>{{ pr.endDate.year }}</option></select></td>
+                <select name = "month" id="project_endmonth_{{ forloop.counter }}" onFocus="fillOptions(this);">
+                {% if pr.endDate.month %}
+                  <option>{{ pr.endDate|date:"b"|title}}</option>
+                {% endif %}
+                </select>
+                <select name = "year"  id="project_endyear_{{ forloop.counter}}" onFocus="fillOptions(this);" onBlur="concat(this);">
+                {% if pr.endDate.year %}
+                    <option>{{ pr.endDate.year }}</option>
+                {% endif %}
+                </select>
+                </td>
+
                 <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
                 </td>
@@ -555,7 +618,12 @@ function validate(obj)
         {% for ac in a %}
             <tr id = 'academic'>
                <td><textarea rows=2 cols=50 id="academic_desc_{{ forloop.counter }}">{{ ac.desc }}</textarea></td>
-               <td><select name = "year"  id="academic_year_{{forloop.counter }}" onFocus="fillOptions(this);" ><option>{{ac.fromDate.year}}</option> </select></td>
+               <td>
+                <select name = "year"  id="academic_year_{{forloop.counter }}" onFocus="fillOptions(this);" >
+                    {% if ac.fromDate.year %}
+                        <option>{{ac.fromDate.year}}</option> 
+                    {% endif %}
+               </select></td>
                <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
                </td>
@@ -564,6 +632,7 @@ function validate(obj)
             <tr id='academic'>
                 <td><textarea rows=2 cols=50 id="academic_desc_1"></textarea></td>
                 <td><select name = "year"  id="academic_year_1" onFocus="fillOptions(this);" onblur="concat(this)" > </select>  </td>
+
             </tr>
             {% endfor %}
 </table>
@@ -579,7 +648,13 @@ function validate(obj)
         {% for extra in e %}
             <tr id = 'extracurricular'>
                 <td><textarea rows=2 cols=50 id="extracurricular_desc_{{ forloop.counter }}">{{ extra.desc }}</textarea></td>
-                <td><select name = "year"  id="extracurricular_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onblur="concat(this)" ><option>{{extra.fromDate.year}}</option> </select></td>
+                <td>
+                    <select name = "year"  id="extracurricular_year_{{ forloop.counter }}" onFocus="fillOptions(this);" onblur="concat(this)">
+                        {% if extra.fromDate.year %}
+                            <option>{{extra.fromDate.year}}</option> 
+                        {% endif %}
+                    </select>
+               </td>
                <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
                </td> 
@@ -775,7 +850,7 @@ Weak Areas
   
 </div> 
 {% endif %}
-</div><! -- end of the tabs div -->
+</div><!-- end of the tabs div -->
   <input type='hidden' value='0' name='allok' id='allok'>
 
 <div id='buttons' class='#' style='text-align:center;'>
