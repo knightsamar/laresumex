@@ -18,7 +18,7 @@ def authenticate(username=None, password=None):
            server = "10.10.21.3"; #jupiter
            try:
                l = ldap.open(server);
-               print 'Connecting using %s , %s ' % (username, password);
+               print 'Connecting using %s ******* ' % (username);
                status = l.simple_bind_s(username,password);
                print 'Connect successfully!';
                return True;

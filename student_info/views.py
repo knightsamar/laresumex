@@ -295,8 +295,8 @@ def submit(request, prn):
         print "======EXCEPTION....while submitting============", e,;
         print 
         print "=====Traceback====="
-        exception_info = exc_info();
-        traceback.print_tb(exception_info[2]);
+        #exception_info = exc_info();
+        #traceback.print_tb(exception_info[2]);
         return our_redirect('/form')
     
     # ============>>> MVSD <<<====================

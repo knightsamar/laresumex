@@ -104,16 +104,18 @@ def contact(request):
                    destination.close()
                    email.attach_file(dest); 
                
-               body=post['message'];
+               body=post['subject']+"<BR><BR><BR>\n\n\n";
+               body += post['message'];
+               body += post['url']
                email.from_email=request.session['username']+'@sicsr.ac.in';
-               email.subject='[Laresumex'+ post['messageType']+']'+ post['subject'];
+               email.subject='[Laresumex'+ post['messageType']+']'
                email.to=to;
                email.body=body;
                email.send();
-
+               print email.subject;
                
                
-               return our_redirect("/common/Thank you/done") # Redirect after POST
+               return our_redirect("/common/Thank-you/done") # Redirect after POST
         else:     
            form = ContactForm() # An unbound form
          
@@ -132,6 +134,10 @@ def done(request,msg):
       message = "Your form has been successfully submitted"
   elif msg == "Thanks":
         message = "Thanks. Your posting has been sent for approval"
+  elif msg == "Thank-you":
+      message = "Thank you. your request would be attended to withing 24hrs."
+  else:
+      message = "Done"
   t=loader.get_template('common/done.html')
   c=Context(
             {

@@ -16,7 +16,7 @@ if ROOT == "/laresumex":
 def login(request):
     #are we processing login attempt ?
     message = None;
-    print request.POST
+    #print request.POST
     if 'username' in request.session:
         return our_redirect('/home');
     if 'username' in request.POST:# and 'password' in request.POST:

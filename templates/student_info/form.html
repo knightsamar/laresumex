@@ -156,28 +156,15 @@ function addNew(elName,val)
 
 function validate(obj)
 {
-   
    name = obj.id.split('_'); 
-   valid = false;
    value = obj.value;
-   message = "";
-
-   //alert('validating ' + name[0]);
-
+    valid = false;
    //What section ?
-   switch (name[0])
-   {
-       case 'marks':
-            //what field in that section ?
-            switch (name[1])
-            {
-                case 'marks':
-                case 'outof':
                      //TODO: Test this trim() functioanlity on all major browsers. Done on Firefox 6.01
-                     if (isNaN(value) || String(value).trim().length == 0)
+                     if (isNaN(value) || value ==  "")
                      {
-                         valid = false;
-                         message = "You need to enter a number!";
+                         alert("You need to enter a number!");
+                         valid =false;
                      }
                      else if (String(value).length > 0)
                      {
@@ -186,29 +173,23 @@ function validate(obj)
                             /* the toFixed function brings up a number with n decimal places. It doesn't truncate if there is already precision 
                             Ref: http://www.bennadel.com/blog/1013-Javascript-Number-toFixed-Method.htm
                             */
-                            //alert()
                             if (String((eval(value).toFixed(4))).indexOf('.') != -1 && (String(eval(value).toFixed(4)).split('.')[0].length <=7) && (String(eval(value).toFixed(4)).split('.')[1].length <= 4))
                             {
-                                valid = true;
+                                valid =  true;
                             }
                             else
                             {
-                                valid = false;
-                                message = "Your marks aren't entered in the form 9999999.999!";
+                                alert("Your marks aren't entered in the form 9999999.999!");
+                                valid =  false;
                             } 
-                    }
-                   break;
-             }
-             break;
-   }
+                     }
 
    //now that we know validity, mark so visually and attributely
    //and tell the user
+   
    if (valid == false){
        obj.setAttribute('class',obj.getAttribute('class')+' invalid_data');
-        //alert(obj.class);
        obj.focus();
-       alert(message);
    }
    else //if found valid, clear any existing invalidity reference!
    {
@@ -325,7 +306,7 @@ function validate(obj)
    {% if not marks.outof %}
        Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' value="{{ marks.markstype }}" disabled=true onblur='validate(this)'> 
    {% else %}
-  Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' value="{{marks.outof}}" onblur='alert("hi");validate(this);'> 
+  Out Of <input type="text" id='marks_outof_{{ forloop.counter }}' size='10' maxlength='10' value="{{marks.outof}}" onblur='validate(this);'> 
   {% endif %}
 </td>
   <td><select name = "year" id="marks_year_{{ forloop.counter }}"  onFocus="fillOptions(this);" onBlur="concat(this);" mandatory='true'>
@@ -344,7 +325,7 @@ function validate(obj)
     <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="concat(this)" mandatory='true'> </select></td>
   </tr>
   <tr>
-      <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" name='marks_course_1' value="XIIth"></td>
+      <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" name='marks_course_2' value="XIIth"></td>
       <td><input type ='text' size=40 id="marks_uni_2" ></td>
       <td><input type='text' size=10 id="marks_marks_2" title='Total marks' maxlength='10' onBlur='validate(this)'>
       <input type="hidden" id="marks_markstype_2" value="Total" maxlength='10' onBlur='validate(this)'>

@@ -1,5 +1,11 @@
- <title>La-ResumeX ::{% block title %}{% endblock %}</title>
+<head>
+<title>La-ResumeX ::{% block title %}{% endblock %}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+{% comment %}
+    next meta tag for magic of Google Webmaster 
+{% endcomment %}
+    <meta name="google-site-verification" content="_eq5ilPot78HSQvDUYIlO4L3Vi2zBGhPhzBQHTfzmPE" />
+
 		<style type="text/css">
 /* code inspiration for tooltip:- http://sixrevisions.com/css/css-only-tooltips/*/
 .tooltip{   
@@ -57,7 +63,7 @@
 
 li {
 	background-repeat: repeat;
-	background-image: url(../media/Untitled);
+	/* background-image: url(../media/Untitled); */
 	list-style-position: outside;
 	list-style-type: square;
 	margin: 11px;
@@ -101,16 +107,30 @@ contact
 {
 	font-family:Verdana;
     font-size:2em;
-    background-image:url(http://projects.sdrclabs.in/laresumex_media/Untitled);
+    /* background-image:url(http://projects.sdrclabs.in/laresumex_media/Untitled); */
 }
 
 </style>
+{% comment %}
+ for google analytics tracking.
+{% endcomment %}
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-26005401-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+
+</script>
 </head>
 <h1 align="center" style="{color: purple}">LaResume-X</h1> <h3 align="center">More than just Resume in <img src="http://projects.sdrclabs.in/laresumex_media/nayiwalifile.png" width=50 height=25></h3>
 <hr size=10 color='Aqua'>
 {% block content %}
 {% endblock %}
-<hr>
 <br>
 <div style ="{float:right;text-align:right;}">
 This software is a creation of 
