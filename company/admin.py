@@ -64,6 +64,9 @@ class companyAdmin(admin.ModelAdmin):
 
     informStudents.short_description = "Inform students about companies"
 
+class placement_inAdmin(admin.ModelAdmin):
+    list_filter = ['company']
+
 admin.site.register(company,companyAdmin);
-admin.site.register(placement_in);
+admin.site.register(placement_in,placement_inAdmin);
 

@@ -52,8 +52,11 @@
 /* provides the addAnother functionality -- allows to add another instance of an element by duplicating it _properly_ */
 function addNew(elName,val)
  {
-        if(val) formflag = false
-        else formflag=true
+        // set the form flag which is used to set whether the remove button is to be rendered or not.
+        if(val == '[]') formflag = true
+        else if (!val) formflag = true
+        else formflag= false
+       
         c=document.getElementById(elName);
         if (formflag)
         {
@@ -62,7 +65,7 @@ function addNew(elName,val)
             removeButton.value="remove";
         }
 
-        if (c.tagName=='TR')
+        if (c.tagName=='TR' || c.tagName == 'tr')
             {
                 l=c.parentNode.children.length;
                  var form =false;
@@ -76,6 +79,26 @@ function addNew(elName,val)
                     firstNode=c.parentNode.children[1]
                 lastNode=c.parentNode.children[l-1]
                 clone=firstNode.cloneNode(true);
+/*                lastID = lastNode.getElementsByTagName('select')[0].id;
+                newID = parseInt(lastID) + 1;
+
+                allInputs = clone.getElementsByTagName('input');
+                allSelects = clone.getElementsByTagName('select');
+                allTextAreas = clone.getElementsByTagName('textarea');
+
+                all = [allInputs,allSelects,allTextAreas];
+                for (var i=0;i<all.length;i++)
+                {
+                    currentColl = all[i];
+
+                    for (var j=0; j<currentColl.length; j++)
+                    {
+                        id = currentColl[j].id.split('_'); //get the number out
+                        id[2] = newID; //increment it
+                        currentColl[j].id = id.join('_'); //we have the new id!
+                    }
+                }
+*/                
                 for(var i=0;i<lastNode.children.length;i++)
                    {
                     for (var j=0;j<lastNode.children[i].children.length;j++)
@@ -83,10 +106,14 @@ function addNew(elName,val)
                         id=lastNode.children[i].children[j].id.split('_');
                         id[2]=parseInt(id[2])+1;
                         clone.children[i].children[j].id=id.join('_');
-                        if (clone.children[i].children[j].type != 'button')
-                        clone.children[i].children[j].value="";
+                        
+                        /* if (clone.children[i].children[j].type != 'button' && (clone.children[i].children[j].tagName == 'textarea' || clone.children[i].children[j].tagName == 'TEXTAREA'))
+                        {
+                            clone.children[i].children[j].value="";
+                        }  */
                     }
                    }
+                 
                 if(formflag)
                 {
                     removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
@@ -497,9 +524,9 @@ function validate(obj)
                    {% endif %}
                   </select>  
             </td>
-                <td>
+            <td>
                 <input type='button' value='remove' onClick="remove(this.parentNode)">
-                </td>
+            </td>
              </tr>
              {% empty %}
              <tr id = 'workex'>
@@ -515,7 +542,7 @@ function validate(obj)
 
              {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('workex','{{ wex }}');" value='Add Another'>   
+             <input type='button'  onClick="addNew('workex','{{ w }}');" value='Add Another'>   
     </div> 
     </div>
 <div>
@@ -540,7 +567,10 @@ function validate(obj)
         {% endif %}    
     </select>
     </td>
-    </tr>
+     <td>
+            <input type='button' value='remove' onClick="remove(this.parentNode)">
+     </td>
+  </tr>
    {% empty %}
    <tr id='certi'>
     <td><textarea rows=2 cols=50 id='certification_desc_1'></textarea></td>
@@ -549,7 +579,7 @@ function validate(obj)
     </tr>
    {% endfor %} 
   </table>
-  <input type='button' onClick="addNew('certi','{{cert}}');" value='Add Another'>      
+  <input type='button' onClick="addNew('certi','{{c}}');" value='Add Another'>      
 </div>
 </div>
 <div>
@@ -606,7 +636,7 @@ function validate(obj)
              </tr>   
              {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('projects','{{pr}}');" value='Add Another'>   
+             <input type='button'  onClick="addNew('projects','{{pro}}');" value='Add Another'>   
 
 </div>
 </div>
@@ -614,7 +644,7 @@ function validate(obj)
     <h3><a class='sectionlinks' href='#'>Academic Achievements</a></h3>
    <div> 
    <table>
-            <tr><th>Description</th><th>YEar</th></tr>
+            <tr><th>Description</th><th>Year</th></tr>
         {% for ac in a %}
             <tr id = 'academic'>
                <td><textarea rows=2 cols=50 id="academic_desc_{{ forloop.counter }}">{{ ac.desc }}</textarea></td>
@@ -636,7 +666,7 @@ function validate(obj)
             </tr>
             {% endfor %}
 </table>
-             <input type='button'  onClick="addNew('academic','{{ac}}');" value='Add Another'>   
+             <input type='button'  onClick="addNew('academic','{{a}}');" value='Add Another'>   
 
 </div>
 </div>
@@ -676,7 +706,7 @@ function validate(obj)
 <div>
    <li>Section Title <input type='text' id='ExtraField_title_1'  value='{{ex.0.title}}'><br>
         <table>
-            <tr><th>Description</th><th>YEar</th></tr>
+            <tr><th>Description</th><th>Year</th></tr>
             {% for A in ex %}
              <tr id = 'extrafield'>
 
@@ -764,7 +794,7 @@ Change the uploaded Photograph
 <!-- company specific information wala tab -->
 <div id= 'tabs-12'> 
 {% if yr != 'staff' %}
-Do you have any active backlogs??
+Do you have any active backlogs?
 {% if s.backlogs %}
           <input type="radio"  name="backlogs" value='yes' checked = true>Yes
           <input type="radio"  name="backlogs" value=''>No<br><br>
@@ -773,7 +803,7 @@ Do you have any active backlogs??
           <input type="radio"  name="backlogs" value='' checked = true>No<br><BR><br>
   {% endif %} 
 <BR><BR>
-Did you have any year drop
+Did you have any year drop ?
 {% if s.yeardrop %}
           <input type="radio"  name="yeardrop" value='yes' checked = true>Yes
           <input type="radio"  name="yeardrop" value='' >No<br><br>
@@ -788,7 +818,6 @@ Did you have any year drop
    {% if c.valueOf.fieldType == 'special' %}
    <!-- We got a special -->
     {% if c.valueOf.key == 'strongAreas' %}
- 
     Strong Areas 
         <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple>
             {% for a in c.value|split:',' %}
@@ -806,7 +835,6 @@ Did you have any year drop
         </select>
         <BR><BR>
     {% endif %} <!-- end of weak areas wala if -->
-  {% else %} <!-- Not special -->
 {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
     <BR>
     <B>{{c.valueOf.displayText}}</b>
@@ -824,16 +852,15 @@ Did you have any year drop
     {% endif %}
   {% endif %}
 {% empty %}
-
+&nbsp;
 {% comment %}
 This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
-{% endcomment %}
 Strong Areas
 <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
 Weak Areas
 <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
 
-
+{% endcomment %}
 {% endfor%}
 
 <!-- unfilled items -->

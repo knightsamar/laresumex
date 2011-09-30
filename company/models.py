@@ -4,6 +4,7 @@ from student_info.models import student
 # Create your models here.
 
 class company(models.Model):
+    x = lambda : "Not mentioned as yet";
     name=models.CharField(max_length=40);
     last_date_of_applying=models.DateTimeField();
     students_applied=models.ManyToManyField('student_info.student',blank=True)
@@ -12,7 +13,9 @@ class company(models.Model):
     phone_number=models.CharField(max_length=20,help_text='Phone number of the Company contact (will not be displayed to students)')
     #comapny_url=models.CharField(max_length=20)
     came_for_group=models.ManyToManyField('ldap_login.group',help_text='Eligible group of students')
+    about=models.TextField(help_text='Information about the company to be displayed to students', blank = True, null = True);
     eligibilty=models.TextField(help_text='Elgibility and other such information to be displayed to students');
+    job_description=models.TextField(help_text='Job profiles the company has to offer.', default = x());
 
     def __str__(self):
         return "%s" % (self.name);
@@ -21,18 +24,18 @@ class company(models.Model):
          verbose_name_plural = "companies"
 
 class placement_in(models.Model):
-    jobtype=(('intership',"Internship"),('placement',"placement"),('placement+internship','placement + internship'))
+    jobtype=(('i',"Internship"),('p',"Placement"),('ip','Internship+Placement'))
     
     student= models.ForeignKey('student_info.student');
-    comapny = models.ForeignKey('company');
+    company = models.ForeignKey('company');
     profile = models.CharField(max_length=50);
-    placementType = models.CharField(choices=jobtype, max_length=30)
+    placementType = models.CharField(choices=jobtype, max_length=2, default = 'i')
     date_of_joining = models.DateField();
-    starting_stipen = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
-    offered_salary = models.DecimalField(max_digits = 5 , decimal_places =2, null=True , blank = True);
+    starting_stipen = models.CharField(max_length = 10, null=True, blank = True);
+    offered_salary = models.CharField(max_length = 10 ,  default = "0.00");
     place = models.CharField(max_length=100, blank=True)
     def __str__(self):
-        return "%s got %s in %s " %(self.student.prn, self.placementType, self.comapny.name)
+        return "%s got %s in %s " %(self.student.fullname, self.get_placementType_display(), self.company.name)
 
     class Meta:
         verbose_name_plural = 'Which Student Got Placements';
