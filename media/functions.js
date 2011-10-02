@@ -128,10 +128,12 @@ function change(o)// Date and other fields dependency Checking.
 
          marksEl.value=o.value;
          marksEl.disabled=true;
- 
+         marksEl.setAttribute('datatype','string')
+  
          outofEl = document.getElementById(id0+'_outof_'+id2); //select the corresponding outof element 
          outofEl.value=o.value;
          outofEl.disabled=true;
+         outofEl.setAttribute('datatype','string')
          
        // o.parentNode.removeChild(o.previousElementSibling);
       }
@@ -139,9 +141,11 @@ function change(o)// Date and other fields dependency Checking.
       {
          marksEl = document.getElementById(id0+'_marks_'+id2); //select the corresponding marks element 
          marksEl.disabled=false;
- 
+         marksEl.setAttribute('datatype','float')
+
          outofEl = document.getElementById(id0+'_outof_'+id2); //select the corresponding outof element 
          outofEl.disabled=false;
+         outofEl.setAttribute('datatype','float')
 
          marksEl.focus();
       }

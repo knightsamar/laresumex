@@ -7,7 +7,7 @@ register = template.Library()
 def split(s,splitter):
     print "We got %s and the type is %s" % (s,type(s))
     
-    if s == '' or s.strip() == '' or s is None:
+    if s is None or s == '' or s.strip() == '': 
         print "Returning a blank list"
         return None
     else:

@@ -33,7 +33,7 @@ def get_tables(s):
                   tables[t]=eval(v).objects.get(primary_table=s)
                 except Exception as e:
                     pass;
-        print "type of sw.OS",type(tables['sw'].OS), "dsfs===", tables['sw'].OS
+        #print "type of sw.OS",type(tables['sw'].OS), "dsfs===", tables['sw'].OS
         tables['s']=s;   
         tables['ex']=ex
         tables['ROOT']=ROOT

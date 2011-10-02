@@ -10,7 +10,7 @@ class student(models.Model):
     fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
     sex=models.CharField(max_length=1,choices=gender);
     email=models.EmailField(max_length=255);
-    phone_number=models.CharField(max_length=12);
+    phone=models.CharField(max_length=12, blank = True, null = True);
     backlogs  = models.CharField(max_length=1);
     yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False);
