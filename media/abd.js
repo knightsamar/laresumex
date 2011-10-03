@@ -1,4 +1,9 @@
-   /* Autofills the passed dropdown object with contents based on it's name
+var DEBUG = false 
+ 
+ 
+ 
+ 
+    /* Autofills the passed dropdown object with contents based on it's name
       
        For day, month and year, fills with values.
        For courses, fills with degrees.
@@ -186,13 +191,14 @@ function change(o)// Date and other fields dependency Checking.
 
  function createDates(o) // adds another monthyear field. This concats the value of date, months and year and puts in one monthyear hidden field. so that it can be processes easyli while subitting.
  {
+  debug('creating dates for ' + o.id);
   var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
   
-  id=o.id.split('_');
-  hidden=document.createElement('input')
+  var id=o.id.split('_');
+  var hidden=document.createElement('input')
   hidden.type="hidden";
  
-  if (id[1].indexOf("year")==-1) // for other fields - when called by onSubmitValidate
+  if (id[1].indexOf("year")==-1) // for other fields - when called by onSubmitValidator
       return
   else if(id[1].indexOf('year')==0) // for birthdate
       id[1] = 'monthyear'
@@ -227,6 +233,7 @@ function change(o)// Date and other fields dependency Checking.
   
   newDate= previousElementSiblingDateKiValue+","+(months.indexOf(previousElementSiblingMonthKiValue)+1) + "," + o.value
   hidden.value=newDate;
+  debug("We created a date called "+hidden.name+" with value " +hidden.value);
   if (H)
       H.value=hidden.value
   else    
@@ -277,6 +284,7 @@ function dependencyCheck()
 function onSubmitValidator()
 {
     if(!dependencyCheck()) return false;
+
     select_fields = document.getElementsByTagName('select'); //for cases like DOB
 
     // check select fields
@@ -314,49 +322,55 @@ function onSubmitValidator()
     for (var i=0;i<input_fields.length;i++)
     {
      
-     if (input_fields[i].getAttribute('type') == 'hidden' || input_fields[i].type == 'button')
+     //we don't process disabled, hidden and button input elements
+     if (input_fields[i].disabled == true || input_fields[i].getAttribute('type') == 'hidden' || input_fields[i].type == 'button')
      {
                 continue; //we don't want to touch such fields!
      }
 
+
+     //is this field mandatory ?
      if (input_fields[i].getAttribute('mandatory') == 'true')
      { 
-
-             //if the field isn't disabled 
-             if (input_fields[i].disabled==false)
-             {
-                 //and the field doesn't have value
-                if (input_fields[i].value == '')
-                {
-                     reason = "mandatory";
-                     highlightError(input_fields[i],true,reason);
-                     return false;
-                }
-             }
-            
-             is_valid = validate(input_fields[i]);
-                        
-             if (!is_valid)
-                    return is_valid;
-             else
-             {       //agar id hai 
-                     //whether it's mandatory or not, we need to replace it with proper name
-                     //everything is good with this field now replace it's name with it's id.
-                    if ((input_fields[i].id != '' || input_fields[i].id != null) && (input_fields[i].value != '' || fields[i].value != null))
-                     {
-                        input_fields[i].name = input_fields[i].id    
-                     }
-             }
+            //do mandatory check.
+           if (input_fields[i].value == '')
+            {
+                 reason = "mandatory";
+                 highlightError(input_fields[i],true,reason);
+                  //if not, get out.
+                 return false;
+            }
       }
-    }
+     
+     //is this field valid ? -- do validity checking
+     is_valid = validate(input_fields[i]);
+     debug('we got '+ is_valid + ' for the field '+ input_fields[i].id);
+    
+     //if not, get out.
+     if (is_valid == false)
+         return is_valid;
+     else //everything seems ok, does this field have a proper id we can put in the name ?
+     {
+         // we need a name for each field that is to be stored
+         //whether it's mandatory or not, we need to replace it with proper name
+         //everything is good with this field now replace it's name with it's id.
+        if ((input_fields[i].id != '' || input_fields[i].id != null) && (input_fields[i].value != '' || input_fields[i].value != null))
+         {
+           debug('changing name from ' + input_fields[i].name + ' to ' + input_fields[i].id);
+           input_fields[i].name = input_fields[i].id    
+         }
+      }
+   }
     
     //now check textarea fields
     textarea_fields = document.getElementsByTagName('textarea'); //for cases like Career Objective
 
     for (var i=0; i<textarea_fields.length; i++)
     {
+        //is this field mandatory ?
         if (textarea_fields[i].getAttribute('mandatory') == 'true')
         {
+           //does it have a value ?
            if (textarea_fields[i].value == '')
            {
                 reason = "mandatory";
@@ -365,23 +379,28 @@ function onSubmitValidator()
            }
         }
             
+
+        //is this field valid ?
         //will check validations.
-        //will also do dependency checking.
+        //will also do dependency checking. --- UPDATE: nopes, dependency checking is now done seperately for all in the beginning of this validator
         is_valid = validate(textarea_fields[i]);
         if (!is_valid)
                 return is_valid;
         else
         {
-            //whether it's mandatory or not, we need to replace it with proper name
+            //whether it's mandatory or not, we need to replace it with proper name so that it can be processed and stored
             //everything is good with this field now replace it's name with it's id.
+            //TODO: Determine whether the value blank checking and null checking should be really done here ? Because we may like to submit some things as explicitly blank maybe...
             if ((textarea_fields[i].id != '' || textarea_fields[i].id != null) && (textarea_fields[i].value != '' || textarea_fields[i].value != null))
             {
                   textarea_fields[i].name = textarea_fields[i].id    
             }
         }
-    }
+   }
     document.getElementById('allok').value = 1;
-    debug('returning true');
+    f = document.getElementById('info_form');
+    f.action = f.getAttribute('original_action');
+    debug('All OK! Now submitting the form');
     return true;
 }
 
@@ -389,17 +408,30 @@ function highlightError(field, yesorno, reason)
 {
     //take the field and it's style
     styleClasses = field.getAttribute('class');
-    if(styleClasses) 
-    highlightClassPosition = styleClasses.indexOf('invalid_data'); //not uses styleClasses variable as it can be null. 
-    else
+
+    if (styleClasses) //this checks for blank and null value both 
+        highlightClassPosition = styleClasses.indexOf('invalid_data'); 
+    else //not uses styleClasses variable as it can be null. 
         highlightClassPosition = -1;
+
     //if we have to hihglight it,
     if (yesorno == true)
     {
+       
         //was this priorly highlighted ? if no, do it
         if (highlightClassPosition == -1)
         {
-               field.setAttribute('class',styleClasses + ' invalid_data');
+               //is this a dependency check and hence the row needs to be fully highlighted  ?
+               if (reason='dependency')
+               {
+                    var rowID = 'tr_'+ field.id.split('_')[0] + '_'+field.id.split('_')[2];
+                    alert("highlighting row " + rowID);
+                    //document.getElementById(rowID).setAttribute('class',styleClasses + ' invalid_data');
+               }
+               else
+               {
+                    field.setAttribute('class',styleClasses + ' invalid_data');
+               }
         }            
         //else,
     }
@@ -415,26 +447,33 @@ function highlightError(field, yesorno, reason)
     }
     // if a reason was given
     reasonArray = ['NaN','decimal_length','mandatory','numeric','dependency','email']
-    messageArray = ['should be a  number','please enter in a format 999.999',' is a mandatory feild','should  be  a +ve number','All the items in the row must be filled',' : email not filled properly']
+    messageArray = ['It should be a number.','It should be in the format 999999.999','It is a mandatory field.','It should be a +ve number.','All the items in the section must be filled.',' email not filled properly']
     if (reason != '')
     {
-               alertmsg = field.id.split('_')
+               //priorly called alertmsg
+               fieldname = field.id.split('_')
                //now that we know validity, mark so visually and attributely
                //and tell the user
-              
-               if (alertmsg.length>1) //and there is more than one component in the name of the element
+               if (field.getAttribute('desc'))
                {
-                   alert(alertmsg[1] + ' in the ' + alertmsg[0] + '  section'+messageArray[reasonArray.indexOf(reason)]);
+                   fieldname[1] = field.getAttribute('desc');
+               }
+               if (fieldname.length > 2 ) //and there is more than one component in the name of the element
+               {
+                   alert(fieldname[1] + ' in the ' + fieldname[0] + ' section is invalid.\n'+messageArray[reasonArray.indexOf(reason)]);
+               }
+               else if (fieldname.length == 2)
+               {
+                   alert(fieldname[0] + ' ' + fieldname[1] + ' in Getting Started section is invalid.\n' + messageArray[reasonArray.indexOf(reason)]);
                }
                else
                {
-                   alert(alertmsg[0] + messageArray[reasonArray.indexOf(reason)]);
+                   alert(fieldname[0] + ' is invalid.\n' + messageArray[reasonArray.indexOf(reason)]);
                }
                
                //now bring us in spotlight!
                //TODO: find out a way to retrieve the parent tab of the element and call it's select() method 
                field.focus();
-
     }
 }
 
@@ -493,7 +532,8 @@ function highlightError(field, yesorno, reason)
 
 function debug(msg)
 {
-    alert(msg);
+    if (DEBUG)
+        alert(msg);
 }
 
 /* validates the data inside the passed field 
@@ -509,7 +549,7 @@ function validate(field)
    switch (validateFor)
    {
         case 'float':
-//                   debug('i am in float');
+                   debug('i am in float');
                    parts = value.split('.');
                    if (parts.length == 1)
                        validateFor = 'numeric';
@@ -536,7 +576,7 @@ function validate(field)
                        break;
                     }
         case 'numeric':
-  //                 debug('i am numeric');
+                   debug('i am numeric');
                    if ((isNaN(value)) || (value ==  "") || (parseInt(value) < 0))
                    {
                       highlightError(field,true,"numeric");
@@ -551,10 +591,12 @@ function validate(field)
                     if ((atpos<1) || (dotpos<atpos+2) || (dotpos+2 >= value.length))
                       {
                          reason ="email"
-                          valid =  false;
+                         valid =  false;
                       }
-                   
-                   valid = true;
+                    else
+                      {
+                            valid = true;
+                      }
                     highlightError(field,!valid,reason);
                    //regexp = 'email ka regexp';
                    break;

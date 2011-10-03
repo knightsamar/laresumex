@@ -51,7 +51,7 @@
             
 /* provides the addAnother functionality -- allows to add another instance of an element by duplicating it _properly_ */
 function addNew(elName,val)
- {
+{
         // set the form flag which is used to set whether the remove button is to be rendered or not.
         if(val == '[]' ) formflag = true
         else if (!val) formflag = true
@@ -104,12 +104,18 @@ function addNew(elName,val)
                     for (var j=0; j<currentColl.length; j++)
                     {
                         id = currentColl[j].id.split('_'); //get the number out
-                        id[2] = newID; //increment it
+                        id[2] = newID; //replace it with the incremented number
                         currentColl[j].id = id.join('_'); //we have the new id!
                         
                         currentColl[j].value = ""
                     }
                 }
+
+                //finally change the Id of the container too!
+                //writing this code seperately because can't find a way to include a single element in the above _all_ wali list :(
+                id = clone.id.split('_');
+                id[2] = newID;
+                clone.id = id.join('_')
 /*                
                 for(var i=0;i<lastNode.children.length;i++)
                    {
@@ -208,16 +214,16 @@ function addNew(elName,val)
 <body>
 <h3 align='center'>Your Details</h3>
 {% if flag == 'form' %}
-<form name='f' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ prn }}/submit'>
+<form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{ prn }}/submit'>
 {% else %}
-<form name='f' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='{{ROOT}}/student_info/{{ s.prn }}/submit'>
+<form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{ s.prn }}/submit'>
 {% endif %}
 {% csrf_token %}
 <div id="tabs">
 			<ul>
 				<li class='sectionlinks'><a href="#tabs-1">Getting Started</a></li>
-				<li class='sectionlinks'><a href="#tabs-2">Qualification*</a></li>
-				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-3">Personality Traits*</a></li>
+				<li class='sectionlinks'><a href="#tabs-2">Marks and Qualifications*</a></li>
+				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-3">Strengths and Weaknesses*</a></li>
 				<!--<li><a href="#tabs-4">Certification</a></li>-->
 				<li class='sectionlinks'><a class='sectionlinks' href="#tabs-5">Software Skillset</a></li>
 				<li><a class='sectionlinks' href="#tabs-6">Other fields</a></li>
@@ -233,7 +239,7 @@ function addNew(elName,val)
 
 <div id='tabs-1'>
  <label for="fullname"> <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
-        <input type="text" id='fullname' mandatory='true' size=60 value="{{ s.fullname }}" datatype='string'>
+        <input type="text" id='fullname' mandatory='true' size=60 value="{{ s.fullname }}" datatype='string' desc='Full Name'>
      <br><BR>    
   Gender* 
   {% if s.sex == 'f' %}
@@ -243,8 +249,8 @@ function addNew(elName,val)
 		  <input type="radio"  id='sex' name="sex" value='m'checked=true >Male
           <input type="radio"  id='sex' name="sex" value="f">Female<br><BR><br>
   {% endif %}        
-  Mobile Number +91<input type='text' mandatory='true' id='phone' maxlength=10 size=10 name="phone" value='{{ s.phone }}' datatype='numeric'><BR><BR>
-  Email ID* <input type='text' id='email' name='email' mandatory='true' value='{{ s.email }}' datatype='email'>
+  Mobile Number +91<input type='text' mandatory='true' id='phone' maxlength=10 size=10 name="phone" value='{{ s.phone }}' datatype='numeric' desc='Mobile Number'><BR><BR>
+  Email ID* <input type='text' id='email' name='email' mandatory='true' value='{{ s.email }}' datatype='email' desc='Email Address'>
 <br>         <br>
 
   Birthdate*
@@ -267,7 +273,7 @@ function addNew(elName,val)
  <br><BR>
 
     <label for = "career_objective"> Career Objective *</label> <br>
-      <textarea rows='3' cols = '124' title="Keep it short and simple"  name = "career_objective" id="career_objective" mandatory='true'>{{ s.career_objective }}</textarea>
+      <textarea rows='3' cols = '124' title="Keep it short and simple"  name = "career_objective" id="career_objective" mandatory='true' desc='Career Objective'>{{ s.career_objective }}</textarea>
 
 </div>
 
@@ -281,7 +287,7 @@ function addNew(elName,val)
     <th>Year</th>
   </tr>
   {% for marks in m %}
-  <tr id='marks'>
+  <tr id='tr_marks_{{forloop.counter}}'>
   <td> <input type="text" id="marks_course_{{forloop.counter}}" size={{ marks.course|length }} maxlength='30' value="{{ marks.course }}" datatype='string'></td>
   <td><input type="text" id="marks_uni_{{ forloop.counter }}" value="{{ marks.uni }}" size={{marks.uni|length}} maxlength='100' datatype='string'></td>
   <td>
@@ -313,7 +319,7 @@ function addNew(elName,val)
   </tr>
   
   {% empty %}
-  <tr>
+  <tr id = 'tr_marks_1'>
     <td>X<sup>th</sup><input type="hidden" id="marks_course_1" name='marks_course_1' value="Xth"></td>
     <td><input type ='text' size=40 id="marks_uni_1" datatype='string' ></td>
     <td><input type='text' size='10' maxlength='10' id="marks_marks_1" title="Total marks" onBlur='validate(this)' datatype='float'> 
@@ -321,7 +327,7 @@ function addNew(elName,val)
      Out Of <input type="text" size=10 maxlength='10' id='marks_outof_1' onBlur='validate(this)' datatype='float'> </td>
     <td><select name = "year" id="marks_year_1"  onFocus="fillOptions(this);"onBlur="createDates(this)" mandatory='true'> </select></td>
   </tr>
-  <tr>
+  <tr id = 'tr_marks_2'>
       <td>XII<sup>th</sup><input type="hidden" id="marks_course_2" name='marks_course_2' value="XIIth"></td>
       <td><input type ='text' size=40 id="marks_uni_2" datatype='string' ></td>
       <td><input type='text' size=10 id="marks_marks_2" title='Total marks' maxlength='10' onBlur='validate(this)'datatype='float'>
@@ -329,7 +335,7 @@ function addNew(elName,val)
        Out Of <input type="text" id='marks_outof_2' size=10 maxlength=10 onBlur='validate(this)' datatype='float' > </td>
       <td><select name = "year" id="marks_year_2"  onFocus="fillOptions(this);" onBlur="createDates(this)" mandatory='true'> </select> </td>
         </tr>
-  <tr id='marks'>
+  <tr id = 'tr_marks_3'>
       <td>
       {% comment %}
       <select name="course-g" id="marks_course_3" onFocus="fillOptions(this)"></select>
@@ -352,7 +358,7 @@ function addNew(elName,val)
      </td>
   </tr>
   {% if yr == '14' %}
-  <tr>
+  <tr id='marks_course_4'>
       <td>
       {% comment %}
          <select name="course-pg" id="marks_course_4" onFocus="fillOptions(this)"></select> 
@@ -376,16 +382,16 @@ function addNew(elName,val)
 
   {% endfor %}
   </table>
-  <input type='button'  onClick="addNew('marks',false);" value='Add Another'>    
+  <input type='button'  onClick="addNew('tr_marks_1',false);" value='Add Another'>    
 </div>
 <div id= 'tabs-3'>
   <div id='strengths'>
       {% for st in p.strength|split:',' %}
-        <li><input type="text" id="personal_strength_{{ forloop.counter }}" value="{{ st }}" mandatory='true' datatype='string'>
+        <li><input type="text" id="personal_strength_{{ forloop.counter }}" value="{{ st }}" mandatory='true' datatype='string' desc='Strengths and Weaknesses'>
             <input type='button' value='remove' onClick="remove(this.parentNode)";>
         </li>
         {% empty %}
-        <li><input type="text" id="personal_strength_1" mandatory='true' datatype='string'></li>
+        <li><input type="text" id="personal_strength_1" mandatory='true' datatype='string' desc='Strengths and Weaknesses'></li>
        {% endfor %} 
   </div>   
   <input type='button'onClick="addNew('strengths','{{p.strength}}');" value='Add Another'>    
@@ -719,30 +725,30 @@ function addNew(elName,val)
 </div>
 <div id='tabs-10'>
         <ul>
-             <li>Mother's Name   <input type='text' id="personal_mother_name" datatype='string' value="{{ p.mother_name }}" mandatory='true'>
-             <li>Mother's Occupation  <input type='text' id="personal_mother_occupation" value="{{ p.mother_occupation }}" mandatory='true'>
-             <li>Father's Name        <input type='text' id="personal_father_name" datatype='string' value="{{ p.father_name }}" mandatory='true'>
-             <li>Father's Occupation  <input type='text' id="personal_father_occupation" value="{{ p.father_occupation }}" mandatory='true'>
+             <li>Mother's Name   <input type='text' id="personal_mother_name" datatype='string' value="{{ p.mother_name }}" mandatory='true' desc="Mother's Name">
+             <li>Mother's Occupation  <input type='text' id="personal_mother_occupation" value="{{ p.mother_occupation }}" mandatory='true' desc ="Mother's occupation">
+             <li>Father's Name        <input type='text' id="personal_father_name" datatype='string' value="{{ p.father_name }}" mandatory='true' desc = "Father's name">
+             <li>Father's Occupation  <input type='text' id="personal_father_occupation" value="{{ p.father_occupation }}" mandatory='true' desc="Father's occupation">
              <li>Languages known
             <ul id = 'lang'>
                 {% if p.languages %}
                     {% for l in p.languages|split:',' %}
-                        <li><input type='text' id="personal_languages_{{forloop.counter}}" datatype='string' value="{{ l }}" mandatory='true'>
+                        <li><input type='text' id="personal_languages_{{forloop.counter}}" datatype='string' value="{{ l }}" mandatory='true' desc="Languages">
                             <input type='button' value='remove' onClick="remove(this.parentNode)";>
                         </li>
                     {% endfor%}
                 {% else %}
-                        <li><input type="text" id="personal_languages_1" mandatory='true' datatype='string'></li>
+                        <li><input type="text" id="personal_languages_1" mandatory='true' datatype='string' desc="Languages"></li>
                 {% endif %}
              </ul>   
              <input type='button'  onClick="addNew('lang','{{p.languages}}');" value='Add Another'>   
              <br><BR><BR>
             <li>Permanent Address<br>
             
-                <textarea rows=5 cols=50 name="personal_per_address" id="personal_per_address" mandatory='true'>{{ p.per_address }}</textarea>
+                <textarea rows=5 cols=50 name="personal_per_address" id="personal_per_address" desc = 'Permanent Address' mandatory='true'>{{ p.per_address }}</textarea>
                <br> <BR>
             <li>Address of Correspondance<br>
-                <textarea rows=5 cols=50 id="personal_corr_address" name="personal_corr_address" mandatory='true'>{{ p.corr_address }}</textarea>  
+                <textarea rows=5 cols=50 id="personal_corr_address" name="personal_corr_address" desc='Correspondence Address' mandatory='true'>{{ p.corr_address }}</textarea>  
 
             <li> Hobbies    
                 <ul id = 'hobbies'>
@@ -762,7 +768,7 @@ function addNew(elName,val)
                     {% if p.areasofinterest %}
                  {% for h in p.areasofinterest|split:',' %}
                      <li><input type='text' id="personal_areasofinterest_{{forloop.counter }}" value="{{ h }}">
-                         <input type='button' value='remove' onClick="remove(this.parentNode)";>
+                         <input type='button' value='remove' mandatory='true' onClick="remove(this.parentNode)";>
                      </li>
                      {% endfor %}
                 {% else %}
