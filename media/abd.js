@@ -295,7 +295,7 @@ function onSubmitValidator()
                 return false;
            }
         }
-            
+         highlightError(select_fields[i],false,"")
         //will check validations.
         //will also do dependency checking.
         is_valid = validate(select_fields[i]);
@@ -355,7 +355,7 @@ function onSubmitValidator()
 
     for (var i=0; i<textarea_fields.length; i++)
     {
-        if (textarea_fields[i].getAttribute('mandatory') = 'true')
+        if (textarea_fields[i].getAttribute('mandatory') == 'true')
         {
            if (textarea_fields[i].value == '')
            {
@@ -367,21 +367,21 @@ function onSubmitValidator()
             
         //will check validations.
         //will also do dependency checking.
-        is_valid = validate(select_fields[i]);
+        is_valid = validate(textarea_fields[i]);
         if (!is_valid)
                 return is_valid;
         else
         {
             //whether it's mandatory or not, we need to replace it with proper name
             //everything is good with this field now replace it's name with it's id.
-            if ((textarea_fields[i].id != '' || input_fields[i].id != null) && (input_fields[i].value != '' || fields[i].value != null))
+            if ((textarea_fields[i].id != '' || textarea_fields[i].id != null) && (textarea_fields[i].value != '' || textarea_fields[i].value != null))
             {
-                  textarea_fields[i].name = input_fields[i].id    
+                  textarea_fields[i].name = textarea_fields[i].id    
             }
         }
     }
-  
-    debug('returning true')
+    document.getElementById('allok').value = 1;
+    debug('returning true');
     return true;
 }
 
@@ -414,8 +414,8 @@ function highlightError(field, yesorno, reason)
         }            
     }
     // if a reason was given
-    reasonArray = ['NaN','decimal_length','mandatory','numeric','dependency']
-    messageArray = ['should be a  number','please enter in a format 999.999',' is a mandatory feild','should  be  a +ve number','All the items in the row must be filled']
+    reasonArray = ['NaN','decimal_length','mandatory','numeric','dependency','email']
+    messageArray = ['should be a  number','please enter in a format 999.999',' is a mandatory feild','should  be  a +ve number','All the items in the row must be filled',' : email not filled properly']
     if (reason != '')
     {
                alertmsg = field.id.split('_')
@@ -542,11 +542,20 @@ function validate(field)
                       highlightError(field,true,"numeric");
                       valid = false;
                    }
-                   else valid = true;
+                   else {valid = true; highlightError(field,false,"");}
                    break;
         case 'email':
-                   debug('i am email');
+                   debug('i am email'); // from w3chools
+                    var atpos=value.indexOf("@");
+                    var dotpos=value.lastIndexOf(".");
+                    if ((atpos<1) || (dotpos<atpos+2) || (dotpos+2 >= value.length))
+                      {
+                         reason ="email"
+                          valid =  false;
+                      }
+                   
                    valid = true;
+                    highlightError(field,!valid,reason);
                    //regexp = 'email ka regexp';
                    break;
         case 'string': //only chars, spaces and parantheses and hyphen allowed...eg Full Name

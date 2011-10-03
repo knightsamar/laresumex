@@ -132,7 +132,7 @@ def submit(request, prn):
     
    #was javascript enabled and everything ok on the client side ???
     if not ('allok' in request.POST and request.POST['allok'] == '1'):
-       return HttpResponse("<h2 align='center' style='color: red;'> Hey, you need to enable JavaScript if you want us to help you! </h2>");
+       return HttpResponse("<h2 align='center' style='color: red;'>  Hey, This is Server, you need to enable JavaScript if you want us to help you! </h2>");
 
     #what is submitted ?
     print "I have got files called ", request.FILES;
@@ -185,7 +185,6 @@ def submit(request, prn):
             pk=prn,
             fullname=post['fullname'],
             career_objective=post['career_objective'],
-            phone_number=post['phone_number'],
             )
     
         s.save(); #will also update the timestamp;

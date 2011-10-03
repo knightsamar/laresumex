@@ -395,7 +395,7 @@ function changeName()
         //alert('done processing select_fields');
 
        //now tell in the form submission the secret
-        document.getElementById('allok').value = 1;
+        document.getElementById('allok').value = 0;
         //return confirm("Do you want to really submit the form ?");
         return true;
 
