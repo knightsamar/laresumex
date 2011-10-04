@@ -258,6 +258,10 @@ function dependencyCheck()
             {
                 currentElement = input[j]
                 if(input[j].type == 'button') { l--;continue};
+                if (input[j].type == 'hidden')
+                {
+                    l -- ; continue;
+                }
                 if (input[j].value != "") filled ++;
             }
               
@@ -422,7 +426,7 @@ function highlightError(field, yesorno, reason)
         if (highlightClassPosition == -1)
         {
                //is this a dependency check and hence the row needs to be fully highlighted  ?
-               if (reason='dependency')
+               if (reason=='dependency')
                {
                     var rowID = 'tr_'+ field.id.split('_')[0] + '_'+field.id.split('_')[2];
                     alert("highlighting row " + rowID);
@@ -659,14 +663,29 @@ function remove(o)
     if (o.tagName=='TD')
     {
         p=o.parentNode;
+        tid = p.id.split('_')
+        firstSibling = p.parentNode.children[1];
+        if(firstSibling == p) // if we want to delete the first row, 
+           { 
+            if (firstSibling.nextElementSibling)// incase there are other elements also, then put their ID as this ID.
+                   {
+                       firstSibling.nextElementSibling.id = tid[0];
+                   }
+           // else :- this is the inly element, then it;l be processed later.
+           }
+         else // its not hte first row to be deelting, then skip.
+             firstSibling.id = tid[0] // for safety sake.. can be skipped.
+
+
         alert(p.parentNode.childElementCount)
         if(p.parentNode.childElementCount == 2) // because for Table, one child is The head. TH tags wla row
            {
+               p.id = tid[0];  // to rename its ID as the main one. so that it can be "add another"ed
                // for each kind of eleemnt, change the Id to one. and value to blank
                a = p.getElementsByTagName('textarea'); 
                for (var i =0;i<a.length;i++)
                    {
-                     id =    a[i].id.split('_')
+                     id = a[i].id.split('_')
                      id[2]=1
                      a[i].id=id.join('_');
                      a[i].value = "";
@@ -694,8 +713,10 @@ function remove(o)
                             a[i].removeChild(a[i].firstChild)
                    }
 
-            return false;
+                return false;
+               
             }
+        
         p.parentNode.removeChild(p) // of its NOT the only child, then remove the entire row.
     }
     else // same for LI types of input.

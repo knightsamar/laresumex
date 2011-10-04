@@ -58,6 +58,7 @@ function addNew(elName,val)
         else formflag= false
        
         c=document.getElementById(elName);
+        debug(c.id + c.tagName)
         if (formflag)
         {
             removeButton=document.createElement('input')
@@ -74,7 +75,7 @@ function addNew(elName,val)
             {
                 noOfTR=c.parentNode.children.length; // number of TR's . = parentNode.childElementCount
                               
-                if ((c.id=='marks') && (formflag))
+                if ((c.id.indexOf('marks')>-1) && (formflag))
                     firstNode=c.parentNode.children[3]; // alteast 3 are compulsory.  and clone the third one. 
                 else  
                     firstNode=c.parentNode.children[1] // if other fields. then clone the first one 
@@ -83,7 +84,9 @@ function addNew(elName,val)
                 clone=firstNode.cloneNode(true); 
                 
                 l=lastNode.getElementsByTagName('select');
-                if (!l ) l = lastNode.getElementsByTagName('textarea')// Since select is in both marks and other fields. Except the Extra fields ehich has a textarea.
+                if (l.length ==0 ) 
+                    l = lastNode.getElementsByTagName('textarea')// Since select is in both marks and other fields. Except the Extra fields ehich has a textarea.
+                    alert(lastNode.id)
 
                 
                 lastID=l[0].id.split('_')[2]                 
@@ -107,6 +110,7 @@ function addNew(elName,val)
                         id[2] = newID; //replace it with the incremented number
                         currentColl[j].id = id.join('_'); //we have the new id!
                         
+                        if (currentColl[j].type != 'button')
                         currentColl[j].value = ""
                     }
                 }
@@ -132,7 +136,7 @@ function addNew(elName,val)
                     }
                    }
                */
-                if((formflag)&&(c.id=='marks'))
+                if((formflag)&&(c.id.indexOf('marks')>-1))
                 {
                     removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
                     id[1]='remove';
@@ -358,7 +362,7 @@ function addNew(elName,val)
      </td>
   </tr>
   {% if yr == '14' %}
-  <tr id='marks_course_4'>
+  <tr id='tr_marks_4'>
       <td>
       {% comment %}
          <select name="course-pg" id="marks_course_4" onFocus="fillOptions(this)"></select> 
@@ -382,7 +386,7 @@ function addNew(elName,val)
 
   {% endfor %}
   </table>
-  <input type='button'  onClick="addNew('tr_marks_1',false);" value='Add Another'>    
+  <input type='button'  onClick="addNew('tr_marks_3',false);" value='Add Another'>    
 </div>
 <div id= 'tabs-3'>
   <div id='strengths'>
