@@ -30,10 +30,10 @@ def index(request):
     if ll is None:
         ll = datetime(2010,12,12,3,2,3);
     u=user.objects.get(username=prn);
-    g=group.objects.get(name='placement committee')
+    g=group.objects.get_or_create(name='placement committee')
     placement_staff_student=[0,0,0];
     new_posting =False;
-    if u in g.user_set.all():
+    if g in u.groups.all():
         print 'placement_committe'
         try:
             j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
