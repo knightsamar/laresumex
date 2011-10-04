@@ -16,7 +16,7 @@ var DEBUG = false
                     return false;
                 }
     
-        if (o.name == 'month')
+        if (o.getAttribute('datatype') == 'month')
         {
             var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
           
@@ -29,7 +29,7 @@ var DEBUG = false
 
             }
         }
-        else if(o.name == 'date')
+        else if(o.getAttribute('datatype') == 'date')
         {
              for (var i =1;i<=31;i++)
             //o.innerHTML += "<option>"+months[i]+"</option>";
@@ -40,7 +40,7 @@ var DEBUG = false
 
             }
         }
-        else if(o.name == 'year')
+        else if(o.getAttribute('datatype') == 'year')
             {
                 if((o.prevElementSibling)&&(o.previousElementSibling.value=="")) o.previousElementSibling.focus()
                 var d = new Date(); //so that we get a dynamic year :)
@@ -197,15 +197,16 @@ function change(o)// Date and other fields dependency Checking.
   var id=o.id.split('_');
   var hidden=document.createElement('input')
   hidden.type="hidden";
+  hidden.setAttribute('datatype','monthyear');
  
   if (id[1].indexOf("year")==-1) // for other fields - when called by onSubmitValidator
-      return
+      return "alfa"
   else if(id[1].indexOf('year')==0) // for birthdate
       id[1] = 'monthyear'
   else
       id[1]=id[1].substr(0,id[1].indexOf("year"))+"monthyear"; // start_montheyar or endmonthyear.
  if (o.selectedIndex < 0 )
-     return
+     return "unfilled"
   hidden.name=id.join("_");
   hidden.id=hidden.name;
 
@@ -317,6 +318,7 @@ function onSubmitValidator()
         {
                 //priorly called concat
                 createDates(select_fields[i]);
+                select_fields[i].name = select_fields[i].id
         }       
     }
 
@@ -327,11 +329,10 @@ function onSubmitValidator()
     {
      
      //we don't process disabled, hidden and button input elements
-     if (input_fields[i].disabled == true || input_fields[i].getAttribute('type') == 'hidden' || input_fields[i].type == 'button')
+     if (input_fields[i].disabled == true || input_fields[i].type == 'hidden' ||  input_fields[i].type == 'button')
      {
                 continue; //we don't want to touch such fields!
      }
-
 
      //is this field mandatory ?
      if (input_fields[i].getAttribute('mandatory') == 'true')
@@ -402,7 +403,11 @@ function onSubmitValidator()
         }
    }
     document.getElementById('allok').value = 1;
+    
+    
     f = document.getElementById('info_form');
+    alert("Original action is " + f.action);
+    alert("we are setting it to " + f.getAttribute('original_action'));
     f.action = f.getAttribute('original_action');
     debug('All OK! Now submitting the form');
     return true;
@@ -604,23 +609,7 @@ function validate(field)
                     highlightError(field,!valid,reason);
                    //regexp = 'email ka regexp';
                    break;
-        case 'string': //only chars, spaces and parantheses and hyphen allowed...eg Full Name
-                   valid = true
-                   debug('i am string');
-                   break;
-    }
-    switch (field.tagName)
-    {
-            case 'select':
-            case 'SELECT':
-//                     valid = dependencyCheck(field);
-                        valid =true
-                     
-                    break;
-            case 'input':
-            case 'INPUT':
-                    if ( (field.type == 'hidden') && (field.id.indexOf('monthyear') > -1)) //is a hidden field used to give us final dates
-                    {
+        case 'monthyear':
                         debug ('value is ' + value);
                         parts = value.split(',');
                         if ((parseInt(parts[0]) >= 1 && parseInt(parts[0]) <= 31) && (parseInt(parts[1]) >= 1) && (parseInt(parts[1]) <= 12) && (parts[2] != ''))
@@ -647,7 +636,24 @@ function validate(field)
 
                             highlightError(f,!valid,'invalid_date');
                          }
-                     }
+            
+            
+            case 'string': //only chars, spaces and parantheses and hyphen allowed...eg Full Name
+                   valid = true
+                   debug('i am string');
+                   break;
+    }
+    switch (field.tagName)
+    {
+            case 'select':
+            case 'SELECT':
+//                     valid = dependencyCheck(field);
+                        valid =true
+                     
+                    break;
+            case 'input':
+            case 'INPUT':
+                       valid = true; 
                      break;
             case 'TEXTAREA':
             case 'textarea':

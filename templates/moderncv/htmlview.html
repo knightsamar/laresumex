@@ -30,7 +30,7 @@ h3{
 <h2> {{ s.fullname }}</h2>
 <pre>
     {{ p.get_age }}Yrs,{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
-<b> Tel(M) </b>: +91-{{s.phone_number}}
+<b> Tel(M) </b>: +91-{{s.phone}}
 </pre>
 </div>
 <br>
@@ -58,7 +58,17 @@ h3{
 
     <table cellpadding=10 >
       {% for marks in m %}
-          <tr><td>{{marks.course}}<td>{{marks.uni}}<td>{{marks.marks}}<td>{{marks.fromDate|date:'Y'}}</tr>
+          <tr><td>{{marks.course}}<td>{{marks.uni}}<td>
+          {% if marks.markstype == 'GPA' %}
+            {{marks.marks}} GPA out of {{marks.outof}}
+          {% else %}
+            {% if not marks.markstype %}
+          {{marks.get_percentage}}%
+           {% else%}
+            {{ marks.markstype}}
+            {% endif%}
+            {% endif %}
+          <td>{{marks.fromDate|date:'Y'}}</tr>
       {% endfor %}
     </table>
 </div>
@@ -119,7 +129,7 @@ h3{
     <h3> Projects Undertaken</h3>
     <table cellpadding=10>
         {% for pr in pro %}
-            <tr><td><li><td>{{pr.desc }}
+            <tr><td><li><td>{{pr.heading}}<td>{{pr.desc }}</tr>
         {% endfor %}
     </table>
 </div>
@@ -131,7 +141,7 @@ h3{
 <h3> Work Experience</h3>
     <table cellpadding=10>
     {% for wex in w %}
-        <tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'Y' }}
+        <tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'bY' }} to {{ wex.endDte|date:'bY'}}
     {% endfor %}
     </table>
 </div>
@@ -144,7 +154,7 @@ h3{
 <h3> Academic Achievements</h3>
     <table cellpadding=10>
         {% for ac in a %}
-            <tr><td><li><td>{{ac.desc }}
+            <tr><td><li><td>{{ac.desc }} in the year {{ac.fromDate|date:'Y'}}
         {% endfor %}
      </table>   
 </div>
@@ -168,12 +178,12 @@ h3{
 <h3>Personal dossier</h3>
 <table>
 <tr><td><b>Mother's Name</b><td>:<td>   {{p.mother_name}}
-<tr><td><b>Mother's occupation</b>  <td>           :<td>  {{p.mother_occupation }}
 <tr><td><b>Father's Name</b>    <td> :<td> {{p.father_name}}
+<tr><td><b>Mother's occupation</b>  <td>           :<td>  {{p.mother_occupation }}
 <Tr><td><b>Father's Occupation</b>       <tD>:<td>{{p.father_occupation}}
 <tr><td><b>Languages Known</b>      <td>:<td>{{p.languages}}
 <tr><td><b>Permanent Adress</b>      <td>:<td><pre>{{p.per_address}}</pre>
-<tr><td><b>Address of correspondence</b>     <td>:<td><pre>{{p.corr_address }}</pre>
+<tr><td><b>Address for correspondence</b>     <td>:<td><pre>{{p.corr_address }}</pre>
 </table>
 </div>
 

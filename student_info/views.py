@@ -210,7 +210,7 @@ def submit(request, prn):
                     index=field_name[1]+'_'+field_name[2];
                     #print "=====> adding", data , "to attribute", index, "of Personal";
                     p.__setattr__(index,data[0]);     
-            if field_name[0]=="birthdate":
+            if field_name[0]=="birthdate" and field_name[1] == 'monthyear':
                 date=data[0].split(',')
                 print "=====>DATE<=====",date
                 print datetime(int(date[2]),int(date[1]),int(date[0]))
