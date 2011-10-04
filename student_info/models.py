@@ -144,10 +144,16 @@ class extracurricular(ExtraField):
  
 # strores company specific details that shd not be stored in the resume
 class companySpecific(models.Model):
-    Types=(('text','Simple Text'),('radio','Simple yes/No type'),('special','Type, to render speciallyy -> for experts ;)'))
+    Types=(('text','Simple Text'),('radio','Simple yes/No type'),('textarea','a large area'),('special','Type, to render speciallyy -> for experts ;)'))
+    datatypes = (('none','none'),('numeric','numbers greater than  0'),('string','Only alphabets and spaces.'));
+    
     fieldType=models.CharField(max_length=50,default='text',choices=Types)
-    key = models.CharField(max_length=100, help_text="enter a key for internal purposes, WITHOUT SPACES or UNDERSCORE")
+    key = models.CharField(max_length=100, help_text="enter a key for internal purposes, WITHOUT SPACES or UNDERSCORE(_)")
     displayText=models.CharField(max_length=100,help_text="The text you want to appear on the form");
+    is_mandatory = models.BooleanField(help_text= 'Should this field be mandatory' );
+    dataType = models.CharField(max_length = 10, help_text = 'What kinds of imput are allowed???', default = 'none' , choices = datatypes)
+    createdOn = models.DateTimeField(auto_now_add = True);
+
     def __str__(self):
         return self.displayText;
 

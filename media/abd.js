@@ -11,53 +11,87 @@ var DEBUG = false
     function fillOptions(o)
     {
         //if options are already filled in there, we ain't gonna process it! performance :B
-                if (o.children.length>1) 
-                {
-                    return false;
-                }
-    
-        if (o.getAttribute('datatype') == 'month')
+        if (o.children.length>1) 
         {
-            var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
+            return false;
+        }
+        
+        switch (o.getAttribute('datatype'))
+        {
+                case 'month':
+                    var months=new Array('Jan','Feb','Mar','April','May','June','July','Aug','Sept','Oct','Nov','Dec');
           
-            for (var i =0;i<12;i++)
-            //o.innerHTML += "<option>"+months[i]+"</option>";
-            {
-                 var option=document.createElement("option");
-                 option.text=months[i];
-                 o.add(option,null)
+                    for (var i =0;i<12;i++)
+                        //o.innerHTML += "<option>"+months[i]+"</option>";
+                    {
+                        var option=document.createElement("option");
+                        option.text=months[i];
+                        o.add(option,null)
 
-            }
-        }
-        else if(o.getAttribute('datatype') == 'date')
-        {
-             for (var i =1;i<=31;i++)
-            //o.innerHTML += "<option>"+months[i]+"</option>";
-            {
-                 var option=document.createElement("option");
-                 option.text=i;
-                 o.add(option,null)
+                    }
+                    break;
+        
+                case 'date':
+                    for (var i =1;i<=31;i++)
+                    //o.innerHTML += "<option>"+months[i]+"</option>";
+                    {
+                         var option=document.createElement("option");
+                         option.text=i;
+                         o.add(option,null)
 
-            }
-        }
-        else if(o.getAttribute('datatype') == 'year')
-            {
-                if((o.prevElementSibling)&&(o.previousElementSibling.value=="")) o.previousElementSibling.focus()
-                var d = new Date(); //so that we get a dynamic year :)
+                    }
+                    break;
 
-                if(o.id.split('_')[0] == 'birthdate')
-                    { var i=d.getFullYear()-60; var j=(d.getFullYear()-18);} // need to be min 18 yrs old..!!
-                else
-                    {var i=d.getFullYear()-18; j=d.getFullYear()+2;}
-                for (;i<=j;i++)
-            //o.innerHTML += "<option>"+months[i]+"</option>";
-            {
-                 var option=document.createElement("option");
-                 option.text=i;
-                 o.add(option,null)
+                case 'year':
+                    if((o.prevElementSibling)&&(o.previousElementSibling.value=="")) o.previousElementSibling.focus()
+                    var d = new Date(); //so that we get a dynamic year :)
 
-            }
-           } 
+                    if(o.id.split('_')[0] == 'birthdate')
+                        { var i=d.getFullYear()-60; var j=(d.getFullYear()-18);} // need to be min 18 yrs old..!!
+                    else
+                        {var i=d.getFullYear()-18; j=d.getFullYear()+2;}
+
+                    for (;i<=j;i++)
+                    //o.innerHTML += "<option>"+months[i]+"</option>";
+                    {
+                         var option=document.createElement("option");
+                         option.text=i;
+                         o.add(option,null)
+
+                    }
+                    break;
+
+                case 'strongAreas':
+                case 'weakAreas':
+                    var h=new Array('programming','database','os','web','packages','areasofinterest');
+                    for( var i=0;i<h.length;i++)
+                    {
+                        c=document.getElementById(h[i]).children; //LI's
+
+                        for(var j=0;j<c.length;j++)
+                        {
+                            if(c[j].children[0].value)
+                            {
+                                var option = document.createElement("option");
+                                option.text=c[j].children[0].value
+                                    o.add(option,null)
+                            }
+                        }
+
+                    }
+                    opt = o.options ; 
+                    
+                    if(opt.length  == 0) 
+                        alert ('Please enter either of your software skill sets or Areas of interest to proceed');
+                    break;
+                default:
+                    alert("Hey what to do with " + o.getAttribute('datatype'));
+    } 
+}     
+/*
+//DUMP CODE -- decide on removal
+
+
         else  if (o.name == 'course-g')
         {
           var course=new Array('BCA','BCS','BSc','BE','B.Tech', 'BBA','B.Com');
@@ -80,30 +114,7 @@ var DEBUG = false
                  o.add(option,null)
             }
         } 
-        else if (o.name == "strongAreas" || o.name == "weakAreas" )
-        {
-            var h=new Array('programming','database','os','web','packages','areasofinterest');
-            for( var i=0;i<h.length;i++)
-            {
-                c=document.getElementById(h[i]).children; //LI's
-                
-                for(var j=0;j<c.length;j++)
-                {
-                    if(c[j].children[0].value)
-                    {
-                        var option = document.createElement("option");
-                        option.text=c[j].children[0].value
-                        o.add(option,null)
-                    }
-               }
-                
-            }
-           opt = o.options ; 
-           if(opt.length  == 0) alert ('Please enter either of your software skill sets or Areas of interest to proceed');
-        }
-}
-     
-    
+*/
 
  /* changes the sibling fields to suit the current value of the passed object.
     
@@ -609,39 +620,39 @@ function validate(field)
                     highlightError(field,!valid,reason);
                    //regexp = 'email ka regexp';
                    break;
-        case 'monthyear':
-                        debug ('value is ' + value);
-                        parts = value.split(',');
-                        if ((parseInt(parts[0]) >= 1 && parseInt(parts[0]) <= 31) && (parseInt(parts[1]) >= 1) && (parseInt(parts[1]) <= 12) && (parts[2] != ''))
+         case 'monthyear':
+                    debug ('value is ' + value);
+                    parts = value.split(',');
+                    if ((parseInt(parts[0]) >= 1 && parseInt(parts[0]) <= 31) && (parseInt(parts[1]) >= 1) && (parseInt(parts[1]) <= 12) && (parts[2] != ''))
+                    {
+                        valid = true;
+                    }
+                    else
+                    {
+                        valid = false;
+                        //it's invalid, now we need to focus and highlight on the right field
+                        id = field.id.split('_');
+                        if (id[1].indexOf('monthyear') == 0)
                         {
-                            valid = true;
+                            id[1] = 'year';
+                            
                         }
                         else
                         {
-                            valid = false;
-                            //it's invalid, now we need to focus and highlight on the right field
-                            id = field.id.split('_');
-                            if (id[1].indexOf('monthyear') == 0)
-                            {
-                                id[1] = 'year';
-                                
-                            }
-                            else
-                            {
-                                id[1] = id[1].substr(0,id[1].indexOf("monthyear"))+"year"; // start_montheyar or endmonthyear.
-                            }
-                            f = document.getElementById(id);
-                            //to be on safe side 
-                            createDates(f);
+                            id[1] = id[1].substr(0,id[1].indexOf("monthyear"))+"year"; // start_montheyar or endmonthyear.
+                        }
+                        f = document.getElementById(id);
+                        //to be on safe side 
+                        createDates(f);
 
-                            highlightError(f,!valid,'invalid_date');
-                         }
-            
-            
-            case 'string': //only chars, spaces and parantheses and hyphen allowed...eg Full Name
-                   valid = true
-                   debug('i am string');
-                   break;
+                        highlightError(f,!valid,'invalid_date');
+                     }
+                //WARNING: Samar added the break statement below because he thought it should be here :P 
+                break; 
+        case 'string': //only chars, spaces and parantheses and hyphen allowed...eg Full Name
+               valid = true
+               debug('i am string');
+               break;
     }
     switch (field.tagName)
     {

@@ -838,22 +838,25 @@ Did you have any year drop ?
         </select>
         <BR><BR>
     {% endif %} <!-- end of weak areas wala if -->
+   {% endif %} <!-- special field type wala if -->
 {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
     <BR>
-    <B>{{c.valueOf.displayText}}</b>
+    <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{%endif%}
     {% if c.valueOf.fieldType == 'radio' %}
         <!-- got a radio -->
         {% if c.value == 'yes' %}
-         Yes  <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='yes' checked>
-         No   <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='no'>
+         Yes  <input type='radio' name='companySpecific_{{c.key}}' value='yes' checked>
+         No   <input type='radio' name='companySpecific_{{c.key}}' value='no'>
         {% else %}
-         Yes  <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='yes'>
-         No   <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}' value='no' checked>
+         Yes  <input type='radio' name='companySpecific_{{c.key}}' value='yes'>
+         No   <input type='radio' name='companySpecific_{{c.key}}' value='no' checked>
          {% endif%}
+     {% endif %} <!-- end of radio wala if-->
+     {% if c.valueOf.fieldType == 'textarea'%}
+     <textarea id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
      {% else %} 
-        <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}'>
-    {% endif %}
-  {% endif %}
+        <input type='{{c.valueOf.fieldType}}' id='companySpecific_{{c.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
+    {% endif %}<!-- fieldtypes wala if -->
 {% empty %}
 &nbsp;
 {% comment %}
@@ -869,13 +872,17 @@ Weak Areas
 <!-- unfilled items -->
 {% for c in mt %}
 <BR>
-    <B>{{c.displayText}}</b>
+    <B>{{c.displayText}}</b> {%if c.is_mandatory %}<b><sup>*</sup></b>{% endif %}
     {% if c.fieldType == 'radio' %}
-         Yes  <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' value='yes'>
-         No   <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' value='no'>
+         Yes  <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}'  value='yes'>
+         No   <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' {% if c.is_mandatory %} checked {% endif %} value='no'>
+     {% else %}
+     {% if c.fieldType == 'textarea' %}
+        <textarea id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
      {% else %} 
-        <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}'>
+        <input type='{{c.fieldType}}' id='companySpecific_{{c.key}}' {%if c.is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'>
     {% endif %}
+    {%endif%}
 {% endfor%}
   
 </div> 
