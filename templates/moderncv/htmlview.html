@@ -24,7 +24,7 @@ h3{
 </head>
 <div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}">
 <div style="{float:left}">
-<img src="{{MEDIA_URL}}/photos/{{s.prn}}.png" height='134' width='434'>
+<img src="{{MEDIA_URL}}/STORE/photos/{{s.prn}}.png" height='150' width='180'>
 </div>
 <div style="{float:'right';position:relative}">
 <h2> {{ s.fullname }}</h2>
@@ -67,7 +67,7 @@ h3{
 <br>
 {% if c %}
 <div>
-    <h3> Certifications</h3>
+    <h3>Certifications</h3>
 
         <table cellpadding=10>
             {% for certi in c %}
@@ -89,10 +89,10 @@ h3{
             <tr><td><b>Database</b>  <td>           :<td>   {{sw.databases}}
         {% endif %}
         {% if sw.OS %}
-            <tr><td><b>Operating system</b>    <td> :<td>{{sw.OS}}
+            <tr><td><b>Operating systems</b>    <td> :<td>{{sw.OS}}
         {% endif %}
         {% if sw.swPackages %}
-            <Tr><td><b>Otehr software</b>       <tD>:<td>{{sw.swPackages}}
+            <Tr><td><b>Other software</b>       <tD>:<td>{{sw.swPackages}}
         {% endif %}
         {% if sw.webTools %}
             <tr><td><b>Web based Tools</b>      <td>:<td>{{sw.webTools}}
@@ -104,7 +104,7 @@ h3{
 {% if p.areasofinterest %}
 <div>
 <br>
-    <h3>Areas Of Interest</h3>
+    <h3>Areas of Interest</h3>
 <ul>
 {% for aoi in p.areasofinterest|split:',' %}
     <li> {{aoi}}</li>
@@ -173,7 +173,7 @@ h3{
 <Tr><td><b>Father's Occupation</b>       <tD>:<td>{{p.father_occupation}}
 <tr><td><b>Languages Known</b>      <td>:<td>{{p.languages}}
 <tr><td><b>Permanent Adress</b>      <td>:<td><pre>{{p.per_address}}</pre>
-<tr><td><b>Address of corospondance</b>      <td>:<td><pre>{{p.corr_address }}</pre>
+<tr><td><b>Address of correspondence</b>     <td>:<td><pre>{{p.corr_address }}</pre>
 </table>
 </div>
 

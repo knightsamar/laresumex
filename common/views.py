@@ -136,6 +136,8 @@ def done(request,msg):
         message = "Thanks. Your posting has been sent for approval"
   elif msg == "Thank-you":
       message = "Thank you. your request would be attended to withing 24hrs."
+  elif msg == "company":
+    message = "Your changes have been saved. All the best..!!"
   else:
       message = "Done"
   t=loader.get_template('common/done.html')

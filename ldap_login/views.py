@@ -46,7 +46,7 @@ def login(request):
             #update last_login timestamp
             #store encrypted password
             #start session
-            request.session.set_expiry(1800)
+            request.session.set_expiry(3600)
             request.session['username'] = request.POST['username']; 
             userName=request.session['username']
         	    #check for user existance... and/or add the use in our feedback database..!!
