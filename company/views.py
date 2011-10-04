@@ -1,4 +1,4 @@
-# Create your views here
+#pplu Create your views here
 
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
@@ -369,4 +369,4 @@ def apply(request):
             k.students_applied.remove(s)
             k.save();
         
-    return our_redirect('/student_info/Saved/done');
+    return our_redirect('/common/company/done');
