@@ -82,10 +82,10 @@ var DEBUG = false
                     opt = o.options ; 
                     
                     if(opt.length  == 0) 
-                        alert ('Please enter either of your software skill sets or Areas of interest to proceed');
+                        debug ('Please enter either of your software skill sets or Areas of interest to proceed');
                     break;
                 default:
-                    alert("Hey what to do with " + o.getAttribute('datatype'));
+                    debug("Hey what to do with " + o.getAttribute('datatype'));
     } 
 }     
 /*
@@ -132,11 +132,11 @@ function change(o)// Date and other fields dependency Checking.
 
      if (id0 == 'marks')
      {
-      //alert(o.value);
+      //debug(o.value);
       //we disable the Marks and OutOf elements for such times
       if (o.value == 'Appearing' || o.value =='Result Awaiting') 
       { 
-         //alert('selecting ' + id0+'_'+'marks'+'_'+id2);
+         //debug('selecting ' + id0+'_'+'marks'+'_'+id2);
          marksEl = document.getElementById(id0+'_marks_'+id2); //select the corresponding marks element 
 
          marksEl.value=o.value;
@@ -216,10 +216,12 @@ function change(o)// Date and other fields dependency Checking.
       id[1] = 'monthyear'
   else
       id[1]=id[1].substr(0,id[1].indexOf("year"))+"monthyear"; // start_montheyar or endmonthyear.
- if (o.selectedIndex < 0 )
+  if (o.selectedIndex < 0 )
      return "unfilled"
+
   hidden.name=id.join("_");
   hidden.id=hidden.name;
+  debug("We created an hidden el with id "+hidden.id + " and name "+ hidden.name);
 
   H=document.getElementById(hidden.name); // H = hidden only. if it already exists, then change existing instead fof creating a new one.
 
@@ -247,22 +249,32 @@ function change(o)// Date and other fields dependency Checking.
   hidden.value=newDate;
   debug("We created a date called "+hidden.name+" with value " +hidden.value);
   if (H)
-      H.value=hidden.value
+      {
+      /* SUPER CODE to make hidden fields name properly and id properly preety! :)  --- by Apoorva*/
+      H.value = hidden.value
+      H.name = hidden.name
+      H.id = hidden.id;
+      }
   else    
+    { 
       o.parentNode.appendChild(hidden);
-
+    }
  }
 
+/* check whether all fields in a row which are dependent on each other, are either fully filled or either fully empty. reports error on partially filled */
 function dependencyCheck()
 {
    var valid = true;
    var currentElement
-    tr = document.getElementsByTagName('tr');
-    a: for (var i =0;i<tr.length;i++)
-    {
+   //take all rows -- all dependent fileds MUST be in the same TRs
+   tr = document.getElementsByTagName('tr');
+   
+   a: for (var i=0;i<tr.length;i++)
+   {
         input = tr[i].getElementsByTagName('input');
         select = tr[i].getElementsByTagName('select')
         textarea = tr[i].getElementsByTagName('textarea')
+
         l = textarea.length + select.length + input.length;
         filled = 0;
         
@@ -272,18 +284,18 @@ function dependencyCheck()
                 if(input[j].type == 'button') { l--;continue};
                 if (input[j].type == 'hidden')
                 {
-                    l -- ; continue;
+                    l-- ; continue;
                 }
                 if (input[j].value != "") filled ++;
             }
               
-         for (var j =0;j<select.length;j++)
+         for (var j = 0;j<select.length;j++)
            {
                 currentElement = select[j];
                 if (select[j].selectedIndex >= 0) filled++
            }
            
-        for (var j =0;j<textarea.length;j++)
+        for (var j=0;j<textarea.length;j++)
             {
              currentElement = textarea[j];
              if (textarea[j].value !="" ) filled++
@@ -319,18 +331,12 @@ function onSubmitValidator()
                 return false;
            }
         }
-         highlightError(select_fields[i],false,"")
-        //will check validations.
-        //will also do dependency checking.
-        is_valid = validate(select_fields[i]);
-        if (!is_valid)
-                return is_valid;
-        else
-        {
-                //priorly called concat
-                createDates(select_fields[i]);
-                select_fields[i].name = select_fields[i].id
-        }       
+        highlightError(select_fields[i],false,"")
+        //IF WE EVER CHOOSE TO VALIDATE SELECTs
+        //is_valid = validate(select_fields[i]);
+        //priorly called concat
+        createDates(select_fields[i]);
+        //select_fields[i].name = select_fields[i].id
     }
 
     //now check input fields
@@ -340,12 +346,25 @@ function onSubmitValidator()
     {
      
      //we don't process disabled, hidden and button input elements
-     if (input_fields[i].disabled == true || input_fields[i].type == 'hidden' ||  input_fields[i].type == 'button')
+     if (input_fields[i].disabled == true ||  input_fields[i].type == 'button')
      {
                 continue; //we don't want to touch such fields!
      }
 
+     if (input_fields[i].type == 'hidden')
+     {
+         debug('we got an hidden field'); 
+         is_valid = validate(input_fields[i]);
+    
+         //if not, get out.
+         if (is_valid == false)
+         {
+             return is_valid;
+         }
+         continue;
+     }
      //is this field mandatory ?
+
      if (input_fields[i].getAttribute('mandatory') == 'true')
      { 
             //do mandatory check.
@@ -400,8 +419,11 @@ function onSubmitValidator()
         //will check validations.
         //will also do dependency checking. --- UPDATE: nopes, dependency checking is now done seperately for all in the beginning of this validator
         is_valid = validate(textarea_fields[i]);
-        if (!is_valid)
-                return is_valid;
+        if (is_valid == false)
+        {
+         debug("textarea "+is_valid);
+         return is_valid;
+        }
         else
         {
             //whether it's mandatory or not, we need to replace it with proper name so that it can be processed and stored
@@ -413,12 +435,13 @@ function onSubmitValidator()
             }
         }
    }
+    debug("We are valid ??" + is_valid);
     document.getElementById('allok').value = 1;
     
     
     f = document.getElementById('info_form');
-    alert("Original action is " + f.action);
-    alert("we are setting it to " + f.getAttribute('original_action'));
+    debug("Original action is " + f.action);
+    debug("we are setting it to " + f.getAttribute('original_action'));
     f.action = f.getAttribute('original_action');
     debug('All OK! Now submitting the form');
     return true;
@@ -445,7 +468,7 @@ function highlightError(field, yesorno, reason)
                if (reason=='dependency')
                {
                     var rowID = 'tr_'+ field.id.split('_')[0] + '_'+field.id.split('_')[2];
-                    alert("highlighting row " + rowID);
+                    debug("highlighting row " + rowID);
                     //document.getElementById(rowID).setAttribute('class',styleClasses + ' invalid_data');
                }
                else
@@ -470,7 +493,7 @@ function highlightError(field, yesorno, reason)
     messageArray = ['It should be a number.','It should be in the format 999999.999','It is a mandatory field.','It should be a +ve number.','All the items in the section must be filled.',' email not filled properly']
     if (reason != '')
     {
-               //priorly called alertmsg
+               //priorly called debugmsg
                fieldname = field.id.split('_')
                //now that we know validity, mark so visually and attributely
                //and tell the user
@@ -593,11 +616,13 @@ function validate(field)
                              }
                        }
                        highlightError(field,!valid,reason);
+                       //break only when are we done fully addition.
                        break;
                     }
+                    //we aren't breaking when the type is numeric
         case 'numeric':
                    debug('i am numeric');
-                   if ((isNaN(value)) || (value ==  "") || (parseInt(value) < 0))
+                   if ((isNaN(value)) || (parseInt(value) < 0))
                    {
                       highlightError(field,true,"numeric");
                       valid = false;
@@ -654,6 +679,11 @@ function validate(field)
                debug('i am string');
                break;
     }
+ 
+    //if found invalid, stop right here.
+    if (!valid)
+        return false;
+ 
     switch (field.tagName)
     {
             case 'select':
@@ -694,7 +724,7 @@ function remove(o)
              firstSibling.id = tid[0] // for safety sake.. can be skipped.
 
 
-        alert(p.parentNode.childElementCount)
+        debug(p.parentNode.childElementCount)
         if(p.parentNode.childElementCount == 2) // because for Table, one child is The head. TH tags wla row
            {
                p.id = tid[0];  // to rename its ID as the main one. so that it can be "add another"ed

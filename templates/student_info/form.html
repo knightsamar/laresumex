@@ -86,7 +86,7 @@ function addNew(elName,val)
                 l=lastNode.getElementsByTagName('select');
                 if (l.length ==0 ) 
                     l = lastNode.getElementsByTagName('textarea')// Since select is in both marks and other fields. Except the Extra fields ehich has a textarea.
-                    alert(lastNode.id)
+                debug(lastNode.id)
 
                 
                 lastID=l[0].id.split('_')[2]                 
@@ -109,7 +109,7 @@ function addNew(elName,val)
                         id = currentColl[j].id.split('_'); //get the number out
                         id[2] = newID; //replace it with the incremented number
                         currentColl[j].id = id.join('_'); //we have the new id!
-                        alert("We got an " + currentColl[j].type) 
+                        debug("We got an " + currentColl[j].type) 
                         if (currentColl[j].type != 'button' && currentColl[j].type !='hidden')
                             currentColl[j].value = ""
                     }
@@ -160,11 +160,11 @@ function addNew(elName,val)
             id[2]=parseInt(id[2])+1; // get Id of last child and increemnt by 1.
             clone.children[0].id=id.join('_');
             clone.children[0].value="";
-            alert(formflag)
+            debug(formflag)
             
             if(formflag) // if not-prefilled, then clonned element would not have the remove button
             {
-                alert('ds');
+                debug('ds');
                 removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
                 id[1]='remove';
                 var removeId=id.join('_');
@@ -369,7 +369,7 @@ function addNew(elName,val)
       {% endcomment %}
       <input type='text' value='' id='marks_course_4' size=20 maxlength='30' datatype='string'>
       </td>
-      <td><input type ='text' size=40 id="marks_uni_4" datatype='float'></td>
+      <td><input type ='text' size=40 id="marks_uni_4" datatype='string'></td>
       <td><input type='text' size='10' id="marks_marks_4" maxlength='10' onBlur='validate(this)' datatype='float'>
           <select name = 'marks_markstype_4' id='marks_markstype_4'onChange="change(this);" title="Total Marks">
           <option>Total</option>
@@ -897,7 +897,7 @@ Weak Areas
 
 </form>
 <noscript>
-    <h2 align='center' style="color: red;"> Hey, this is Sammer, you need to enable JavaScript if you want us to help you! </h2>
+    <h2 align='center' style="color: red;"> Hey, you need to enable JavaScript if you want us to help you! </h2>
 </noscript>
 {% endblock %}
 
