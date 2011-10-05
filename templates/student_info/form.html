@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 <!-- Form for the resume -->
 {% load some_tags %}
-<html>
-<head>
-
 {% block title %}
     Your Details
 {% endblock %}
-{% block content %}
 
+{% block styles %}
 <style type='text/css'>
     .invalid_data
     {
@@ -20,6 +17,18 @@
 </style>
 
 <link type="text/css" href="{{MEDIA_URL}}/jquery/css/humanity/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
+<style type="text/css">
+    body{ font: 80% "Verdana", sans-serif; margin: 50px;}
+    .demoHeaders { margin-top: 2em; }
+    #dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+    #dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+    ul#icons {margin: 0; padding: 0;}
+    ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+    ul#icons span.ui-icon {float: left; margin: 0 4px;}
+</style>	
+{% endblock %}
+
+{% block scripts %}
 		<script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.14.custom.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}/abd.js"></script>
@@ -205,17 +214,8 @@ function addNew(elName,val)
  }
 
 </script>
-		<style type="text/css">
-			body{ font: 80% "Verdana", sans-serif; margin: 50px;}
-			.demoHeaders { margin-top: 2em; }
-			#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
-			#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
-			ul#icons {margin: 0; padding: 0;}
-			ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
-			ul#icons span.ui-icon {float: left; margin: 0 4px;}
-		</style>	
-</head>
-<body>
+{% endblock %}
+{% block content %}
 <h3 align='center'>Your Details</h3>
 {% if flag == 'form' %}
 <form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{ prn }}/submit'>
