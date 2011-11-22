@@ -22,7 +22,8 @@ def add(request):
     for adding a new Job Posting 
     '''
     if 'username' not in request.session:
-        return HttpResponse('please signup first ;)')
+        request.session['redirect'] = request.get_full_path();
+        return our_redirect('/ldap_login')
 
     if request.method == 'POST': # If the form has been submitted...
        form = JobPostingForm(request.POST) # A form bound to the POST
@@ -70,6 +71,7 @@ def add(request):
 
 def view(request,template):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login');
     prn=request.session['username'];
     a="";
@@ -123,6 +125,7 @@ def view(request,template):
 
 def do(request,template):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login');
     if 'role' in request.session:
             role = request.session['role'];
@@ -190,6 +193,7 @@ def do(request,template):
         
 def hidden(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login');
     u = user.objects.get(username = request.session['username']);
     j = personalised_posting.objects.filter(prn = u).filter(is_hidden =True);
