@@ -18,10 +18,6 @@ def login(request):
     message = None;
     #print request.POST
     if 'username' in request.session:
-        if 'redirect' in request.session:
-            print 'redirecting to', request.session['redirect']
-            return our_redirect(request.session['redirect'])
-        else:
             return our_redirect('/home');
     if 'username' in request.POST:# and 'password' in request.POST:
         print "== Got username..!!!!"
@@ -111,7 +107,9 @@ def login(request):
 		
             #our_redirect to the index view!
             if 'redirect' in request.session:
-                return our_redirect(request.session['redirect']);
+                a = request.session['redirect']
+                request.session['redirect'] ='' 
+                return redirect(a);
             else:    
                 return our_redirect('/home');
         else: # if status == False

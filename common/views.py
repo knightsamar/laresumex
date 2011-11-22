@@ -18,6 +18,7 @@ from datetime import datetime
 
 def index(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         print "from home to login as No session"
         return our_redirect('/ldap_login')
     # see whether user has logged in...
