@@ -2,6 +2,7 @@
 
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
+from django.shortcuts import render_to_response
 from django.http import HttpResponse;
 #from django.shortcuts import render_to_response, redirect;
 from company.models import *
@@ -45,23 +46,58 @@ def admin_index(request):
 
 
 ''' Gives the HTML output of students who have got placed ...'''
-def got_placed(request,placed_id):
+def got_placed(request):
+    
+    
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/')
+        
+    #if 'POST' not in request: 
+    #    print 'no post'
+    
+    count = student.objects.all().count(); 
+    try:
+        placed_id = request.POST['what']
+        filter = request.POST['filter']
+    except KeyError:
+        #return HttpResponse('PLease fill all fields')
+        return render_to_response('admin/reportsmenu.html', context_instance = RequestContext(request))
+    def mkdict(stu,type):
+        lala = []
+        for items in stu:
+            toreturn = {}
+            toreturn['other'] = items;
+            if type == 0: # items[0].__class__.__name__ = 'student'
+                toreturn['company'] = items.company;
+                u = user.objects.get(username = items.student.prn);
+            else:
+                    print items
+                    u = user.objects.get(username = items.prn)
+            toreturn['group'] = u.groups.all()[0]
+            lala.append(toreturn)    
+        return lala
+        
     g = group.objects.get(name='placement committee')
 
     if user(request.session['username']) not in g.user_set.all():
         return HttpResponse('not for u');
-    placed_stu=placement_in.objects.all();
-    if int(placed_id) == 1:
-        c=Context({'placed':'yes','PS':placed_stu});
-    elif int(placed_id) == 2:
+    placed_stu=placement_in.objects.all(); 
+    if placed_id == 'placed':
+        context = {'placed':'yes','PS':mkdict(placed_stu,0)};
+    elif placed_id == 'unplaced':
         slist=[]
         for p in placed_stu:
             slist.append(p.student.prn)
         unplaced_stu=student.objects.exclude(prn__in=slist);
-        c=Context({'placed':'no','UPS':unplaced_stu});
+        context = {'placed':'no','UPS':mkdict(unplaced_stu,1)};
+    
+    context['count']=count;
+    context['fil'] = filter; #because flter is a keyword i think 
+    
+    c = Context(context);
     t=loader.get_template('company/got_placed.html');
+    print "=========",request.get_full_path()
     return HttpResponse(t.render(c))
 
 
@@ -91,6 +127,7 @@ def get_full_list():
 
 def fetch_index(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login')
     try:
         g = group.objects.get(name='placement committee')
@@ -119,6 +156,7 @@ def fetch_index(request):
 
 def get_students_name(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login')
     g = group.objects.get(name='placement committee')
 
@@ -275,6 +313,7 @@ Thisgives the company's information as a tooltip, and a check box for apllying. 
 '''
 def company_list(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/');
     else:
         prn=request.session['username'];
@@ -330,6 +369,7 @@ def apply(request):
     print request.POST
     #check for the session and our_redirect
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/')   
        
     prn=request.session['username']

@@ -10,8 +10,8 @@ class group(models.Model):
 
     def __str__(self):
        if self.name.isdigit() is True:
-            Three_yr_courses={ 122:'BBA(IT)', 121:'BCA'}
-            Two_yr_courses={ 142:'MSc(CA)', 141:'MBA(IT)'}
+            Three_yr_courses={ 122:'BBA-IT', 121:'BCA'}
+            Two_yr_courses={ 142:'MSc. (CA)', 141:'MBA-IT'}
             course=""
             a=0
             try:
@@ -21,7 +21,7 @@ class group(models.Model):
                 elif int(self.name[5:8]) in Two_yr_courses.keys():
                     a=2
                     course=Two_yr_courses[int(self.name[5:8])]   
-                yr=course+" "+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
+                yr=course+" 20"+str(self.name[:2]) + '-' + str(a+int(self.name[:2])) 
             except Exception as e:
                 yr = self.name
        else:

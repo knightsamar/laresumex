@@ -46,7 +46,7 @@ urlpatterns = patterns('',
     (r'^company/apply',"company.views.apply"),
     (r'^PT/admin',"company.views.admin_index"),
     (r'^PT/fetch',"company.views.fetch_index"),
-    (r'^PT/(?P<placed_id>\d+)/got_placed',"company.views.got_placed"),
+    (r'^PT/reports',"company.views.got_placed"),
     
     
     # student_info

@@ -25,6 +25,7 @@ from time import sleep
 
 def latex(request,prn):
     if 'username' not in request.session:
+            request.session['redirect'] = request.get_full_path();
             return our_redirect('/ldap_login/')
     '''generates the resume and puts it into the resume store for version control'''
     #the current user from session;
@@ -112,6 +113,7 @@ def latex(request,prn):
 
 def pdf(request,prn):
     if 'username' not in request.session:
+            request.session['redirect'] = request.get_full_path();
             return our_redirect('/ldap_login/')
     if prn != request.session['username']:
         return HttpResponse('Not your resume!')
@@ -193,6 +195,7 @@ def pdf(request,prn):
 
 def html(request,prn):
     if 'username' not in request.session:
+           request.session['redirect'] = request.get_full_path();
            return our_redirect('/ldap_login')
     if prn != request.session['username']:
           return HttpResponse('Not urs..!!')

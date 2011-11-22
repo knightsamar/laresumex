@@ -33,7 +33,9 @@ def index(request):
     g=group.objects.get_or_create(name='placement committee')
     placement_staff_student=[0,0,0];
     new_posting =False;
-    if g in u.groups.all():
+    print g[0]
+    print "user ==",u,"groups", u.groups.all()
+    if g[0] in u.groups.all():
         print 'placement_committe'
         try:
             j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
@@ -79,6 +81,7 @@ def index(request):
 
 def contact(request):
         if 'username' not in request.session:
+            request.session['redirect'] = request.get_full_path();
             return HttpResponse('please signup first ;)')
         if request.method == 'POST': # If the form has been submitted...
            form = ContactForm(request.POST) # A form bound to the POST
