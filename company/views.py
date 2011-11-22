@@ -50,13 +50,13 @@ def got_placed(request):
     
     
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/')
-        print request.session
         
     #if 'POST' not in request: 
     #    print 'no post'
     
-    
+    count = student.objects.all().count(); 
     try:
         placed_id = request.POST['what']
         filter = request.POST['filter']
@@ -75,9 +75,6 @@ def got_placed(request):
                     print items
                     u = user.objects.get(username = items.prn)
             toreturn['group'] = u.groups.all()[0]
-                #except Exception:
-                #    print 
-                #    toreturn['group'] = '-';
             lala.append(toreturn)    
         return lala
         
@@ -95,10 +92,12 @@ def got_placed(request):
         unplaced_stu=student.objects.exclude(prn__in=slist);
         context = {'placed':'no','UPS':mkdict(unplaced_stu,1)};
     
+    context['count']=count;
     context['fil'] = filter; #because flter is a keyword i think 
     
     c = Context(context);
     t=loader.get_template('company/got_placed.html');
+    print "=========",request.get_full_path()
     return HttpResponse(t.render(c))
 
 
@@ -128,6 +127,7 @@ def get_full_list():
 
 def fetch_index(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login')
     try:
         g = group.objects.get(name='placement committee')
@@ -156,6 +156,7 @@ def fetch_index(request):
 
 def get_students_name(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login')
     g = group.objects.get(name='placement committee')
 
@@ -312,6 +313,7 @@ Thisgives the company's information as a tooltip, and a check box for apllying. 
 '''
 def company_list(request):
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/');
     else:
         prn=request.session['username'];
@@ -367,6 +369,7 @@ def apply(request):
     print request.POST
     #check for the session and our_redirect
     if 'username' not in request.session:
+        request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login/')   
        
     prn=request.session['username']

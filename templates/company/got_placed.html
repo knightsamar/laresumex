@@ -11,6 +11,7 @@
 {% if placed == 'yes' %}
     <h3> Placed Student's</h3>
     Total Students Placed  - {{ PS|length }}<BR>
+    Total Students = {{count}}<BR>
     {% if fil == 'company'%}
         {% regroup PS by company as filter_list %}
     {% else %}
@@ -21,15 +22,16 @@
         {{ item.grouper }}<br>
        
         <table>
-        <tr><th> Student name<th> {% if fil == 'company'%} Batch {%else%}Company {%endif%}<th> job type </tr>
+        <tr><th> Student name<th> {% if fil == 'company' %} Batch {% else %}Company {% endif %}<th> job type </tr>
         {% for p in item.list %}
-            <tr><td> {{ p.other.student.fullname }} <td>{%if fil == 'group'%} {{p.company}}{%else%} {{p.company}}{%endif%}<td>{{ p.other.placementType }}</tr>
+            <tr><td> {{ p.other.student.fullname }} <td>{%if fil == 'group'%} {{p.company}}{% else %} {{p.group}} {% endif %}<td>{{ p.other.placementType }}</tr>
         {% endfor %}
         </table>
     {% endfor %}
 {% else %}
     <h3> Student's Left to be placed </h3>
     Total Students left  - {{ UPS|length }}<BR>
+    Total Students = {{count}}
         {% regroup UPS by group as filter_list %}
 
     {% for item in filter_list %}

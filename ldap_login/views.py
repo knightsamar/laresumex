@@ -18,7 +18,11 @@ def login(request):
     message = None;
     #print request.POST
     if 'username' in request.session:
-        return our_redirect('/home');
+        if 'redirect' in request.session:
+            print 'redirecting to', request.session['redirect']
+            return our_redirect(request.session['redirect'])
+        else:
+            return our_redirect('/home');
     if 'username' in request.POST:# and 'password' in request.POST:
         print "== Got username..!!!!"
         if request.POST['username'] == "":
@@ -106,7 +110,10 @@ def login(request):
    
 		
             #our_redirect to the index view!
-            return our_redirect('/home');
+            if 'redirect' in request.session:
+                return our_redirect(request.session['redirect']);
+            else:    
+                return our_redirect('/home');
         else: # if status == False
             message = 'Wrong Username/Password';
             print "because status was", status, "hence message is", message;
@@ -143,8 +150,8 @@ def logout(request):
         print 'logging you out';
         request.session.flush();
     else:
-		#no,
-        print 'redirecting to login page to tell you to login first :P';
+		    #no,
+            print 'redirecting to login page to tell you to login first :P';
 			#then tell me to login first, using the message if possible 
 			#message = "Hey, you need to go in before you can go out :P :P";
 

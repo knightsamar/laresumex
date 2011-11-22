@@ -81,6 +81,7 @@ def index(request):
 
 def contact(request):
         if 'username' not in request.session:
+            request.session['redirect'] = request.get_full_path();
             return HttpResponse('please signup first ;)')
         if request.method == 'POST': # If the form has been submitted...
            form = ContactForm(request.POST) # A form bound to the POST
