@@ -16,7 +16,7 @@ from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PA
 
 ''' import spreadsheet generation module'''
 from pyExcelerator import *
-
+from pygooglechart import PieChart3D
 #TODO: We have to check the licensing restrictions imposed by it.
 
 
@@ -85,19 +85,29 @@ def got_placed(request):
     placed_stu=placement_in.objects.all(); 
     if placed_id == 'placed':
         context = {'placed':'yes','PS':mkdict(placed_stu,0)};
+        leng = len(context['PS'])
     elif placed_id == 'unplaced':
         slist=[]
         for p in placed_stu:
             slist.append(p.student.prn)
         unplaced_stu=student.objects.exclude(prn__in=slist);
         context = {'placed':'no','UPS':mkdict(unplaced_stu,1)};
+        leng = len(context['UPS'])
     
     context['count']=count;
     context['fil'] = filter; #because flter is a keyword i think 
-    context['ROOT'] = ROOT    
+    context['ROOT'] = ROOT 
+    context['MEDIA_URL'] = MEDIA_URL
+    chart = PieChart3D(250,100);
+    chart.add_data([leng,count-leng])
+    chart.set_pie_labels([placed_id, 'lala'])
+    try:
+        chart.download('%s/lala.png'%MEDIA_ROOT)
+        context['chart'] = '%s/lala.png'%MEDIA_URL;
+    except:
+        pass;
     c = Context(context);
     t=loader.get_template('company/got_placed.html');
-    print "=========",request.get_full_path()
     return HttpResponse(t.render(c))
 
 

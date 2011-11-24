@@ -6,7 +6,7 @@ from ldap_login.models import user,group;
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from student_info.utility import our_redirect
-
+from django.shortcuts import redirect
 from laresumex.settings import ROOT
 if ROOT == "/laresumex":
     from ldapAuthBackend import authenticate;
