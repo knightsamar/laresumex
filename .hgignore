@@ -1,8 +1,17 @@
 syntax: glob
 *~
+*.sql
+*.new
+*.old
+templates/chimpu.html
+*.egg
+
 *.pyc
 .*swp
-settings.py
+*settings.py*
+*.rej
+*.gz
+*.patch
 templates/*.zip
 templates/*.log
 templates/moderncv/*.out
