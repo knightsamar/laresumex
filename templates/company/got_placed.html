@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+{% if placed == 'yes'%}
+<title> Placed Students</title>
+{% else %}
+<title> Studrnts left to be placed</title>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if placed == 'yes' %}
+    <h3> Placed Student's</h3>
+    Total Students Placed  - {{ PS|length }}<BR>
+    Total Students = {{count}}<BR>
+    <HR>
+    {% if fil == 'company'%}
+        {% regroup PS by company as filter_list %}
+    {% else %}
+        {% regroup PS by group as filter_list %}
+    {% endif %}
+
+    {% for item in filter_list %}
+        <BR><BR>
+        {{ item.grouper }}<br>
+        <HR>
+        <table>
+        <tr><th> Student name<th> {% if fil == 'company' %} Batch {% else %}Company {% endif %}<th> job type </tr>
+        {% for p in item.list %}
+            <tr><td> {{ p.other.student.fullname }} <td>{%if fil == 'company' %} {{p.group}} {% else %} {{p.company}} {% endif %}<td>{{ p.other.placementType }}</tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
+{% else %}
+    <h3> Student's Left to be placed </h3>
+    Total Students left  - {{ UPS|length }}<BR>
+    Total Students = {{count}}
+        {% regroup UPS by group as filter_list %}
+
+    {% for item in filter_list %}
+        
+        <BR><HR><BR>
+
+        <h3>{{ item.grouper }}</h3>
+       
+        
+        
+        <BR><BR>
+        {% for p in item.list %}
+            <li>{{ p.other }}
+        {% endfor %}
+        </table>
+    {% endfor %}
+{%comment%}
+{% else %}
+
+{% for p in UPS %}
+<li> {{p}}
+{% endfor %}
+{%endcomment%}
+{% endif %}
+<input type = 'button' value='back' onClick='history.go(-1)'>
+{% endblock %}
