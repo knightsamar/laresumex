@@ -18,7 +18,12 @@ def login(request):
     message = None;
     #print request.POST
     if 'username' in request.session:
-            return our_redirect('/home');
+            if 'redirect' in request.session:
+                a = request.session['redirect']
+                request.session['redirect'] = ''
+                return our_redirect(a);
+            else:
+                return our_redirect('/home');
     if 'username' in request.POST:# and 'password' in request.POST:
         print "== Got username..!!!!"
         if request.POST['username'] == "":
