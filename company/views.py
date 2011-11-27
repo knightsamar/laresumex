@@ -16,7 +16,6 @@ from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PA
 
 ''' import spreadsheet generation module'''
 from pyExcelerator import *
-from pygooglechart import PieChart3D
 
 #TODO: We have to check the licensing restrictions imposed by it.
 
@@ -85,32 +84,28 @@ def got_placed(request):
         return HttpResponse('not for u');
     placed_stu=placement_in.objects.all(); 
     from operator import itemgetter;
+    a = lambda(x): itemgetter(filter)(x).__str__()
+
     if placed_id == 'placed':
-        context = {'placed':'yes','PS':sorted(mkdict(placed_stu,0),key = itemgetter(filter))};
+        label = ['placed','unplaced']
+        context = {'placed':'yes','PS':sorted(mkdict(placed_stu,0),key = a)};
     elif placed_id == 'unplaced':
         slist=[]
+        label = ['unplaced','placed']
         for p in placed_stu:
             slist.append(p.student.prn)
         unplaced_stu=student.objects.exclude(prn__in=slist);
-        context = {'placed':'no','UPS':sorted(mkdict(unplaced_stu,1),key = itemgetter(filter))};
+        context = {'placed':'no','UPS':sorted(mkdict(unplaced_stu,1),key = a)};
     try:
         leng = len(context['UPS'])
         print context['UPS'] 
     except:
+        leng = len(context['PS'])
         print context['PS']
     context['count']=count;
     context['fil'] = filter; #because flter is a keyword i think 
     context['ROOT'] = ROOT 
     
-    context['MEDIA_URL'] = MEDIA_URL
-    chart = PieChart3D(250,100);
-    chart.add_data([leng,count-leng])
-    chart.set_pie_labels([placed_id, 'lala'])
-    try:
-        chart.download('%s/lala.png'%MEDIA_ROOT)
-        context['chart'] = '%s/lala.png'%MEDIA_URL;
-    except:
-        pass;
 
     c = Context(context);
     t=loader.get_template('company/got_placed.html');
