@@ -37,7 +37,7 @@ class posting(models.Model):
 
     def tally(self):
         #count = personalised_posting.objects.filter(post = self).aggregate(count = 'is_interested = True')
-        count = personalised_posting.objects.filter(post=posting.objects.all()[0]).filter(is_interested=True).count();
+        count = personalised_posting.objects.filter(post=self).filter(is_interested=True).count();
         return count;
 
 def handle_new_posting(sender, **kwargs):

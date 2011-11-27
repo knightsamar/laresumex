@@ -114,7 +114,7 @@ def login(request):
             if 'redirect' in request.session:
                 a = request.session['redirect']
                 request.session['redirect'] ='' 
-                return our_redirect(a);
+                return our_redirect('/'+a.strip(ROOT));
             else:    
                 return our_redirect('/home');
         else: # if status == False
