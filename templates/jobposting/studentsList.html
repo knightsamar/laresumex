@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Students who are interested in a Job Posting {% endblock %}
+{% block content %}
+
+{% for jp,students in jpStudents.items %}
+   <h4>----{{jp}}----</h4>
+   <ul>
+   {% for u in students %}
+        <li>{{u}}</li>
+   {% empty %}
+         <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
+   {% endfor %}
+   </ul>
+{% endfor %}
+<input type='button' value='back' onclick="history.go(-1);return true;">
+</div>
+{% endblock %}

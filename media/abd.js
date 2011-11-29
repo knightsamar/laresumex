@@ -1,8 +1,5 @@
 var DEBUG = false 
  
- 
- 
- 
     /* Autofills the passed dropdown object with contents based on it's name
       
        For day, month and year, fills with values.
@@ -10,6 +7,8 @@ var DEBUG = false
     */
     function fillOptions(o)
     {
+        //o is the object in which options are to be filled
+
         //if options are already filled in there, we ain't gonna process it! performance :B
         if (o.children.length>1) 
         {
@@ -26,8 +25,8 @@ var DEBUG = false
                     {
                         var option=document.createElement("option");
                         option.text=months[i];
+                        option.value=months[i];
                         o.add(option,null)
-
                     }
                     break;
         
@@ -37,8 +36,8 @@ var DEBUG = false
                     {
                          var option=document.createElement("option");
                          option.text=i;
+                         option.value=i;
                          o.add(option,null)
-
                     }
                     break;
 
@@ -56,6 +55,7 @@ var DEBUG = false
                     {
                          var option=document.createElement("option");
                          option.text=i;
+                         option.value=i;
                          o.add(option,null)
 
                     }
