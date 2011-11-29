@@ -1,9 +1,18 @@
-{% extends "base.html" %}
-{% block title %} Students who are interested in a Job Posting {% endblock %}
-{% block content %}
+<html>
+
+<head>
+<title> Students who are interested in Job Posting(s) </title>
+
+</head>
+<body>
+<div id ='sid' ><!--Samar is Dog -->
+    <h1 align="center" style="{color: purple}">LaResume-X</h1> 
+    <h3 align="center">More than just Resume in <img src="http://projects.sdrclabs.in/laresumex_media/nayiwalifile.png" width=50 height=25></h3>
+    <hr size=10 color='#56C72B'>
+</div>
 
 {% for jp,students in jpStudents.items %}
-   <h4>----{{jp}}----</h4>
+   <h4>---- {{ jp }} ----</h4>
    <ul>
    {% for u in students %}
         <li>{{u}}</li>
@@ -12,6 +21,8 @@
    {% endfor %}
    </ul>
 {% endfor %}
-<input type='button' value='back' onclick="history.go(-1);return true;">
-</div>
-{% endblock %}
+
+<input type='button' value='Go back' onclick="history.go(-1);return true;">
+
+</body>
+</html>

@@ -19,13 +19,13 @@ class postingAdmin(admin.ModelAdmin):
             for pp in personalised_posting.objects.filter(post=jp).filter(is_interested=True):
                 students_list.append(pp.prn)
             
-            jpStudentsDict[str(jp)] =  students_list;
+            jpStudentsDict['%s : %d students' % (str(jp.company_name),len(students_list))] = students_list;
         print jpStudentsDict;
 
         t = loader.get_template("jobposting/studentsList.html");
         c = Context ({ 'jpStudents' : jpStudentsDict });
         return HttpResponse(t.render(c));
-    getStudents.short_description="Show interested students";
+    getStudents.short_description="List interested students!";
 
     def approve(self, request, queryset):
         r = queryset.update(status='a');
