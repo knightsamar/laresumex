@@ -1,6 +1,8 @@
 from jobposting.models import *
 from django.contrib import admin
 
+class personalizedPostingAdmin(admin.ModelAdmin):
+    list_filter = ['post','is_interested'];
 
 def approve(modeladmin, request, queryset):
     queryset.update(status='d');
@@ -23,5 +25,5 @@ class postingAdmin(admin.ModelAdmin):
 
     
 admin.site.register(posting,postingAdmin);
-admin.site.register(personalised_posting);
+admin.site.register(personalised_posting,personalizedPostingAdmin);
 

@@ -33,7 +33,7 @@ class posting(models.Model):
         return "hooooohooooo"
 
     def __str__(self):
-        return "posting for %s by %s " % (self.company_name, self.posted_by);
+        return "job posting about %s by %s " % (self.company_name, self.posted_by);
 
     def tally(self):
         #count = personalised_posting.objects.filter(post = self).aggregate(count = 'is_interested = True')

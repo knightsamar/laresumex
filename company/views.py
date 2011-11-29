@@ -33,7 +33,7 @@ def admin_index(request):
      g = group.objects.get(name='placement committee')
 
      if user(request.session['username']) not in g.user_set.all():
-         return HttpRespose('page not for u');
+         return HttpResponse('page not for u');
      t=loader.get_template('company/admin_index.html');
     
      c=RequestContext(request,{

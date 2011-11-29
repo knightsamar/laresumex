@@ -71,6 +71,7 @@ def login(request):
             if userName.isdigit() is True:
                 print "its a student"
                 groupid=userName[0:8];
+                request.session['role'] = 'student'
             else:
                  from django.contrib.auth.models import User, Group;
                  try:
