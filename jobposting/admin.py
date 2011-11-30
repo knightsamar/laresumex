@@ -1,6 +1,7 @@
 from jobposting.models import *
 from django.contrib import admin
 from ldap_login.models import * #currently weak because we don't have fullnams yet :(
+from student_info.models import student #for getting d fullname when it's there.
 from django.template import Context, loader
 from django.http import HttpResponse
 
@@ -17,8 +18,14 @@ class postingAdmin(admin.ModelAdmin):
         for jp in selected_jobpostings:
             students_list = []
             for pp in personalised_posting.objects.filter(post=jp).filter(is_interested=True):
-                students_list.append(pp.prn)
-            
+                '''try:
+                    s = student.objects.get(prn=str(pp.prn));
+                    students_list.append("%d - %s" % (str(pp.prn),s.fullname));
+                except student.DoesNotExist:'''
+                students_list.append(pp.prn);
+                '''except Exception as e:
+                    print "Unexpected exception in admin %s " % e;'''
+
             jpStudentsDict['%s : %d students' % (str(jp.company_name),len(students_list))] = students_list;
         print jpStudentsDict;
 

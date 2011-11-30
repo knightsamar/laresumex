@@ -63,7 +63,7 @@ h3{
             {{marks.marks}} GPA out of {{marks.outof}}
           {% else %}
             {% if not marks.marks %}
-                {{marks.get_percentage}}%
+                {{marks.markstype}}
             {% else %}
                 {% if marks.markstype == 'Total' %}
                     {{marks.get_percentage}}
@@ -85,7 +85,7 @@ h3{
 
         <table cellpadding=10>
             {% for certi in c %}
-                        <tr><td><li><td>{{ certi.desc }}<td>{{ certi.fromDate|date:'MY' }}
+                        <tr><td><li><td>{{ certi.desc }}<td>{{certi.fromDate|date:'M Y'}}
             {% endfor %}
 </table>
 </div>
@@ -133,7 +133,7 @@ h3{
     <h3> Projects Undertaken</h3>
     <table cellpadding=10>
         {% for pr in pro %}
-            <tr><td><li><td>{{pr.heading}}<td>{{pr.desc }}</tr>
+            <tr><td><li><td>{{pr.heading}}</td><td>{{pr.desc}}</td></tr>
         {% endfor %}
     </table>
 </div>
@@ -145,7 +145,7 @@ h3{
 <h3> Work Experience</h3>
     <table cellpadding=10>
     {% for wex in w %}
-        <tr><td><li><td>{{wex.desc }}<td> in the year {{ wex.fromDate|date:'bY' }} to {{ wex.endDte|date:'bY'}}
+        <tr><td><li><td>{{wex.desc}}<td> from {{wex.fromDate|date:'b Y'}} to {{wex.endDate|date:'b Y'}}
     {% endfor %}
     </table>
 </div>
@@ -158,7 +158,7 @@ h3{
 <h3> Academic Achievements</h3>
     <table cellpadding=10>
         {% for ac in a %}
-            <tr><td><li><td>{{ac.desc }} in the year {{ac.fromDate|date:'Y'}}
+            <tr><td><li><td>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</td></tr>
         {% endfor %}
      </table>   
 </div>
@@ -169,7 +169,7 @@ h3{
 <h3> Extra Curricular</h3>
     <table cellpadding=10>
         {% for ex in e %}
-            <tr><td><li><td>{{ex.desc }}<td> in the year {{ ex.fromDate|date:'Y' }}
+            <tr><td><li><td>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</td></tr>
         {% endfor %}
     </table>
 </div>
