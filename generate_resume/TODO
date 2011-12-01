@@ -4,4 +4,4 @@
 * Write code for all the logic written in the commented sections of generate_resume.views
 * Find out a way to generate a DOC copy of the resume, either from PDF or TEX -- Ashwini.
 * When generating resume, put hyperlinks properly in the resume's PDF and TEX.
-
+* Find a way to stop pisapdf generator from crashing when encountering cases like images not available.

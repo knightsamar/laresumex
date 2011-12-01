@@ -1,5 +1,7 @@
 from django.db import models
 from datetime  import datetime, date; #for django
+from django.db.models.signals import post_save
+from datetime import datetime;
 
 # Create your models here.
 
@@ -168,21 +170,38 @@ class companySpecificData(models.Model):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
+
+def handle_student_updates(sender, **kwargs):
+    '''Signal handler whenever any of a student related data is modified and saved
+       Refer: http://localhost/docs/django-docs/ref/signals.html#django.db.models.signals.post_save
+    '''
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+    print "A signal was sent by ", sender
+    print 
+    print "The instance which forced the signal to sent was ", kwargs['instance']
+    print 
+    #would be applicable if we would be processing post_save
+    print "Was a new job instance created ?", kwargs['created']
+    try:
+       if kwargs['instance'].primary_table:
+           s = kwargs['instance'].primary_table;
+           print 'Found the student whose data was last modified on %s ' % (s.last_update)
+           s.last_update = datetime.now();
+           s.save();
+           print 'Changed last modified to %s ' % (s.last_update)
+       else:
+           print "Can't get prn";
+    except Exception as e:
+        print "Exception %s occured" % e;
+    print "++++++++++++++++++++++++++++++++++++++++++++"
+
+#Whenever a posting is saved, signal!
+#Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
+for k,model in tables.items():
+    post_save.connect(handle_student_updates,sender=eval(model),weak=False,dispatch_uid='studentUpdateSignal');
+
 
 #In sabko ume actually use karna hai jab hum version treat karenge au
 """

@@ -31,6 +31,8 @@ urlpatterns = patterns('',
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),
     (r'^generate_resume/(?P<prn>\d+)/html',"generate_resume.views.html"),
+    (r'^generate_resume/(?P<prn>\d+)/pisapdf',"generate_resume.views.pisapdf"), #the non-latex pisa and reportlab based pdf generator
+
     #(r'^generate_resume/(?P<prn>\d+)/latex',"generate_resume.views.latex"),
     
     #ldap_login

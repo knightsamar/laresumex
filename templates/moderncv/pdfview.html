@@ -7,8 +7,9 @@ ul {
 	margin-left: 1%;
 }
 table {
-    margin-left: 4%;
-    border:0px;
+/*    margin-left: 4%; */
+    border:2px;
+    width:60%;
 }
 pre{
     font-family:"verdana";
@@ -25,9 +26,9 @@ div {
 }
 </style>
 </head>
-<div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}">
+<div style = "{border-style:double;}">
     <div style="{float:left}">
-        <img src="{{MEDIA_URL}}/STORE/photos/{{s.prn}}.png" height='150' width='180'>
+        <img src="{{MEDIA_URL}}/STORE/photos/{{s.prn}}.png" height='150' width='200'>
     </div>
     <div style="{float:'right';position:relative}">
         <h2> {{ s.fullname }}</h2>
@@ -36,16 +37,14 @@ div {
             <b> Tel(M) </b>: +91-{{s.phone}}
         </pre>
     </div>
-<br>
 <div>
 <br>
     <h3>Career Objective</h3>
-        <b><i>{{s.career_objective}}</b></i>
+    <b><i>{{s.career_objective}}</b></i>
 </div>
 
 {% if p.strength %}
 <div>
-<br>
 <h3>Personality Traits</h3>
 <ul>
 	{% for per in p.strength|split:',' %} 
@@ -55,13 +54,14 @@ div {
 {% endif %}
 
 <div>
-<br>
 {% if m %}
 <h3> Academic Qualifications</h3>
-
     <table cellpadding=10 >
       {% for marks in m %}
-          <tr><td>{{marks.course}}<td>{{marks.uni}}<td>
+          <tr>
+            <td>{{marks.course}}</td>
+            <td>{{marks.uni}}</td>
+            <td>
           {% if marks.markstype == 'GPA' %}
             {{marks.marks}} GPA out of {{marks.outof}}
           {% else %}
@@ -75,7 +75,9 @@ div {
                 {% endif %}
             {% endif %}
            {% endif %}
-          <td>{{marks.fromDate|date:'Y'}}</tr>
+           </td>
+          <td>{{marks.fromDate|date:'Y'}}</td>
+         </tr>
       {% endfor %}
     </table>
 </div>
@@ -85,11 +87,13 @@ div {
 {% if c %}
 <div>
     <h3>Certifications</h3>
-
-        <table cellpadding=10>
-            {% for certi in c %}
-                        <tr><td><li><td>{{ certi.desc }}<td>{{certi.fromDate|date:'M Y'}}
-            {% endfor %}
+    <table cellpadding>
+    {% for certi in c %}
+     <tr>
+         <td>{{certi.desc}}</td>
+         <td>{{certi.fromDate|date:'M Y'}}</td>
+     </tr>
+    {% endfor %}
 </table>
 </div>
 {% endif %}
@@ -100,19 +104,34 @@ div {
     <h3>Software Exposure</h3>
     <table>
         {% if sw.programming %}
-            <tr><td><b>Programming Languages</b><td>:<td> {{sw.programming}}
+            <tr>
+            <td><b>Programming Languages</b></td>
+            <td>{{sw.programming}}</td>
+            </tr>
         {% endif %}
         {% if sw.databases %}
-            <tr><td><b>Database</b>  <td>           :<td>   {{sw.databases}}
+            <tr>
+            <td><b>Database</b></td>
+            <td>{{sw.databases}}</td>
+            </tr>
         {% endif %}
         {% if sw.OS %}
-            <tr><td><b>Operating systems</b>    <td> :<td>{{sw.OS}}
+            <tr>
+            <td><b>Operating systems</b></td>
+            <td>{{sw.OS}}</td>
+            </tr>
         {% endif %}
         {% if sw.swPackages %}
-            <Tr><td><b>Other software</b>       <tD>:<td>{{sw.swPackages}}
+            <tr>
+            <td><b>Other software</b></td>
+            <td>{{sw.swPackages}}</td>
+            </tr>
         {% endif %}
         {% if sw.webTools %}
-            <tr><td><b>Web based Tools</b>      <td>:<td>{{sw.webTools}}
+            <tr>
+            <td><b>Web based Tools</b></td>
+            <td>{{sw.webTools}}</td>
+            </tr>
         {% endif %}
     </table>
 </div>
@@ -126,6 +145,7 @@ div {
 {% for aoi in p.areasofinterest|split:',' %}
     <li> {{aoi}}</li>
 {% endfor %}
+</ul>
 </div>
 {% endif %}
 
@@ -134,9 +154,12 @@ div {
 {% if pro %}
   <div>   
     <h3> Projects Undertaken</h3>
-    <table cellpadding=10>
+    <table>
         {% for pr in pro %}
-            <tr><td><li><td>{{pr.heading}}</td><td>{{pr.desc}}</td></tr>
+            <tr>
+            <td>{{pr.heading}}</td>
+            <td>{{pr.desc}}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
@@ -145,23 +168,26 @@ div {
 <br>
 {% if w %}
 <div>
-<h3> Work Experience</h3>
-    <table cellpadding=10>
+<h3>Work Experience : <h3>
+    <table cellpadding='10'>
     {% for wex in w %}
-        <tr><td><li><td>{{wex.desc}}<td> from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}
+        <tr>
+        <td>{{wex.desc}} from <i>{{wex.fromDate|date:'M Y'}}</i> to <i>{{wex.endDate|date:'M Y'}}</i></td>
+        </tr>
     {% endfor %}
     </table>
 </div>
 {% endif %}
 
-
 <br>
 {% if a %}
 <div>
 <h3> Academic Achievements</h3>
-    <table cellpadding=10>
+    <table>
         {% for ac in a %}
-            <tr><td><li><td>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</td></tr>
+            <tr>
+                <td>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</td>
+            </tr>
         {% endfor %}
      </table>   
 </div>
@@ -170,27 +196,48 @@ div {
 {% if e %}
 <div>
 <h3> Extra Curricular</h3>
-    <table cellpadding=10>
+    <table>
         {% for ex in e %}
-            <tr><td><li><td>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</td></tr>
+            <tr>
+            <td>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</td>
+            </tr>
         {% endfor %}
     </table>
 </div>
 {% endif %}
 
-
-
 <div>
 <br>
 <h3>Personal dossier</h3>
-<table>
-<tr><td><b>Mother's Name</b><td>:<td>   {{p.mother_name}}
-<tr><td><b>Father's Name</b>    <td> :<td> {{p.father_name}}
-<tr><td><b>Mother's occupation</b>  <td>           :<td>  {{p.mother_occupation }}
-<Tr><td><b>Father's Occupation</b>       <tD>:<td>{{p.father_occupation}}
-<tr><td><b>Languages Known</b>      <td>:<td>{{p.languages}}
-<tr><td><b>Permanent Adress</b>      <td>:<td><pre>{{p.per_address}}</pre>
-<tr><td><b>Address for correspondence</b>     <td>:<td><pre>{{p.corr_address }}</pre>
+<table cellpadding='5px' width='70%' cellspacing='5'>
+<tr>
+    <td><b>Mother's Name</b></td>
+    <td>{{p.mother_name}}</td>
+</tr>
+<tr>
+    <td><b>Father's Name</b></td>
+    <td>{{p.father_name}}</td>
+</tr>
+<tr>
+    <td><b>Mother's occupation</b></td>
+    <td>{{p.mother_occupation }}</td>
+</tr>
+<tr>
+    <td><b>Father's Occupation</b></td>
+    <td>{{p.father_occupation}}</td>
+</tr>
+<tr>
+    <td><b>Languages Known</b></td>
+    <td>{{p.languages}}</td>
+</tr>
+<tr>
+    <td><b>Permanent Adress</b></td>
+    <td><pre>{{p.per_address}}</pre></td>
+</tr>
+<tr>
+    <td><b>Address for correspondence</b></td>
+    <td><pre>{{p.corr_address }}</pre></td>
+</tr>
 </table>
 </div>
 
@@ -199,8 +246,9 @@ div {
     <h3>Hobbies</h3>
 <ul>
 {% for h in p.hobbies|split:','%}
-<li>{{h}}
+    <li>{{h}}</li>
 {% endfor %}
+</ul>
 </div>
 
 
@@ -208,12 +256,10 @@ div {
 <p>I hereby declare that the above-mentioned information is correct up to my knowledge and I bear the responsibility for the correctness of the above-mentioned particulars. 
 </p><br><br><BR>
 
-<div style = "{float:left;}">
+<div style = "{text-align:left;}">
 <br>Date
 </div>
-<div style = "{float:right;}">
+<div style = "{text-align:right;}">
 {{s.fullname}}<br>Pune
 </div>
-<br><BR>
 </div>
-<input type = 'button' onclick="javascript:location.href='{{ROOT}}/home'" value='Home'>

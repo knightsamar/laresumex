@@ -13,9 +13,10 @@
 
 {% for jp,students in jpStudents.items %}
    <h4>---- {{ jp }} ----</h4>
+   <!-- <a href='/generate_resume/jp/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
    <ul>
    {% for u in students %}
-        <li>{{u}}</li>
+        <li>{{u}} -- <a href='/generate_resume/{{u}}/pisapdf'>Get Resume (PDF)</a></li>
    {% empty %}
          <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
    {% endfor %}
