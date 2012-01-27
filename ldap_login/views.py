@@ -37,6 +37,13 @@ def login(request):
                 #comment this line when you ARE OUTSIDE SICSR!
                 if ROOT == "/laresumex":
                     status = authenticate(request.POST['username'],request.POST['password']);
+                    if status is not True:
+                         from django.contrib.auth import login,authenticate
+                         user = authenticate(username = request.POST['username'], password = request.POST['password'])
+                         if user is not None:
+                             login(request,user);
+                         else:
+                             status = False;
                 else:
                     status =True
                 #UNCOMMENT the next line when you are outside SICSR!
