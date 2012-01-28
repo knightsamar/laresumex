@@ -1,6 +1,6 @@
 import ldap;
 #class ldapAuthBackend:
-def authenticate(username=None, password=None):
+def ldap_authenticate(username=None, password=None):
     
     if username is None or password is None:
        return False;

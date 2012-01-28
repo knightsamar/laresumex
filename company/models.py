@@ -30,6 +30,7 @@ class placement_in(models.Model):
     company = models.ForeignKey('company');
     profile = models.CharField(max_length=50);
     placementType = models.CharField(choices=jobtype, max_length=2, default = 'i')
+    date_of_offer = models.DateField();
     date_of_joining = models.DateField();
     starting_stipen = models.CharField(max_length = 10, null=True, blank = True);
     offered_salary = models.CharField(max_length = 10 ,  default = "0.00");

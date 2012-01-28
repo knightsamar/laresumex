@@ -34,16 +34,22 @@ def index(request):
     g=group.objects.get_or_create(name='placement committee')
     placement_staff_student=[0,0,0];
     new_posting =False;
-    print g[0]
-    print "user ==",u,"groups", u.groups.all()
-    if g[0] in u.groups.all():
-        print 'placement_committe'
+    if 'role' in request.session and request.session['role']=='admin':
+        placement_staff_student[0] = 1
+    else:    
+        print g[0]
+        print "user ==",u,"groups", u.groups.all()
+        if g[0] in u.groups.all():
+            print 'placement_committe'
+   
+            request.session['role']='admin'
+            placement_staff_student[0]=1;
+    if placement_staff_student[0] == 1:       
         try:
             j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
         except:
             j = posting.objects.filter(status = 'p');
-        request.session['role']='admin'
-        placement_staff_student[0]=1;
+        
         if j:
             new_posting = True
     elif prn.isdigit():

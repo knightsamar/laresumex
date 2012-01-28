@@ -29,11 +29,10 @@ from pyExcelerator import *
 def admin_index(request):
      if 'username' not in request.session:
         return our_redirect('/ldap_login/')
-       
-     g = group.objects.get(name='placement committee')
-
-     if user(request.session['username']) not in g.user_set.all():
+     #g = group.objects.get(name='placement committee')
+     if request.session['role'] != 'admin':  
          return HttpResponse('page not for u');
+
      t=loader.get_template('company/admin_index.html');
     
      c=RequestContext(request,{
@@ -78,9 +77,9 @@ def got_placed(request):
             lala.append(toreturn)
         return lala
         
-    g = group.objects.get(name='placement committee')
+    #g = group.objects.get(name='placement committee')
 
-    if user(request.session['username']) not in g.user_set.all():
+    if request.session['role'] != 'admin':
         return HttpResponse('not for u');
     placed_stu=placement_in.objects.all(); 
     from operator import itemgetter;
@@ -141,13 +140,9 @@ def fetch_index(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
         return our_redirect('/ldap_login')
-    try:
-        g = group.objects.get(name='placement committee')
-
-        if user(request.session['username']) not in g.user_set.all():
+        if request.session['role'] !='admin':
              return HttpResponse('page not for u'); 
-    except Exception as e:
-        return HttpResponse("nly for group, placement committee.. please create group, or add users to it.")
+   
     com=company.objects.all();
     a = ['staff','placement committee']
     g=group.objects.exclude(name__in = a);
