@@ -78,8 +78,8 @@ def got_placed(request):
         return lala
         
     #g = group.objects.get(name='placement committee')
-
-    if request.session['role'] != 'admin':
+    #there might be a case when there would be no role in the session!! -- though we need to correct and avoid such a case actually!
+    if (not request.session.has_key('role')) or (request.session['role'] != 'admin'):
         return HttpResponse('not for u');
     placed_stu=placement_in.objects.all(); 
     from operator import itemgetter;
