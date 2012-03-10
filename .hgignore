@@ -22,9 +22,10 @@ apache2/django.wsgi
 .DS_Store*
 *.orig
 *.png
-media/jquery*
 *.log
 media/*.xls
+media/jquery.tar.bz2
+jquery-ui-1.8.14.custom.zip
 
 syntax: regexp
 #we need the directory STORE because it is looked for when creating the subdirs 
