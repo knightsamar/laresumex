@@ -1,7 +1,6 @@
 from django.db import models
 from ldap_login.models import user, group
 from django.db.models.signals import post_save
-from custom_fields import MultiSelectField 
 from django.core.exceptions import ObjectDoesNotExist
 from student_info.models import student
 from django.core.mail import EmailMultiAlternatives
@@ -31,7 +30,7 @@ class posting(models.Model):
     approved_on = models.DateTimeField(editable = False,null = True , blank =True);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(max_length=1,choices=post_status, default = 'p');
-    for_streams = models.ManyToManyField(group)
+    for_programmes = models.ManyToManyField(group,verbose_name="Eligible Groups")
 
     def test(self):
         self.company_name = "ha ha ha ";
