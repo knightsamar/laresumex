@@ -44,7 +44,6 @@ function oncemore()
     h=document.getElementById('id_how_to_apply');
     if (h.value=='walk-in')
         o.checked=true;
-
         
     makeWalkin(o);
 }
@@ -61,17 +60,14 @@ function validate()
         howto.disabled=false;
     }
     input=document.getElementsByTagName('input')
-    for(var i =0;i<input.length;i++)
+    for(var i=0;i<input.length;i++)
     {
-        
         a=input[i].parentNode.childNodes
-        if(input[i].value=="")
+        if(input[i].value=="" && input[i].id != 'id_walk_in')
         {
             if(a.length<=2)
             {
-               
                 input[i].parentNode.appendChild(err);
-
             }
             input[i].focus();
             return false;
@@ -101,7 +97,7 @@ function validate()
 <table>
     <tr align='left'>
         <th width='20%'><label for="id_walk_in">Is this a walk-in?</label></td>
-        <td width='50%' ><input type="checkbox" name="walk_in" id="id_walk_in"  onChange='makeWalkin(this)'></td>
+        <td width='50%'><input type="checkbox" name="walk_in" id="id_walk_in" onChange='makeWalkin(this)'></td>
     </tr>
     {% for field in form %}
        <tr align='left'>    

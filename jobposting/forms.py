@@ -15,7 +15,7 @@ class JobPostingForm(ModelForm):
     class Meta:
       model = posting
       #the list of fields, in the order, that they will be displayed on the form
-      fields = ('company_name','company_url','description','how_to_apply'); 
+      fields = ('company_name','company_url','description','how_to_apply','for_streams'); 
         
   
 ''' walkin=(('on','yes'),('off','no'));

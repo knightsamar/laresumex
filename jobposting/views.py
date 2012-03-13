@@ -35,7 +35,6 @@ def add(request):
            post=request.POST;
            print "=======POST======",post;
 
-
            #insert code here to set the values for fields which aren't show in the form but are required to save the instance.
 
            #now actually save everything
@@ -43,7 +42,7 @@ def add(request):
            postedby.posted_by=request.session['username'];
            postedby.save();
            email = EmailMessage();
-           body = "%s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex. Please Approve it as soon as possible so that its available for all the students." %(postedby.posted_by, postedby.company_name);
+           body = "%s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex. Please Approve it as soon as possible so that it is available for all the students." %(postedby.posted_by, postedby.company_name);
            email.subject = "[LaResume-X]: New job posting";
            email.body = body;
            from django.contrib.auth.models import Group;
@@ -51,8 +50,9 @@ def add(request):
            for u in g.user_set.all():
                email.to.append(u.email)
            email.bcc = ['10030142031@sicsr.ac.in','samar@sicsr.ac.in'];
+
            print email.to;
-           #email.send();
+           email.send();
            print email.bcc
            return our_redirect('/common/Thanks/done/') # Redirect after POST
     else:     
@@ -80,7 +80,7 @@ def view(request,template):
     print "last login =============", last_login;
     empty  = False;
     if 'role' in request.session:
-        print "role fornf", request.session['role']
+        print "role forn", request.session['role']
         if request.session['role'] == 'admin':
             j = posting.objects.filter(status='p').order_by('-status')
             role ="admin"
@@ -197,8 +197,8 @@ def hidden(request):
         return our_redirect('/ldap_login');
     u = user.objects.get(username = request.session['username']);
     j = personalised_posting.objects.filter(prn = u).filter(is_hidden =True);
-    t=loader.get_template('jobposting/view.html');
-    c=RequestContext(request,{
+    t = loader.get_template('jobposting/view.html');
+    c = RequestContext(request,{
         'ROOT':ROOT,
         'MEDIA_URL':MEDIA_URL,
         'hidden_job':j,

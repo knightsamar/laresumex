@@ -1,7 +1,7 @@
 from django.db import models
+
 from django.contrib import admin #for special admin things
 from datetime import datetime
-# Create your models here.
 
 #one group has many users
 class group(models.Model):
@@ -38,4 +38,3 @@ class user(models.Model):
     
     def __str__(self):
 	    return self.username;
-

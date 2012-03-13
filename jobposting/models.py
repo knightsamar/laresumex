@@ -1,6 +1,11 @@
 from django.db import models
-from ldap_login.models import user
+from ldap_login.models import user, group
 from django.db.models.signals import post_save
+from custom_fields import MultiSelectField 
+from django.core.exceptions import ObjectDoesNotExist
+from student_info.models import student
+from django.core.mail import EmailMultiAlternatives
+
 # Create your models here.
 
 class personalised_posting(models.Model):
@@ -26,7 +31,8 @@ class posting(models.Model):
     approved_on = models.DateTimeField(editable = False,null = True , blank =True);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(max_length=1,choices=post_status, default = 'p');
-    
+    for_streams = models.ManyToManyField(group)
+
     def test(self):
         self.company_name = "ha ha ha ";
         self.save();
@@ -44,18 +50,66 @@ def handle_new_posting(sender, **kwargs):
     '''Signal handler whenever a job posting is created
        Refer: http://localhost/docs/django-docs/ref/signals.html#django.db.models.signals.post_save
     '''
-    print "++++++++++++++++++++++++++++++++++++++++++++"
-    print "A signal was sent by ", sender
-    print 
-    print "The instance which forced the signal to sent was ", kwargs['instance']
-    print 
-    #would be applicable if we would be processing post_save
-    print "Was a new job posting created or not ?", kwargs['created']
-    print
-    #print 'The signal id was',kwargs['dispatch_uid']
-    print "++++++++++++++++++++++++++++++++++++++++++++"
 
+    if sender == posting:
+        if kwargs['created'] == False: #we want to handle only APPROVED jobpostings (right ?)
+            jp = kwargs['instance']
+            print dir(jp)
+            print jp.get_status_display()
+            if jp.get_status_display() != 'approved': #ONLY do the things on APPROVED job postings
+                print "Not approved, returning"
+                return
+            
+            print "Processing, it's approved"
+            
+            to_be_emailed = []; #list of email addresses to be emailed
+            print "For jobposting ", jp
+            for g in jp.for_streams.all():
+                print 'Got group',g
+                for u in g.user_set.all():
+                    print 'Got user',u
+                    try:
+                        to_be_emailed.append("%s@sicsr.ac.in" % (u.username))
+                        to_be_emailed.append(student.objects.get(prn=u.username)).email
+                    except ObjectDoesNotExist:
+                        print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
+                    except Exception as e:
+                        print e
+
+            html_content = """
+             Hi,
+
+             A new job posting has been put up on LaResume-X by %s.
+
+             To view it go <a href='http://tinyurl.com/sicsr-placements'>here</a>
+             
+             Thanks!
+
+             Regards,
+             Team LaResume-X
+            """ % (u.username)
+
+            text_content = """
+             Hi,
+
+             A new job posting has been put up on LaResume-X by %s.
+
+             To view it go to http://tinyurl.com/sicsr-placements
+             
+             Thanks!
+
+             Regards,
+             Team LaResume-X
+             """ % (u.username) 
+            email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
+            email.attach_alternative(html_content, 'text/html')
+            email.bcc = '10030142031@sicsr.ac.in'
+            email.bcc = '10030142056@sicsr.ac.in'
+            email.bcc = to_be_emailed;
+
+            email.subject = "[LaResume-X] New job posting"
+            email.send()
+            
 #Whenever a posting is saved, signal!
 #Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
 post_save.connect(handle_new_posting,sender=posting,weak=False,dispatch_uid='hamaraSignalwa');   
-   
