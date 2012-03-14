@@ -25,6 +25,7 @@ apache2/django.wsgi
 *.log
 media/*.xls
 media/jquery.tar.bz2
+media/jquery/development-bundle/*
 jquery-ui-1.8.14.custom.zip
 
 syntax: regexp

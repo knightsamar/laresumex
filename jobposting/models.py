@@ -74,11 +74,12 @@ def handle_new_posting(sender, **kwargs):
                         print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
                     except Exception as e:
                         print e
+            full_name = u.fullname if u.fullname.strip()!= '' else u.username
 
             html_content = """
              Hi,
 
-             A new job posting has been put up on LaResume-X by %s.
+             A new job posting has been put up on LaResume-X by <b>%s</b>.
 
              To view it go <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
              
@@ -86,7 +87,7 @@ def handle_new_posting(sender, **kwargs):
 
              Regards,
              Team LaResume-X
-            """ % (u.username)
+            """ % (full_name)
 
             text_content = """
              Hi,
@@ -99,7 +100,7 @@ def handle_new_posting(sender, **kwargs):
 
              Regards,
              Team LaResume-X
-             """ % (u.username) 
+             """ % (full_name) 
             email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
             email.attach_alternative(html_content, 'text/html')
             email.bcc = '10030142031@sicsr.ac.in'

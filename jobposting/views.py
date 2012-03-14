@@ -42,13 +42,16 @@ def add(request):
            postedby.posted_by=request.session['username'];
            postedby.save();
            email = EmailMessage();
+           u = user.objects.get(username = postedby.posted_by);
+           full_name = u.fullname if u.fullname.strip()!= '' else u.username
+
            body = """
            Hi,
 
            %s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex/jobposting/views/view
            
            Please Approve it as soon as possible so that it is available for all the students.
-           """  %(postedby.posted_by, postedby.company_name);
+           """  %(full_name, postedby.company_name);
 
            email.subject = "[LaResume-X]: New job posting";
            email.body = body;

@@ -32,6 +32,7 @@ class group(models.Model):
 class user(models.Model): 
     username = models.CharField(max_length=30,primary_key=True); #without the domain suffix
     #password = models.CharField(max_length=255,blank=True,null=True); #we may or many not store the password;
+    fullname = models.CharField(max_length=255,blank=True,null=True); #so that we may greet them :D
     last_login = models.DateTimeField(blank=True,null=True,default = datetime(2010,12,12,0,0,0));
     created_on = models.DateTimeField(auto_now_add=True);
     groups = models.ManyToManyField(group);
