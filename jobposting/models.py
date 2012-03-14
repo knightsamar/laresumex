@@ -80,7 +80,7 @@ def handle_new_posting(sender, **kwargs):
 
              A new job posting has been put up on LaResume-X by %s.
 
-             To view it go <a href='http://tinyurl.com/sicsr-placements'>here</a>
+             To view it go <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
              
              Thanks!
 
@@ -93,7 +93,7 @@ def handle_new_posting(sender, **kwargs):
 
              A new job posting has been put up on LaResume-X by %s.
 
-             To view it go to http://tinyurl.com/sicsr-placements
+             To view it go to http://projects.sdrclabs.in/laresumex/jobposting/views/view
              
              Thanks!
 
