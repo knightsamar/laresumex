@@ -42,7 +42,14 @@ def add(request):
            postedby.posted_by=request.session['username'];
            postedby.save();
            email = EmailMessage();
-           body = "%s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex. Please Approve it as soon as possible so that it is available for all the students." %(postedby.posted_by, postedby.company_name);
+           body = """
+           Hi,
+
+           %s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex/jobposting/views/view
+           
+           Please Approve it as soon as possible so that it is available for all the students.
+           """  %(postedby.posted_by, postedby.company_name);
+
            email.subject = "[LaResume-X]: New job posting";
            email.body = body;
            from django.contrib.auth.models import Group;
