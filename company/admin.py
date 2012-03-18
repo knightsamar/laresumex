@@ -4,6 +4,7 @@ from student_info.models import student; #for mailing the student on his persona
 from django.core.mail import EmailMessage,get_connection #because this one actually let's use BCC and all.
 from django.template import Context, loader
 from laresumex.settings import MANAGERS;
+from datetime import datetime
 '''
 class membershipInline(admin.TabularInline):
     model = student_info.placement_in.set; #a reference to the intermediary modeli
@@ -31,8 +32,13 @@ class companyAdmin(admin.ModelAdmin):
         t = loader.get_template('company/informStudents_mail.html');
         conn = get_connection(); #for mailing
         
-        
         for c in selectedCompanies:
+            #don't send email intimations about old company arrivals wrongly as done on Sat Mar 17.
+
+            if c.date_of_process < datetime.today(): #company process date has already passed
+               print "Not informing because date of process %s has already passed!!" % (c.date_of_process)
+               continue
+                
             ppltoInform = c.came_for_group.get_query_set()[0].user_set.all() 
             context = Context(
                 {
@@ -44,7 +50,7 @@ class companyAdmin(admin.ModelAdmin):
             to = [];
             for p in ppltoInform:
                 to += ["%s@sicsr.ac.in" % str(p.username)]; #for primary sicsrwala address
-        
+       
             #send mail actually.
             email = EmailMessage();
             email.from_email = '"Ashwini Narayan" <placements@sicsr.ac.in>';
