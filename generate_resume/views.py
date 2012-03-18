@@ -11,7 +11,7 @@ from company.views import fetch_index;
 from student_info.utility import *; 
 from student_info import tables
 from pprint import pprint
-#import ho.pisa as pisa;
+import ho.pisa as pisa;
 import cStringIO as StringIO
 
 ''' import vars '''
