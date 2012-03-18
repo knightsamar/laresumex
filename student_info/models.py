@@ -51,7 +51,7 @@ class marks(models.Model):
     def __str__(self):
         if self.marks is None:
             return "%s in %s at %s" %(self.markstype,self.course,self.uni)
-        return "Obtained %d out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
+        return "Obtained %s out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
 
 
     def get_percentage(self):
