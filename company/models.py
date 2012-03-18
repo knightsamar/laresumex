@@ -29,7 +29,7 @@ class placement_in(models.Model):
     student= models.ForeignKey('student_info.student');
     company = models.ForeignKey('company');
     profile = models.CharField(max_length=50);
-    placementType = models.CharField(choices=jobtype, max_length=2, default = 'i')
+    placementType = models.CharField('Type of Offer', help_text = 'The offer that the student got from the company', choices=jobtype, max_length=2, default = 'i')
     date_of_offer = models.DateField();
     date_of_joining = models.DateField();
     starting_stipen = models.CharField(max_length = 10, null=True, blank = True);
