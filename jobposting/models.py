@@ -12,7 +12,6 @@ class personalised_posting(models.Model):
     is_interested = models.BooleanField();
     is_hidden = models.BooleanField();
     prn = models.ForeignKey('ldap_login.user')
-
     def __str__(self):
         return "job posting of %s for %s" % (self.prn.username , self.post.company_name)
  
@@ -24,12 +23,13 @@ class posting(models.Model):
     company_url=models.URLField(verify_exists=True,verbose_name='Website address');
     description=models.TextField(blank=False,verbose_name='Description',help_text='Please tell in details about the job profile, eligibility, etc');
     how_to_apply=models.TextField(blank=False,help_text='Please tell how students can apply');
-    posted_by=models.CharField(max_length=12,blank=False);
+    posted_by=models.CharField(max_length=30,blank=False)
+    non_sicsr_poster=models.BooleanField(verbose_name='Posted by SICSR user?', default=False,blank=False,null=False) #to determine whether to use ldap_login or other auth sources
     posted_on=models.DateTimeField(auto_now_add=True,editable=False);
     #tally  = models.IntegerField(default=0, verbose_name = "No of Students that have shown interest in this company", editable = False);
     approved_on = models.DateTimeField(editable = False,null = True , blank =True);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
-    status=models.CharField(max_length=1,choices=post_status, default = 'p');
+    status=models.CharField(verbose_name='Job Posting status',max_length=1,choices=post_status, default = 'p');
     for_programmes = models.ManyToManyField(group,verbose_name="Eligible Groups")
 
     def test(self):

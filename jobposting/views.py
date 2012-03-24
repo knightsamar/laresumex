@@ -20,14 +20,15 @@ from datetime import datetime
 def add(request):
     '''
     for adding a new Job Posting 
+    
     '''
-    if 'username' not in request.session:
+    if ('username' not in request.session) and (not request.user.is_authenticated()):
         request.session['redirect'] = request.get_full_path();
-        return our_redirect('/ldap_login')
+        return our_redirect('/')
 
     if request.method == 'POST': # If the form has been submitted...
        form = JobPostingForm(request.POST) # A form bound to the POST
-           
+       
        if form.is_valid(): # All validation rules pass
            # Process the data in form.cleaned_data
            # ...
@@ -39,20 +40,24 @@ def add(request):
 
            #now actually save everything
            postedby=form.save(commit=False);
-           postedby.posted_by=request.session['username'];
+           postedby.posted_by=request.session['username'] if 'username' in request.session else request.user.username;
+           postedby.non_sicsr_poster=True if 'username' not in request.session else False #socialauth-logins don't have this
            postedby.save();
            email = EmailMessage();
-           u = user.objects.get(username = postedby.posted_by);
-           full_name = u.fullname if u.fullname.strip()!= '' else u.username
+           if postedby.non_sicsr_poster:
+              full_name = request.user.get_full_name() if request.user.first_name.strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
+           else:
+              u = user.objects.get(username = postedby.posted_by)
+              full_name = u.fullname if u.fullname.strip()!= '' else u.username
 
            body = """
            Hi,
 
            %s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex/jobposting/views/view
            
-           Please Approve it as soon as possible so that it is available for all the students.
+           Please approve it as soon as possible so that it is available for all the students.
            """  %(full_name, postedby.company_name);
-
+           print body
            email.subject = "[LaResume-X]: New job posting";
            email.body = body;
            from django.contrib.auth.models import Group;
