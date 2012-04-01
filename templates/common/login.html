@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}
+ Login 
+{% endblock %}
+{% block content %}
+<style>
+    #social_auth
+    {
+        float: left;
+        width: 33%;
+        border: 2px dotted black;
+        margin-left: 1px;
+        background: #9c9; 
+    } 
+    #ldap_login
+    {
+        float: right;
+        width: 65%;
+        border: 2px dotted black;
+        margin-left: 1px;
+    }
+
+</style>
+
+<div id='social_auth'>
+    <h3 align='center'>Tell SICSR students about an opening</h3>
+    <a href='/login/facebook'><img src='{{MEDIA_URL}}/f_logo.png' width='35px' height='30px'></a>
+    <a href='/login/facebook'>Login using your Facebook account</b></a>
+</a>    
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+</div>
+
+<div id='ldap_login'>
+<h3 align='center'>For SICSR students</h3>
+  <form action='{{ROOT}}/ldap_login/' method='POST'>
+      {% csrf_token %}
+      {% if message != None %}
+          <h4 align='center' style='color: red' size='10'> {{ message }} </h4>
+      {% endif %}
+      <p align='center' style="{font-size: 13pt;}"> Please login using your SICSR Authentication <br/>(the one you use for Internet access, Moodle, <a href='http://projects.sdrclabs.in/change_agent'>Change Agent</a>, <a href='http://live.sdrclabs.in'>SDRCLive</a>)</p>
+      <table align='center'>
+      <tr>
+          <td><label for='username'>Username</label></td>
+          <td><input type='text' name='username' value='YOURPRN' onFocus="this.value=''" maxlength='30'/></td>
+      </tr><tr>
+          <td><label for='password'>Password</label></td>
+          <td><input type='password' name='password' value='PASSWORD' onFocus="this.value=''" maxlength='255'/></td>
+      </tr>
+      <tr>
+          <td><td><input type='submit' value='Login!'/></td>
+      </tr>
+      </table>
+  </form>
+</div>
+
+
+{% endblock %}
+<br/><br/>
