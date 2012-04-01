@@ -38,4 +38,4 @@ def logged_in(request):
 def logout(request):
     '''logs you out, duh!'''
     auth_logout(request)
-    return HttpResponseRedirect('/')
+    return our_redirect('/')

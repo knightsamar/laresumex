@@ -8,7 +8,7 @@ templates/chimpu.html
 
 *.pyc
 .*swp
-*settings.py*
+settings.py
 *.rej
 *.gz
 *.patch
