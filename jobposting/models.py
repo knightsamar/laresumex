@@ -4,8 +4,8 @@ from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from student_info.models import student
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 
-# Create your models here.
 
 class personalised_posting(models.Model):
     post= models.ForeignKey('posting');
@@ -19,6 +19,8 @@ class posting(models.Model):
     '''described the Job Posting model.
        WARNING: any changes made to this need to be reflected in the corresponding ModelForm in forms.py too!
     '''
+    eligible_groups = Q(name__icontains = '142') | Q(name__icontains = '141') | Q(name__icontains = '121') | Q(name__icontains = '122') | Q(name__icontains = 'laresumex')
+
     company_name=models.CharField(max_length=50,blank=False,verbose_name='Organization\'s Name');
     company_url=models.URLField(verify_exists=True,verbose_name='Website address');
     description=models.TextField(blank=False,verbose_name='Description',help_text='Please tell in details about the job profile, eligibility, etc');
@@ -30,7 +32,8 @@ class posting(models.Model):
     approved_on = models.DateTimeField(editable = False,null = True , blank =True);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(verbose_name='Job Posting status',max_length=1,choices=post_status, default = 'p');
-    for_programmes = models.ManyToManyField(group,verbose_name="Eligible Groups")
+
+    for_programmes = models.ManyToManyField(group,verbose_name="Eligible Groups",limit_choices_to=eligible_groups)
 
     def test(self):
         self.company_name = "ha ha ha ";
