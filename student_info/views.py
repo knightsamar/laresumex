@@ -32,7 +32,7 @@ def showform(request):
     if 'username' not in request.session:
         print "No session"
         request.session['redirect'] = request.get_full_path();
-        return our_redirect('/ldap_login')
+        return our_redirect('/login')
     prn=request.session['username'];    
     
     #the user shoud not get the form if he already has one.
@@ -131,7 +131,7 @@ def submit(request, prn):
     if 'username' not in request.session:
         print "no session found"
         request.session['redirect'] = request.get_full_path();
-        return our_redirect('/ldap_login')
+        return our_redirect('/login')
     
    #was javascript enabled and everything ok on the client side ???
     if not ('allok' in request.POST and request.POST['allok'] == '1'):

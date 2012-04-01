@@ -166,9 +166,9 @@ def logout(request):
         print 'logging you out';
         request.session.flush();
     else:
-		    #no,
-            print 'redirecting to login page to tell you to login first :P';
-			#then tell me to login first, using the message if possible 
-			#message = "Hey, you need to go in before you can go out :P :P";
+        #no,
+        print 'redirecting to login page to tell you to login first :P';
+        #then tell me to login first, using the message if possible 
+        #message = "Hey, you need to go in before you can go out :P :P";
 
     return our_redirect('/ldap_login/');	

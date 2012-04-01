@@ -50,7 +50,6 @@ urlpatterns = patterns('',
     (r'^PT/fetch',"company.views.fetch_index"),
     (r'^PT/reports',"company.views.got_placed"),
     
-    
     # student_info
     (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
     (r'^student_info/form',"student_info.views.showform"),
@@ -62,4 +61,8 @@ urlpatterns = patterns('',
     (r'^socialauth/loggedin/',"socialauth.views.logged_in"),
     (r'^socialauth/logout/',"socialauth.views.logout"), 
     url(r'',include('social_auth.urls')),
+
+    #for ldap login 
+    (r'^login/$','common.views.login'),
+    (r'^logout/$','common.views.logout'),
 )

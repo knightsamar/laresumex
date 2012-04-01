@@ -15,12 +15,31 @@ from pprint import pprint
 from laresumex.settings import MANAGERS,ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
 from datetime import datetime
 
+def login(request):
+    t = loader.get_template('common/login.html')
+    
+    c=Context({
+            'MEDIA_URL' : MEDIA_URL,
+            'ROOT':ROOT,
+             }
+            );
+    return HttpResponse(t.render(c));
+
+#redirect to proper logout page
+def logout(request):
+    if 'username' in request.session:
+        #ldap login
+        return our_redirect('ldap_login/logout')
+    elif request.user.is_authenticated():
+        #social auth login
+        return our_redirect('socialauth/logout')
+    return our_redirect('/login/')
 
 def index(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
         print "from home to login as No session"
-        return our_redirect('/ldap_login')
+        return our_redirect('/login')
     # see whether user has logged in...
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.
@@ -139,13 +158,12 @@ def contact(request):
 
 
 def done(request,msg):
-  
   if msg == "Submitted":
       message = "Your form has been successfully submitted"
   elif msg == "Thanks":
-        message = "Thanks. Your posting has been sent for approval"
+        message = "Thanks! Your job posting has been sent for approval and will be shown to students as soon as it is approved!"
   elif msg == "Thank-you":
-      message = "Thank you. your request would be attended to withing 24hrs."
+      message = "Thank you. Your request would be attended within 24hrs."
   elif msg == "company":
     message = "Your changes have been saved. All the best..!!"
   else:

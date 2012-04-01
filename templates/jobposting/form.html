@@ -3,6 +3,7 @@
     JobPosting
 {% endblock %}
 {% block content %}
+
 <script>
 // This function checkes whether walkin is selected, then how to apply firld automaticalaly becomes walkin, othewise, they need to enter in the textarea...
 function makeWalkin(o)
@@ -92,6 +93,7 @@ function validate()
 </script>
 
 <body onload='oncemore()'>
+<i>Hi {{user.get_full_name}}! </i><br/><br/>
 <form action='{{ROOT}}/jobposting/add' method = 'post' onSubmit='return validate()'> 
 {% csrf_token %}
 <table>
@@ -111,9 +113,14 @@ function validate()
       </tr>
    {% endfor %}
     <tr> 
-        <td colspan='2' align='center'><input type= 'submit' value='Post this job'></td>
+        <td colspan='2' align='center'>
+            <br/>
+            <input type= 'submit' value='Post this job'>
+        </td>
     </tr>
 </table>
 </form>
+<br/>
+<a href='/socialauth/logout'>Logout</a>
 </body>
 {% endblock %}

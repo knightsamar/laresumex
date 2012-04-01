@@ -201,7 +201,7 @@ def pdf(request,prn):
 def html(request,prn):
     if 'username' not in request.session:
            request.session['redirect'] = request.get_full_path();
-           return our_redirect('/ldap_login')
+           return our_redirect('/login')
     '''if prn != request.session['username']:
           return HttpResponse('Not urs..!!')'''
     if prn is not None:
@@ -295,7 +295,7 @@ def pisapdf(request,prn):
 '''
 def html(request,prn):
     if 'username' not in request.session:
-           return our_redirect('/ldap_login')
+           return our_redirect('/login')
     if prn != request.session['username']:
           return HttpResponse('Not urs..!!')
     if prn is not None:

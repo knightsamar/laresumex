@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import Context, loader, RequestContext
 from django.contrib.auth import logout as auth_logout
 from laresumex.settings import MEDIA_URL
+from student_info.utility import our_redirect 
 
 def loginHandler(request):
     '''for showing various login options and getting the user to login'''
@@ -18,8 +19,11 @@ def loginHandler(request):
 
 @login_required
 def logged_in(request):
-  print request.user
+  #for now simply redirect to job posting page, as that is the only functionality offered
+  
+  '''print request.user
   print request
+
   t = loader.get_template('socialauth/index.html')
   c = RequestContext(request, 
       {
@@ -27,7 +31,9 @@ def logged_in(request):
       }
     )
   print request.user
-  return HttpResponse(t.render(c));
+  return HttpResponse(t.render(c));'''
+
+  return our_redirect('/jobposting/add')
 
 def logout(request):
     '''logs you out, duh!'''

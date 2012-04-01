@@ -139,7 +139,7 @@ def get_full_list():
 def fetch_index(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
-        return our_redirect('/ldap_login')
+        return our_redirect('/login')
         if request.session['role'] !='admin':
              return HttpResponse('page not for u'); 
    
@@ -164,7 +164,7 @@ def fetch_index(request):
 def get_students_name(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
-        return our_redirect('/ldap_login')
+        return our_redirect('/login')
     g = group.objects.get(name='placement committee')
 
     if user(request.session['username']) not in g.user_set.all():
