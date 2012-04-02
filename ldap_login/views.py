@@ -171,4 +171,4 @@ def logout(request):
         #then tell me to login first, using the message if possible 
         #message = "Hey, you need to go in before you can go out :P :P";
 
-    return our_redirect('/ldap_login/');	
+    return our_redirect('/login/');	

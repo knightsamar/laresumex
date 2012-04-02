@@ -29,10 +29,10 @@ def login(request):
 def logout(request):
     if 'username' in request.session:
         #ldap login
-        return our_redirect('ldap_login/logout')
+        return our_redirect('/ldap_login/logout')
     elif request.user.is_authenticated():
         #social auth login
-        return our_redirect('socialauth/logout')
+        return our_redirect('/socialauth/logout')
     return our_redirect('/login/')
 
 def index(request):

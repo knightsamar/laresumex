@@ -39,7 +39,7 @@
 
 <div id='ldap_login'>
 <h3 align='center'>For SICSR students</h3>
-  <form action='{{ROOT}}/ldap_login/' method='POST'>
+  <form action='{% url ldap_login.views.login %}' method='POST'>
       {% csrf_token %}
       {% if message != None %}
           <h4 align='center' style='color: red' size='10'> {{ message }} </h4>
@@ -59,7 +59,6 @@
       </table>
   </form>
 </div>
-
 
 {% endblock %}
 <br/><br/>
