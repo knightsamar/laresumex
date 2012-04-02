@@ -18,7 +18,7 @@ from datetime import datetime
 def login(request):
     t = loader.get_template('common/login.html')
     
-    c=Context({
+    c=RequestContext(request,{
             'MEDIA_URL' : MEDIA_URL,
             'ROOT':ROOT,
              }
