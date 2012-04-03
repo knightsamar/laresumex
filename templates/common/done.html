@@ -13,7 +13,6 @@ Show the logout button only to social-auth users.
 {% endcomment %}
 {% if user.is_authenticated %} 
     <a href="{{ROOT}/logout">Logout</a>
-{% endif %
-}
+{% endif %}
 <br/><br/>
 {% endblock%}
