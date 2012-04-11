@@ -33,7 +33,7 @@ class posting(models.Model):
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(verbose_name='Job Posting status',max_length=1,choices=post_status, default = 'p');
 
-    for_programmes = models.ManyToManyField(group,verbose_name="Eligible Groups",limit_choices_to=eligible_groups)
+    for_programmes = models.ManyToManyField(group,verbose_name="Eligible Batches",limit_choices_to=eligible_groups,help_text='These batches will be informed by email about this Job posting.')
 
     def test(self):
         self.company_name = "ha ha ha ";

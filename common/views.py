@@ -161,11 +161,11 @@ def done(request,msg):
   if msg == "Submitted":
       message = "Your form has been successfully submitted"
   elif msg == "Thanks":
-        message = "Thanks! Your job posting has been sent for approval and will be shown to students as soon as it is approved!"
+        message = "Thanks! Your job posting has been sent for approval and will be shown to students as soon as it is approved by the SICSR Placement Committee!"
   elif msg == "Thank-you":
       message = "Thank you. Your request would be attended within 24hrs."
   elif msg == "company":
-    message = "Your changes have been saved. All the best..!!"
+    message = "Your changes have been saved. All the best!!!"
   else:
       message = "Done"
   t=loader.get_template('common/done.html')
