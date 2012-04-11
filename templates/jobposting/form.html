@@ -2,6 +2,38 @@
 {% block title %}
     JobPosting
 {% endblock %}
+{% block styles %}
+.help
+{   
+  color: #999999;
+  font-size: 12px !important;
+}
+
+.error
+{
+    color: red;
+    font-size: 11px !important;
+    margin: 0 0 3px;
+    padding: 4px 5px 4px 25px;    
+}
+
+table
+{
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #CCCCCC;
+    margin-bottom: 5px;
+    width: 60%;    
+}
+
+td
+{
+    border-bottom: 2px solid #EEEEEE;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 8px 12px;
+}
+
+{% endblock %}
 {% block content %}
 
 <script>
@@ -49,75 +81,91 @@ function oncemore()
     makeWalkin(o);
 }
 
+function removeErrors(forElement)
+{
+    errormsgs = forElement.parentNode.getElementsByTagName('p')
+    for (var j=0;j<errormsgs.length;j++)
+    {
+        errormsgs[j].parentNode.removeChild(errormsgs[j])
+    }
+}
 function validate()
 {
     // function is called on submit, enables the disabled field. and if walkin is not selected then ensures that the textaera part is filled.
     walkin=document.getElementById('id_walk_in');
     howto=document.getElementById('id_how_to_apply');
-    err=document.createTextNode('Cant leave this empty')
+    err = document.createElement('p')
+    errmsg = document.createTextNode("You can't leave this empty")
+    err.appendChild(errmsg)
+    err.setAttribute('class','error')
     if (walkin.checked && howto.disabled)
     {
         //alert("enabling the 'how to apply' for submission");
         howto.disabled=false;
     }
-    input=document.getElementsByTagName('input')
-    for(var i=0;i<input.length;i++)
+    inputs = document.getElementsByTagName('input')
+    valid = true
+    for(var i=0;i<inputs.length;i++)
     {
-        a=input[i].parentNode.childNodes
-        if(input[i].value=="" && input[i].id != 'id_walk_in')
-        {
-            if(a.length<=2)
-            {
-                input[i].parentNode.appendChild(err);
-            }
-            input[i].focus();
-            return false;
-        }
-        else
-        {
-           if(a.length>2)
-               input[i].parentNode.removeChild(a[2])
+        //remove existing error msgs if any
+        removeErrors(inputs[i])
 
+        if(inputs[i].value=="" && inputs[i].id != 'id_walk_in')
+        {
+           inputs[i].parentNode.appendChild(err.cloneNode(true));
+           inputs[i].focus();
+           valid = false
         }
     }
-    textarea=document.getElementsByTagName('textarea')
-    for(var i =0;i<input.length;i++)
-        if(textarea[i].value=="")
+
+    textareas=document.getElementsByTagName('textarea')
+    for(var i=0;i<textareas.length;i++)
+    {
+        removeErrors(textareas[i])
+        if(textareas[i].value=="")
         {
-          textarea[i].parentNode.appendChild(err);
-            return false;
+          textareas[i].parentNode.appendChild(err.cloneNode(true));
+          valid = false;
         }
+    }
+    if (!valid)
+        alert("Please correct the errors!")
+    return valid
 }
 
-
 </script>
-
 <body onload='oncemore()'>
 <i>Hi {{user.get_full_name}}! </i><br/><br/>
 <form action='{{ROOT}}/jobposting/add' method = 'post' onSubmit='return validate()'> 
+
 {% csrf_token %}
 <table>
-    <tr align='left'>
-        <th width='20%'><label for="id_walk_in">Is this a walk-in?</label></td>
+   <caption>Post a job for SICSR students</caption> 
+   <tr align='left'>
+        <td width='20%'><label for="id_walk_in">Is this a walk-in?</label></td>
         <td width='50%'><input type="checkbox" name="walk_in" id="id_walk_in" onChange='makeWalkin(this)'></td>
-    </tr>
-    {% for field in form %}
-       <tr align='left'>    
-        <th width='20%'> {{ field.label_tag }} <br/>
+   </tr>
+   {% for field in form %}
+   <tr align='left'>    
+        <td width='20%'> {{ field.label_tag }} <br/>
             <span class='help'>{{ field.help_text }}</span>
-            <br/> {{ field.errors }}
+            
         </th>
         
-        <td width='50%'> {{ field }}<td>
-<!--        <td width='20%' align='left'> </td> -->
-      </tr>
+        <td width='50%'> 
+            {{ field }}
+            {% for error in field.errors %}
+                <p class='error'>{{ error }}</p>
+            {% endfor %}
+        </td>
+   </tr>
    {% endfor %}
-    <tr> 
+   <tr> 
         <td colspan='2' align='center'>
             <br/>
             <input type= 'submit' value='Post this job'>
         </td>
-    </tr>
+   </tr>
 </table>
 </form>
 <br/>

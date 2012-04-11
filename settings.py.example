@@ -123,7 +123,6 @@ TEMPLATE_CONTEXT_PREPROCESSORS = (
 FACEBOOK_APP_ID = '262186370481378'
 FACEBOOK_API_SECRET = '817980f27ad9a339ba0f154aa1a1ba7b'
 FACEBOOK_EXTENDED_PERMISSION = ['user_about_me','email']
-SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 
 #this means wherever we use @login_required, user will be redirected to here :)
 LOGIN_URL          = '/socialauth/login/'
@@ -131,9 +130,9 @@ LOGIN_REDIRECT_URL = '/socialauth/loggedin/'
 LOGIN_ERROR_URL = '/socialauth/logout/'
 
 SOCIAL_AUTH_CREATE_USERS = True
-SOCIAL_AUTH_ASSOCIATE_BY_EMAIL = True
+ASSOCIATE_BY_EMAIL = True
 SOCIAL_AUTH_RAISE_EXCEPTIONS = DEBUG
-SOCIAL_AUTH_EXTRA_DATA = True
+LOAD_EXTRA_DATA = True
 
 #necessary for error email logs and other such mails to be sent
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
