@@ -3,7 +3,7 @@ from ldap_login.models import user, group
 from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from student_info.models import student
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, mail_managers
 from django.db.models import Q
 
 
@@ -112,7 +112,8 @@ def handle_new_posting(sender, **kwargs):
                 email.bcc = to_be_emailed;
 
                 email.subject = "[LaResume-X] New job posting"
-                email.send(fail_silently=False)
+                #TODO: to be enabled only after the major bugfix...ask Samar for details.
+                #email.send(fail_silently=False)
                 print "Sent email succesfully to ", to_be_emailed
             except smtplib.SMTPException as e:
                 print 'Exception occured when trying to actually send the email'
@@ -120,7 +121,12 @@ def handle_new_posting(sender, **kwargs):
             except Exception as e:
                 print 'Exception occurred when constructing email messages'
                 print e
+                mail_managers(subject = "Emailing problem",
+                message = "Couldn't send email about jobposting for %s by %s" % (jp.company_name, full_name),
+                fail_silently = False)
+
 
 #Whenever a posting is saved, signal!
 #Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
 post_save.connect(handle_new_posting,sender=posting,weak=False,dispatch_uid='hamaraSignalwa');   
+
