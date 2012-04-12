@@ -64,55 +64,63 @@ def handle_new_posting(sender, **kwargs):
             
             print "Processing, it's approved"
             
-            to_be_emailed = []; #list of email addresses to be emailed
-            print "For jobposting ", jp
-            for g in jp.for_streams.all():
-                print 'Got group',g
-                for u in g.user_set.all():
-                    print 'Got user',u
-                    try:
-                        to_be_emailed.append("%s@sicsr.ac.in" % (u.username))
-                        to_be_emailed.append(student.objects.get(prn=u.username)).email
-                    except ObjectDoesNotExist:
-                        print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
-                    except Exception as e:
-                        print e
-            full_name = u.fullname if u.fullname.strip()!= '' else u.username
+            try:
+                to_be_emailed = []; #list of email addresses to be emailed
+                print "For jobposting ", jp
+                for g in jp.for_programmes.all():
+                    print 'Got group',g
+                    for u in g.user_set.all():
+                        print 'Got user',u.username
+                        try:
+                            to_be_emailed.append("%s@sicsr.ac.in" % (u.username))
+                            to_be_emailed.append(student.objects.get(prn=u.username)).email
+                        except ObjectDoesNotExist:
+                            print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
+                        except Exception as e:
+                            print e
+                full_name = u.fullname if u.fullname.strip()!= '' else u.username
 
-            html_content = """
-             Hi,
+                html_content = """
+                 Hi,
 
-             A new job posting has been put up on LaResume-X by <b>%s</b>.
+                 A new job posting has been put up on LaResume-X by <b>%s</b> for <b>%s</b>.
 
-             To view it go <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
-             
-             Thanks!
+                 To view it go <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
+                 
+                 Thanks!
 
-             Regards,
-             Team LaResume-X
-            """ % (full_name)
+                 Regards,
+                 Team LaResume-X
+                """ % (full_name, jp.company_name)
 
-            text_content = """
-             Hi,
+                text_content = """
+                 Hi,
 
-             A new job posting has been put up on LaResume-X by %s.
+                 A new job posting has been put up on LaResume-X by %s for %s.
 
-             To view it go to http://projects.sdrclabs.in/laresumex/jobposting/views/view
-             
-             Thanks!
+                 To view it go to http://projects.sdrclabs.in/laresumex/jobposting/views/view
+                 
+                 Thanks!
 
-             Regards,
-             Team LaResume-X
-             """ % (full_name) 
-            email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
-            email.attach_alternative(html_content, 'text/html')
-            email.bcc = '10030142031@sicsr.ac.in'
-            email.bcc = '10030142056@sicsr.ac.in'
-            email.bcc = to_be_emailed;
+                 Regards,
+                 Team LaResume-X
+                 """ % (full_name, jp.company_name) 
+                email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
+                email.attach_alternative(html_content, 'text/html')
+                email.bcc = '10030142031@sicsr.ac.in'
+                email.bcc = '10030142056@sicsr.ac.in'
+                email.bcc = to_be_emailed;
 
-            email.subject = "[LaResume-X] New job posting"
-            email.send()
-            
+                email.subject = "[LaResume-X] New job posting"
+                email.send(fail_silently=False)
+                print "Sent email succesfully to ", to_be_emailed
+            except smtplib.SMTPException as e:
+                print 'Exception occured when trying to actually send the email'
+                print e
+            except Exception as e:
+                print 'Exception occurred when constructing email messages'
+                print e
+
 #Whenever a posting is saved, signal!
 #Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
 post_save.connect(handle_new_posting,sender=posting,weak=False,dispatch_uid='hamaraSignalwa');   
