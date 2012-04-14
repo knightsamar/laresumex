@@ -46,10 +46,10 @@ def add(request):
            #now actually save everything
            postedby=form.save(commit=False);
            postedby.posted_by=request.session['username'] if 'username' in request.session else request.user.username;
-           postedby.non_sicsr_poster=True if 'username' not in request.session else False #socialauth-logins don't have this
+           postedby.non_sicsr_poster=True if 'username' not in request.session else False #socialauth-logins don't set this attribute in session
            postedby.save();
            email = EmailMessage();
-           if postedby.non_sicsr_poster:
+           if postedby.non_sicsr_poster: #if non_sicsr_poster
               full_name = request.user.get_full_name() if request.user.first_name.strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
            else:
               u = user.objects.get(username = postedby.posted_by)

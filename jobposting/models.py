@@ -5,7 +5,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from student_info.models import student
 from django.core.mail import EmailMultiAlternatives, mail_managers
 from django.db.models import Q
-
+from smtplib import SMTPException 
+from django.contrib.auth.models import User
+from social_auth.models import UserSocialAuth
 
 class personalised_posting(models.Model):
     post= models.ForeignKey('posting');
@@ -26,10 +28,10 @@ class posting(models.Model):
     description=models.TextField(blank=False,verbose_name='Description',help_text='Please tell in details about the job profile, eligibility, etc');
     how_to_apply=models.TextField(blank=False,help_text='Please tell how students can apply');
     posted_by=models.CharField(max_length=30,blank=False)
-    non_sicsr_poster=models.BooleanField(verbose_name='Posted by SICSR user?', default=False,blank=False,null=False) #to determine whether to use ldap_login or other auth sources
-    posted_on=models.DateTimeField(auto_now_add=True,editable=False);
+    non_sicsr_poster=models.BooleanField(verbose_name='Posted by Non-SICSR user?', default=False,blank=False,null=False) #to determine whether to use ldap_login or other auth sources
+    posted_on=models.DateTimeField(auto_now_add=True);
     #tally  = models.IntegerField(default=0, verbose_name = "No of Students that have shown interest in this company", editable = False);
-    approved_on = models.DateTimeField(editable = False,null = True , blank =True);
+    approved_on = models.DateTimeField(null = True , blank =True, editable = False);
     post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(verbose_name='Job Posting status',max_length=1,choices=post_status, default = 'p');
 
@@ -78,7 +80,21 @@ def handle_new_posting(sender, **kwargs):
                             print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
                         except Exception as e:
                             print e
-                full_name = u.fullname if u.fullname.strip()!= '' else u.username
+
+                poster_id = jp.posted_by
+                poster_full_name = "Unknown User"
+
+                if jp.non_sicsr_poster:
+                    record = User.objects.get(username=poster_id)
+                    poster_full_name = record.get_full_name() if record.get_full_name().strip()!= '' else record.username
+                    #TODO: to get the provider name properly and fix this
+                    #provider = UserSocialAuth.objects.get(uid=poster_id).provider
+                    #poster_full_name = "%s from %s" % (poster_full_name, provider)
+                else:
+                    u = user.objects.get(username = poster_id)
+                    poster_full_name = u.fullname if u.fullname.strip()!= '' else u.username
+                
+                print "Poster's Full name : ", poster_full_name
 
                 html_content = """
                  Hi,
@@ -91,7 +107,7 @@ def handle_new_posting(sender, **kwargs):
 
                  Regards,
                  Team LaResume-X
-                """ % (full_name, jp.company_name)
+                """ % (poster_full_name, jp.company_name)
 
                 text_content = """
                  Hi,
@@ -104,7 +120,7 @@ def handle_new_posting(sender, **kwargs):
 
                  Regards,
                  Team LaResume-X
-                 """ % (full_name, jp.company_name) 
+                 """ % (poster_full_name, jp.company_name) 
                 email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
                 email.attach_alternative(html_content, 'text/html')
                 email.bcc = '10030142031@sicsr.ac.in'
@@ -113,16 +129,16 @@ def handle_new_posting(sender, **kwargs):
 
                 email.subject = "[LaResume-X] New job posting"
                 #TODO: to be enabled only after the major bugfix...ask Samar for details.
-                #email.send(fail_silently=False)
+                email.send(fail_silently=False)
                 print "Sent email succesfully to ", to_be_emailed
-            except smtplib.SMTPException as e:
+            except SMTPException as e:
                 print 'Exception occured when trying to actually send the email'
                 print e
             except Exception as e:
                 print 'Exception occurred when constructing email messages'
                 print e
                 mail_managers(subject = "Emailing problem",
-                message = "Couldn't send email about jobposting for %s by %s" % (jp.company_name, full_name),
+                message = "Couldn't send email about jobposting for %s by %s" % (jp.company_name, poster_full_name),
                 fail_silently = False)
 
 

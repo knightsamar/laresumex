@@ -25,7 +25,6 @@ from student_info.utility import our_redirect, debugger;
 from time import sleep
 import traceback;
 
-
 def latex(request,prn):
     if 'username' not in request.session:
             request.session['redirect'] = request.get_full_path();
@@ -44,7 +43,7 @@ def latex(request,prn):
             return HttpResponse(output);
         
         if s is not None:
-            print "==latex====s is not NOne"
+            print "===latex=== is not NOne"
             #pass the student object with all his entered info to the template generator
             t = loader.get_template('%s/template.tex' % RESUME_FORMAT);
             
