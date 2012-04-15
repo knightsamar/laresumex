@@ -52,19 +52,39 @@ def add(request):
            form.save_m2m();
 
            email = EmailMessage();
+           import pdb; pdb.set_trace()
            if postedby.non_sicsr_poster: #if non_sicsr_poster
-              full_name = request.user.get_full_name() if request.user.first_name.strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
+              full_name = request.user.get_full_name() if request.user.get_full_name().strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
+              if 'provider' in request.user.social_auth.values()[0]:
+                  provider = request.user.social_auth.values()[0]['provider']
+                  full_name = '%s from %s' % (full_name, provider)
+                  #TODO: find a better way, something like model implementation or a f() rather putting things here...
+                  profile_link = None
+                  if provider == 'facebook':
+                      profile_link = 'https://www.facebook.com/%s' % request.user.username
+                  #TODO: Find a way to link to google profiles 
+                  
            else:
               u = user.objects.get(username = postedby.posted_by)
               full_name = u.fullname if u.fullname.strip()!= '' else u.username
 
-           body = """
-           Hi,
+           if postedby.non_sicsr_poster and profile_link is not None:
+               body = """
+               Hi,
 
-           %s just posted a new job posting for %s on http://projects.sdrclabs.in/laresumex/jobposting/views/view
-           
-           Please approve it as soon as possible so that it is available for all the students.
-           """  %(full_name, postedby.company_name);
+               <a href='%s'>%s</a> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
+               
+               Please approve it as soon as possible so that it is available for all the students.
+               """  %(profile_link, full_name, postedby.company_name);
+           else:
+               body = """
+               Hi,
+
+               <b>%s</b> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
+               
+               Please approve it as soon as possible so that it is available for all the students.
+               """  %(full_name, postedby.company_name);
+
            print body
            email.subject = "[LaResume-X]: New job posting";
            email.body = body;
