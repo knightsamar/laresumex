@@ -1,7 +1,6 @@
 from django.db import models
 from ldap_login.models import user, group
 from django.db.models.signals import post_save
-from django.core.exceptions import ObjectDoesNotExist
 from student_info.models import student
 from django.core.mail import EmailMultiAlternatives, mail_managers
 from django.db.models import Q
@@ -65,7 +64,6 @@ def handle_new_posting(sender, **kwargs):
                 return
             
             print "Processing, it's approved"
-            
             try:
                 to_be_emailed = []; #list of email addresses to be emailed
                 print "For jobposting ", jp
@@ -75,11 +73,16 @@ def handle_new_posting(sender, **kwargs):
                         print 'Got user',u.username
                         try:
                             to_be_emailed.append("%s@sicsr.ac.in" % (u.username))
-                            to_be_emailed.append(student.objects.get(prn=u.username)).email
-                        except ObjectDoesNotExist:
+                            c = student.objects.get(prn=u.username)
+                            if c is student:
+                                to_be_emailed.append(student.objects.get(prn=u.username)).email
+
+                        except student.DoesNotExist as s:
                             print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
+                            continue;
                         except Exception as e:
                             print e
+                            continue;
 
                 poster_id = jp.posted_by
                 poster_full_name = "Unknown User"

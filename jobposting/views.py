@@ -74,7 +74,7 @@ def add(request):
 
                <a href='%s'>%s</a> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
                
-               Please approve it as soon as possible so that it is available for all the students.
+               Please *approve it* by going to the above link, as soon as possible so that it is available for all the students.
                """  %(profile_link, full_name, postedby.company_name);
            else:'''
 
@@ -83,7 +83,7 @@ def add(request):
 
            <b>%s</b> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
            
-           Please approve it as soon as possible so that it is available for all the students.
+           Please approve it, by going to the above link, as soon as possible so that it is available for all the students.
            """  %(full_name, postedby.company_name);
 
            print body
