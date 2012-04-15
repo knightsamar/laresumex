@@ -48,6 +48,9 @@ def add(request):
            postedby.posted_by=request.session['username'] if 'username' in request.session else request.user.username;
            postedby.non_sicsr_poster=True if 'username' not in request.session else False #socialauth-logins don't set this attribute in session
            postedby.save();
+           #ref: http://www.quora.com/How-to-save-django-model-form-with-many-to-many-field
+           form.save_m2m();
+
            email = EmailMessage();
            if postedby.non_sicsr_poster: #if non_sicsr_poster
               full_name = request.user.get_full_name() if request.user.first_name.strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
