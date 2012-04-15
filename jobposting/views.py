@@ -52,7 +52,6 @@ def add(request):
            form.save_m2m();
 
            email = EmailMessage();
-           import pdb; pdb.set_trace()
            if postedby.non_sicsr_poster: #if non_sicsr_poster
               full_name = request.user.get_full_name() if request.user.get_full_name().strip() != '' else (request.user.username + " from " + request.user.social_auth.values()[0]['provider'])
               if 'provider' in request.user.social_auth.values()[0]:
@@ -68,7 +67,8 @@ def add(request):
               u = user.objects.get(username = postedby.posted_by)
               full_name = u.fullname if u.fullname.strip()!= '' else u.username
 
-           if postedby.non_sicsr_poster and profile_link is not None:
+           #TODO: to be implemented when a HTML email solution just like the models is implemented here.
+           '''if postedby.non_sicsr_poster and profile_link is not None:
                body = """
                Hi,
 
@@ -76,14 +76,15 @@ def add(request):
                
                Please approve it as soon as possible so that it is available for all the students.
                """  %(profile_link, full_name, postedby.company_name);
-           else:
-               body = """
-               Hi,
+           else:'''
 
-               <b>%s</b> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
-               
-               Please approve it as soon as possible so that it is available for all the students.
-               """  %(full_name, postedby.company_name);
+           body = """
+           Hi,
+
+           <b>%s</b> just posted a new job posting for <b>%s</b> on http://projects.sdrclabs.in/laresumex/jobposting/views/view
+           
+           Please approve it as soon as possible so that it is available for all the students.
+           """  %(full_name, postedby.company_name);
 
            print body
            email.subject = "[LaResume-X]: New job posting";
