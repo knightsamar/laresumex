@@ -23,13 +23,15 @@ def add(request):
     
     '''
     if ('username' not in request.session) and (not request.user.is_authenticated()):
+        print 'Jobposting using PRN login'
         request.session['redirect'] = request.get_full_path();
         return our_redirect('/')
     else:
+        print 'Jobposting using SocialAuth login'
         print request.user.is_authenticated()
         print 'Username: ', request.session.keys()
-        print request.session['_auth_user_id']
-        print request.session['_auth_user_backend']
+        if '_auth_user_id' in request.session.keys(): print request.session['_auth_user_id']         
+        if '_auth_user_backend' in request.session.keys(): print request.session['_auth_user_backend'] 
 
     if request.method == 'POST': # If the form has been submitted...
        form = JobPostingForm(request.POST) # A form bound to the POST
