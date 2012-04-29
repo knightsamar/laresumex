@@ -12,7 +12,7 @@ from student_info.utility import *;
 from pprint import pprint
 
 ''' import vars '''
-from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH
+from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,MANAGERS
 from datetime import datetime
 
 
@@ -95,7 +95,9 @@ def add(request):
            g = Group.objects.get(name = 'placement committee')
            for u in g.user_set.all():
                email.to.append(u.email)
-           email.bcc = ['10030142031@sicsr.ac.in','samar@sicsr.ac.in'];
+           #add the managers
+           for x in MANAGERS:
+               email.bcc.append(x[1]);
 
            print email.to;
            email.send();

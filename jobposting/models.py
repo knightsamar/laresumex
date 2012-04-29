@@ -7,6 +7,7 @@ from django.db.models import Q
 from smtplib import SMTPException 
 from django.contrib.auth.models import User
 from social_auth.models import UserSocialAuth
+from laresumex.settings import MANAGERS
 
 class personalised_posting(models.Model):
     post= models.ForeignKey('posting');
@@ -126,14 +127,17 @@ def handle_new_posting(sender, **kwargs):
                  """ % (poster_full_name, jp.company_name) 
                 email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
                 email.attach_alternative(html_content, 'text/html')
-                email.bcc = '10030142031@sicsr.ac.in'
-                email.bcc = '10030142056@sicsr.ac.in'
+                
+                #add the managers 
+                for x in MANAGERS:
+                    email.bcc.append(x[1]);
+
                 email.bcc = to_be_emailed;
 
                 email.subject = "[LaResume-X] New job posting"
-                #TODO: to be enabled only after the major bugfix...ask Samar for details.
                 email.send(fail_silently=False)
                 print "Sent email succesfully to ", to_be_emailed
+                print "Total addresses emailed  :", len(to_be_emailed) 
             except SMTPException as e:
                 print 'Exception occured when trying to actually send the email'
                 print e
