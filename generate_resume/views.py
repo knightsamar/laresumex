@@ -7,7 +7,7 @@ from generate_resume.models import resume;
 ''' import generator helpers '''
 from django.template import Context, loader, RequestContext
 from django.http import HttpResponse;
-from company.views import fetch_index;
+#from company.views import fetch_index;
 from student_info.utility import *; 
 from student_info import tables
 from pprint import pprint
@@ -216,7 +216,11 @@ def html(request,prn):
     return HttpResponse(t.render(c))
            
 
-def pisapdf(request,prn):
+def pisapdf(request,prn,return_PDF_directly=True):
+    '''generates a PDF resume using the HTML template by using the pisaPDF generation library.
+       if return_PDF_directly is True, it will return the PDF in the request
+       if return_PDF_directly is False, it will simply return the filesystem path for the PDF.
+    '''
     if prn is not None:
         s = student.objects.get(pk=prn);
     else:
@@ -256,6 +260,7 @@ def pisapdf(request,prn):
                 del result #to clean memory
                 #move the pdf to permanent location
                 destination_dir = '%s/%s/' % (RESUME_STORE, prn)
+
                 try:
                      debugger("Trying to change in %s" % destination_dir);
                      chdir(destination_dir) #if we can't change into it, create it!
@@ -264,7 +269,7 @@ def pisapdf(request,prn):
                 finally:
                      chdir(FULL_PATH);            
                 
-                copy_pdf_command = "cp -v /tmp/%s.pdf %s/%s/%s.pdf" % (prn, RESUME_STORE,prn,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
+                copy_pdf_command = "cp -v /tmp/%s.pdf %s/resumes/%s.pdf" % (prn, RESUME_STORE,prn,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
                 get_done(copy_pdf_command);
                 print "Updating timestamp for the PDF generation in our records"
                 r.last_pdf_generated = datetime.now();
@@ -280,44 +285,16 @@ def pisapdf(request,prn):
        print "Exception occurred when in pisapdf : %s" % e;
        return HttpResponse("Error when getting resume for %s " % prn );
 
-    #open the pdf file
-    print "Opening the file at : %s" % pdf_file_name
-    resume_pdf = open(pdf_file_name);
-    #prepare the file to be sent
-    response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
-    resume_pdf.close();
-    #name the file properly
-    response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
-    
+    if return_PDF_directly is True:
+        #open the pdf file
+        print "Opening the file at : %s" % pdf_file_name
+        resume_pdf = open(pdf_file_name);
+        #prepare the file to be sent
+        response = HttpResponse(resume_pdf.read(), mimetype="application/pdf");
+        resume_pdf.close();
+        #name the file properly
+        response['Content-Disposition'] = "attachment; filename=SICSR_%s_resume.pdf" % s.fullname;
+    else:
+        response = pdf_file_name
+
     return response;
-
-'''
-def html(request,prn):
-    if 'username' not in request.session:
-           return our_redirect('/login')
-    if prn != request.session['username']:
-          return HttpResponse('Not urs..!!')
-    if prn is not None:
-        try:
-           s = student.objects.get(pk=prn);
-        except:
-           output = "<h3>Student details for PRN %s not found! Can't give you HTML</h3>" % (prn);
-           return HttpResponse(output);
-
-    #is the html file current and updated?
-    html_file = 'STORE/%s/%s.html' % (prn, prn);
-
-    #if yes, just show it 
-
-    #otherwise generate again and show it
-
-    try:
-        cmd = "yes Q | htlatex %s.tex" % (prn);
-        done = get_done(cmd,"%s/%s/" % (RESUME_STORE,prn));
-    
-        return our_redirect('%s/%s' % (MEDIA_URL, html_file));
-    except Exception as e:
-        #tell them can't do it.
-        return HttpResponse("Boss! Can't generate HTML for resume of %s because we got %s" % (prn,e));
-        
-'''

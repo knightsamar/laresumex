@@ -9,6 +9,8 @@ from student_info.utility import our_redirect
 from django.contrib.auth import login,authenticate,logout
 from django.shortcuts import redirect
 from laresumex.settings import ROOT
+from django.shortcuts import render_to_response
+
 if ROOT == "/laresumex":
     from ldapAuthBackend import ldap_authenticate;
 #from django_auth_ldap.config import LDAPSearch
@@ -18,8 +20,9 @@ def login(request):
     #are we processing login attempt ?
     message = None;
     #print request.POST
+    
     if 'username' in request.session:
-            if 'redirect' in request.session:
+            if 'redirect' in request.session and request.session['redirect'].strip() != '':
                 a = request.session['redirect']
                 request.session['redirect'] = ''
                 return our_redirect(a);
@@ -172,3 +175,10 @@ def logout(request):
         #message = "Hey, you need to go in before you can go out :P :P";
 
     return our_redirect('/login/');	
+
+def passwordHelp(request):
+    if 'username' in request.session:
+        return our_redirect('/home');
+    else:
+        return render_to_response('ldap_login/passwordhelp.html');
+ 

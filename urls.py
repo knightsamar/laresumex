@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     #ldap_login
     (r'^ldap_login/$','ldap_login.views.login'), #for authentication
     (r'^ldap_login/logout$','ldap_login.views.logout'), #for loggin out
+    (r'^ldap_login/passwordHelp$','ldap_login.views.passwordHelp'),
     (r'^home/$',"common.views.index"),
     (r'^$','common.views.index'),
     
@@ -46,6 +47,7 @@ urlpatterns = patterns('',
     (r'^company/list',"company.views.company_list"),
     (r'^company/get_student_name',"company.views.get_students_name"),
     (r'^company/apply',"company.views.apply"),
+    (r'^company/search',"company.views.search"),
     (r'^PT/admin',"company.views.admin_index"),
     (r'^PT/fetch',"company.views.fetch_index"),
     (r'^PT/reports',"company.views.got_placed"),

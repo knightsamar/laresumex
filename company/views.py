@@ -10,6 +10,7 @@ from student_info.models import *
 from ldap_login.models import *
 from datetime import datetime
 from student_info.utility import our_redirect,get_done
+from generate_resume.models import resume
 
 ''' import vars '''
 from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,MEDIA_ROOT
@@ -21,7 +22,7 @@ from pyExcelerator import *
 
 
 ###############################################################################################
-##################           VIEWS THAT RENDER MENU            ################################
+######################    VIEWS THAT RENDER ADMIN MENU           ################################
 ###############################################################################################
 
 # Admin page for a admin. 
@@ -165,6 +166,7 @@ def get_students_name(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
         return our_redirect('/login')
+
     g = group.objects.get(name='placement committee')
 
     if user(request.session['username']) not in g.user_set.all():
@@ -247,12 +249,11 @@ def get_students_name(request):
                         table=marks.get_graduation_course(s)
                         data = str(table)
                     else:    
-                        
                             table= eval(si[0]).objects.filter(primary_table=s).filter(course=si[1])[0]; 
                             print "we are using table ", table
                             data = str(table.get_percentage());
                except Exception as e:
-                            print "==========HAD GOT and EXCEPTION ;)", e
+                            print "==========HAD GOT an EXCEPTION ;)", e
                             data  = "---"
                             pass;
 
@@ -263,6 +264,22 @@ def get_students_name(request):
         wb.save('/tmp/%s' % (spreadsheet_name));
         copy_spreadsheet_command = "cp -v /tmp/%s %s" % (spreadsheet_name,MEDIA_ROOT);
         get_done(copy_spreadsheet_command);
+   
+    #get the resume collection of these students too.
+    #TODO: move this method to the model, making it static.
+    import pdb;
+    pdb.set_trace();
+    resumes_list = []
+    
+    for n in name_list:
+        try:
+            r = resume.objects.get(prn=n);
+            if r is None:
+                r = pisapdf(request,n,get_PDF_directly=False)
+        except resume.DoesNotExist as e:
+            r = pisapdf(request,n,get_PDF_directly=False);
+                
+        resumes_list.append(r);
 
     t = loader.get_template('company/students_list.html')
     c = Context({
@@ -270,10 +287,11 @@ def get_students_name(request):
         'spreadsheet_link':MEDIA_URL+'/'+spreadsheet_name,
         'ROOT':ROOT,
         })
+
+    
     return HttpResponse(t.render(c))   
     #return HttpResponse('f');
-    
-
+ 
 
 ##############################################################################################
 #########################           SEARCH STUDENTS           ################################
@@ -289,7 +307,7 @@ def search(request):
 
 def getResume(request):
     print str(request.POST)
-    print "====Now we'l process the post fields..==="
+    print "====Now we'll process the post fields..==="
     final_string=""
     for k,v in request.POST.iteritems():
         if k == 'csrfmiddlewaretoken':
@@ -306,8 +324,6 @@ def getResume(request):
     return HttpResponse("Please wait till i fetch the resumes...\n\n"+final_string);
 
 
-
-
 ###############################################################################################
 ######################            STUDENTS CAN APPLY           ################################
 ###############################################################################################
@@ -316,7 +332,7 @@ def getResume(request):
 
 
 ''' For the student's view, This generated a lists of companies vailable for them to apply for. 
-Thisgives the company's information as a tooltip, and a check box for apllying. It also disables thecompanies that have gone.
+This gives the company's information as a tooltip, and a check box for apllying. It also disables thecompanies that have gone.
 '''
 def company_list(request):
     if 'username' not in request.session:

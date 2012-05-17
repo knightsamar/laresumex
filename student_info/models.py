@@ -23,7 +23,6 @@ class student(models.Model):
     workex=models.BooleanField();
     Extra_field=models.BooleanField();
     last_update=models.DateTimeField(auto_now=True);
-    
 
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
@@ -38,7 +37,17 @@ class student(models.Model):
             duration +=  ((w.endDate - w.fromDate).days)/12; #will return the number of days;
 
         return duration; 
- 
+
+    def get_resume_path(self):
+        from generate_resume.models import resume
+        
+        try :
+            r = resume.objects.get(prn = self.prn);
+            return r.get_pdf_path()
+        except resume.DoesNotExist as e:
+            return None
+        
+            
 class marks(models.Model):
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
