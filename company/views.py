@@ -267,8 +267,8 @@ def get_students_name(request):
    
     #get the resume collection of these students too.
     #TODO: move this method to the model, making it static.
-    import pdb;
-    pdb.set_trace();
+    #import pdb;
+    #pdb.set_trace();
     resumes_list = []
     
     for n in name_list:
