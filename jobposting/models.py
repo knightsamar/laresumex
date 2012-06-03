@@ -53,10 +53,16 @@ class posting(models.Model):
 def handle_new_posting(sender, **kwargs):
     '''Signal handler whenever a job posting is created
        Refer: http://localhost/docs/django-docs/ref/signals.html#django.db.models.signals.post_save
+    
+       This signal handler does the following:
+       
+       If a jobposting is approved:
+            Emails all the eligible group students the jobposting.
+
     '''
 
     if sender == posting:
-        if kwargs['created'] == False: #we want to handle only APPROVED jobpostings (right ?)
+        if kwargs['created'] == False: #we want to handle only APPROVED jobpostings 
             jp = kwargs['instance']
             print dir(jp)
             print jp.get_status_display()
@@ -76,7 +82,7 @@ def handle_new_posting(sender, **kwargs):
                             to_be_emailed.append("%s@sicsr.ac.in" % (u.username))
                             c = student.objects.get(prn=u.username)
                             if c is student:
-                                to_be_emailed.append(student.objects.get(prn=u.username)).email
+                               to_be_emailed.append(student.objects.get(prn=u.username)).email
 
                         except student.DoesNotExist as s:
                             print "%s hasn't yet filled in details...so couldn't get his personal email address" % u.username
@@ -105,26 +111,40 @@ def handle_new_posting(sender, **kwargs):
 
                  A new job posting has been put up on LaResume-X by <b>%s</b> for <b>%s</b>.
 
-                 To view it go <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
+                 It's detail are as follows :
+                 <ul>
+                    <li>Organization's Website: %s </li> 
+                    <li>Description:
+                    <p>%s</p>
+                    </li>
+                    <li>How to Apply ? %s </li>
+                 </ul>
+                 To register your interest in it go to <a href='http://projects.sdrclabs.in/laresumex/jobposting/views/view'>here</a>
                  
                  Thanks!
 
                  Regards,
                  Team LaResume-X
-                """ % (poster_full_name, jp.company_name)
+                """ % (poster_full_name, jp.company_name, jp.company_url, jp.description, jp.how_to_apply)
 
                 text_content = """
                  Hi,
 
                  A new job posting has been put up on LaResume-X by %s for %s.
 
-                 To view it go to http://projects.sdrclabs.in/laresumex/jobposting/views/view
+                 To register your interest in it go to http://projects.sdrclabs.in/laresumex/jobposting/views/view
+
+                 It's detail are as follows :
+                 Organization's Website: %s  
+                 Description: %s 
+                 How to Apply ? %s 
+                 
                  
                  Thanks!
 
                  Regards,
                  Team LaResume-X
-                 """ % (poster_full_name, jp.company_name) 
+                 """  % (poster_full_name, jp.company_name, jp.company_url, jp.description, jp.how_to_apply)
                 email = EmailMultiAlternatives('[LaResume-X]New job posting',text_content)
                 email.attach_alternative(html_content, 'text/html')
                 

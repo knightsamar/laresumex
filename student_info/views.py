@@ -23,7 +23,6 @@ if DEBUG is True: #do not import when not needed!
     from sys import exc_info; #for getting traceback
     import traceback; #for printing traceback;
 
-
 ##########################################################################
 ###################### STUDENT FORM ######################################
 ##########################################################################
@@ -133,7 +132,7 @@ def submit(request, prn):
         request.session['redirect'] = request.get_full_path();
         return our_redirect('/login')
     
-   #was javascript enabled and everything ok on the client side ???
+    #was javascript enabled and everything ok on the client side ???
     if not ('allok' in request.POST and request.POST['allok'] == '1'):
        return HttpResponse("<h2 align='center' style='color: red;'>  Hey, This is Server, you need to enable JavaScript if you want us to help you! </h2>");
 
@@ -183,7 +182,6 @@ def submit(request, prn):
         s[0].delete() #delete to create a new one.
     
     try:
-
         s = student.objects.create(
             pk=prn,
             fullname=post['fullname'],
@@ -196,7 +194,6 @@ def submit(request, prn):
         mvsd=dict();
         extra_fields = dict()
         l = ['marks', 'extracurricular','academic','certification','project','workex','ExtraField'] #list of model names other than personal.
-
 
         for field,data in post.lists(): #it will be a list
             #we are using this long branch of IF and ELIFs because Python doesn't have switch case!!!
@@ -274,12 +271,11 @@ def submit(request, prn):
               else:
                 index=field_name[0]+'_'+field_name[1];
                 if index not in mvsd:
-                    mvsd[index]=data[0];
+                   mvsd[index]=data[0];
                 else:
                    mvsd[index]+=','+data[0];
                    
  
-
             #if we are retrieving the data
             '''row = eval("%s" % field_name[0]).objects.get_or_create(primary_table=prn);
              row[field_name[1]] = data;
@@ -355,7 +351,6 @@ def submit(request, prn):
     return our_redirect('/common/Submitted/done');
 
 
-
 ########################################################################
 ######################   OTHER FIELDS    ###############################
 ########################################################################
@@ -367,6 +362,4 @@ def ajaxRequest(request):
 
     return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
-
-
 

@@ -20,7 +20,6 @@ def login(request):
     #are we processing login attempt ?
     message = None;
     #print request.POST
-    
     if 'username' in request.session:
             if 'redirect' in request.session and request.session['redirect'].strip() != '':
                 a = request.session['redirect']
