@@ -1,0 +1,9 @@
+LaResume-X -- the placement software for SICSR
+
+Requirements:
+  * django 1.2.5
+  * pyExcelerator
+  * pisapdf
+  * django-social-auth (requires python-openid and python-oauth2)
+  * pygooglecharts
+  * xhtml2pdf
