@@ -229,7 +229,7 @@ def pisapdf(request,prn,return_PDF_directly=True):
     try:
         #have we ever recorded a pdf creation for this student ?
         r,new_record_created = resume.objects.get_or_create(prn=s);
-        pdf_file_name = "%s/%s/%s.pdf" % (RESUME_STORE, prn, prn);
+        pdf_file_name = "%s/%s.pdf" % (RESUME_STORE, prn);
         got_file = False;
 
         if not new_record_created:
@@ -269,7 +269,7 @@ def pisapdf(request,prn,return_PDF_directly=True):
                 finally:
                      chdir(FULL_PATH);            
                 
-                copy_pdf_command = "cp -v /tmp/%s.pdf %s/resumes/%s.pdf" % (prn, RESUME_STORE,prn,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
+                copy_pdf_command = "cp -v /tmp/%s.pdf %s/%s.pdf" % (prn, RESUME_STORE,prn); #copy the .pdf to the user's directory in STORE so that we can reuse it
                 get_done(copy_pdf_command);
                 print "Updating timestamp for the PDF generation in our records"
                 r.last_pdf_generated = datetime.now();
