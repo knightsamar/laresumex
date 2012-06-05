@@ -2,7 +2,7 @@
 
 #CUSTOM VARS
 FULL_PATH = "/home/knightsamar/learn/laresumex";
-RESUME_STORE = "%s/STORE/" % (FULL_PATH);
+RESUME_STORE = "%s/STORE/resumes" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 ROOT="";
 
@@ -19,12 +19,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'laresumex',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.mysql',# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'laresumex',                 # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'sqladmin',      # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'PASSWORD': 'sqladmin',              # Not used with sqlite3.
+        'HOST': '',                          # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                          # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -138,4 +138,5 @@ LOAD_EXTRA_DATA = True
 #necessary for error email logs and other such mails to be sent
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 #the directory where emails will be stored
-EMAIL_FILE_PATH = '/home/knightsamar/learn/laresumex/emails' # change this to a proper locationDEFAULT_FROM_EMAIL = 'testing@testing.localhost'
+EMAIL_FILE_PATH = '/home/knightsamar/learn/laresumex/emails' # change this to a proper location
+DEFAULT_FROM_EMAIL = 'testing@testing.localhost'
