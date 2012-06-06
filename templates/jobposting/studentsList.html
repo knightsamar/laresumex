@@ -8,14 +8,17 @@
    <h4>---- {{ jp }} ----</h4>
    <!-- <a href='generate_resume/jp/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
    <ul>
-   {% for s in students %}
-   <li>{{s}} -- <a href="{% url generate_resume.views.pisapdf s %}">Get Resume (PDF)</a></li>
-   {% empty %}
-         <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
+       {% for student,hasresume in students.items %}
+       {% if hasresume %}
+           <li>{{student}} -- <a href="{% url generate_resume.views.pisapdf student %}">Get Resume (PDF)</a></li>
+       {% else %}
+           <li>{{student}} -- No details available!</li>
+       {% endif %}
+       {% empty %}
+             <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
    {% endfor %}
    </ul>
 {% endfor %}
 
 <input type='button' value='Go back' onclick="history.go(-1);return true;">
-
 {% endblock %}

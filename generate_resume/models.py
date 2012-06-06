@@ -22,3 +22,14 @@ class resume(models.Model):
                 print '%s does not exist, needs to be generated!' % pdf_path
                 pisapdf(None,self.prn,False)
         return None
+    
+    @staticmethod
+    def can_resume_be_generated(prn):
+        try:
+            s = student.objects.get(pk=prn);
+            print "Resume can be generated for %s" % (prn)
+            return True;
+        except student.DoesNotExist as e:
+            print "Resume cannot be generated for %s as data is not available!" % (prn);
+            return False
+        
