@@ -17,17 +17,9 @@ class postingAdmin(admin.ModelAdmin):
     def getStudents(self, request, selected_jobpostings):
         jpStudentsDict = {}
         for jp in selected_jobpostings:
-            students_list = {}
-            for pp in personalised_posting.objects.filter(post=jp).filter(is_interested=True):
-                '''try:
-                    s = student.objects.get(prn=str(pp.prn));
-                    students_list.append("%d - %s" % (str(pp.prn),s.fullname));
-                except student.DoesNotExist:'''
-                students_list[pp.prn] = resume.can_resume_be_generated(pp.prn);
-                '''except Exception as e:
-                    print "Unexpected exception in admin %s " % e;'''
+            interested_students = jp.get_interested_students()
+            jpStudentsDict['%s : %d students' % (str(jp.company_name),len(interested_students))] = interested_students;
 
-            jpStudentsDict['%s : %d students' % (str(jp.company_name),len(students_list))] = students_list;
         print jpStudentsDict;
 
         t = loader.get_template("jobposting/studentsList.html");

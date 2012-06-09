@@ -8,11 +8,11 @@
    <h4>---- {{ jp }} ----</h4>
    <!-- <a href='generate_resume/jp/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
    <ul>
-       {% for student,hasresume in students.items %}
-       {% if hasresume %}
-           <li>{{student}} -- <a href="{% url generate_resume.views.pisapdf student %}">Get Resume (PDF)</a></li>
+       {% for prn, details in students.items %}
+       {% if details.has_resume %}
+           <li>{{prn}} -- <a href="{% url generate_resume.views.pisapdf prn %}">Get Resume (PDF)</a></li>
        {% else %}
-           <li>{{student}} -- No details available!</li>
+           <li>{{prn}} -- <i>No details available!</i></li>
        {% endif %}
        {% empty %}
              <li><i>No Students have yet shown interest in this Job Posting!</i></li> 

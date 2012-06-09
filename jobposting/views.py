@@ -130,7 +130,7 @@ def view(request,template):
     if 'role' in request.session:
         print "role forn", request.session['role']
         if request.session['role'] == 'admin':
-            j = posting.objects.filter(status='p').order_by('-status')
+            j = posting.objects.order_by('-posted_on')
             role ="admin"
             if not j:
                 empty = True;
@@ -254,3 +254,19 @@ def hidden(request):
         })
     return HttpResponse(t.render(c));
 
+def get_interested_students(request,jp):
+    '''this view returns the list of interested students for a jp
+       this view is written for calling from the laresumex views 
+       unlike the admin code which is written for calling from django admin views
+
+       basically both views call the same model method which has the core functionality of getting interested students.
+       both views also use the same template.
+    '''
+    print 'Getting interested students for jp', jp
+    jp = posting.objects.get(pk=jp)
+    interested_students = jp.get_interested_students()  
+    jpStudents = {'%s : %d students' % (str(jp.company_name),len(interested_students)) : interested_students };
+
+    t = loader.get_template('jobposting/studentsList.html')
+    c = Context({'jpStudents':jpStudents})
+    return HttpResponse(t.render(c))

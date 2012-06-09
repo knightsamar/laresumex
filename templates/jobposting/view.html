@@ -195,8 +195,6 @@ function a(o,j)
 <H3> Your changes have been recorded </h3>
 {% endif %}
 {% if hidden_job %}
-
-
     <form action = '{{ROOT}}/jobposting/hidden/do' method = 'post'>
 {%else %}
     <form action = '{{ROOT}}/jobposting/views/do' method = 'post'>
@@ -218,8 +216,18 @@ function a(o,j)
  {{ j.post.how_to_apply }}<BR><BR>
 <BR><BR>
 {% if role == 'admin' %}
-    <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
-    <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
+    <b> Current status of Approval : </b> {{ j.get_status_display }} <br/>
+    {% if j.status == 'p' or j.status == 'd' %}
+        <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
+    {% endif %}
+    
+    {% if j.status == 'p' %}
+        <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
+    {% endif %}
+    
+    {% if j.status == 'a' %}
+        <input type = 'button' value = 'List interested students' onclick = "window.open('{% url jobposting.views.get_interested_students j.id %}')">
+    {% endif %}
 {% else %}
     <input type = 'button' value = 'Un - Hide' onclick = "toggle(this, '{{j.id}}')">
 {% endif %}
@@ -257,14 +265,23 @@ function a(o,j)
  {{ j.how_to_apply }}<BR><BR>
 <BR><BR>
 {% if role == 'admin' %}
-    <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
-    <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
+    <b> Status : </b> {{ j.get_status_display }} <br/>
+    {% if j.status == 'p' or j.status == 'd' %}
+        <input type = 'button' value = 'Approve' onclick = 'toggle(this, "{{j.id}}")'>
+    {% endif %}
+    
+    {% if j.status == 'p' %}
+        <input type = 'button' value = 'Reject' onclick = 'toggle(this,"{{j.id}}")'>
+    {% endif %}
+    
+    {% if j.status == 'a' %}
+        <input type = 'button' value = 'List interested students' onclick = "window.open('{% url jobposting.views.get_interested_students j.id %}')">
+    {% endif %}
 {% else %}
     <input type = 'button' id = 'interest_{{j.id}}' default = 'not interested' value = 'I am interested in this.' onclick = 'toggle(this, "{{j.id}}")'>
     <input type = 'button' value = 'Hide' onclick = "toggle(this, '{{j.id}}')">
 {% endif %}
 <div class = 'hidden' id = 'div_{{j.id}}'>
-
     <input type = 'button' value = 'Show {{j.company_name}}' onclick = "a(this, '{{j.id}}')">
 </div>
 </p>

@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,11 +23,11 @@ urlpatterns = patterns('',
     (r'^contact',"common.views.contact"),
     
     #jobposting
-    
     (r'^jobposting/add$',"jobposting.views.add"),
     (r'^jobposting/view_hidden$',"jobposting.views.hidden"),
     (r'^jobposting/(?P<template>\D+)/view$',"jobposting.views.view"),
     (r'^jobposting/(?P<template>\D+)/do$',"jobposting.views.do"),
+    (r'^jobposting/(?P<jp>\d+)/get_interested_students$',"jobposting.views.get_interested_students"),
 
     # generate_resume
     (r'^generate_resume/(?P<prn>\d+)/pdf',"generate_resume.views.pdf"),

@@ -8,12 +8,15 @@ from smtplib import SMTPException
 from django.contrib.auth.models import User
 from social_auth.models import UserSocialAuth
 from laresumex.settings import MANAGERS
+from generate_resume.models import resume
+from ldap_login.models import user
 
 class personalised_posting(models.Model):
     post= models.ForeignKey('posting');
     is_interested = models.BooleanField();
     is_hidden = models.BooleanField();
     prn = models.ForeignKey('ldap_login.user')
+    
     def __str__(self):
         return "job posting of %s for %s" % (self.prn.username , self.post.company_name)
  
@@ -22,6 +25,7 @@ class posting(models.Model):
        WARNING: any changes made to this need to be reflected in the corresponding ModelForm in forms.py too!
     '''
     eligible_groups = Q(name__icontains = '142') | Q(name__icontains = '141') | Q(name__icontains = '121') | Q(name__icontains = '122') | Q(name__icontains = 'laresumex')
+    post_status=(('p','pending approval'),('a','approved'),('d','disapproved'));
 
     company_name=models.CharField(max_length=50,blank=False,verbose_name='Organization\'s Name');
     company_url=models.URLField(verify_exists=True,verbose_name='Website address');
@@ -32,7 +36,6 @@ class posting(models.Model):
     posted_on=models.DateTimeField(auto_now_add=True);
     #tally  = models.IntegerField(default=0, verbose_name = "No of Students that have shown interest in this company", editable = False);
     approved_on = models.DateTimeField(null = True , blank =True, editable = False);
-    post_status=(('p','pending'),('a','approved'),('d','disapproved'));
     status=models.CharField(verbose_name='Job Posting status',max_length=1,choices=post_status, default = 'p');
 
     for_programmes = models.ManyToManyField(group,verbose_name="Eligible Batches",limit_choices_to=eligible_groups,help_text='These batches will be informed by email about this Job posting.')
@@ -49,6 +52,22 @@ class posting(models.Model):
         #count = personalised_posting.objects.filter(post = self).aggregate(count = 'is_interested = True')
         count = personalised_posting.objects.filter(post=self).filter(is_interested=True).count();
         return count;
+    
+    def get_interested_students(self):
+        '''Returns a data structure of interested students for this job posting
+           This data structure is a dictionary of dictionaries which contain various informations about the interested student
+        '''
+        pps = personalised_posting.objects.filter(post=self).filter(is_interested=True)
+        interested_students = {}
+
+        for p in pps:
+            interested_students[str(p.prn)] = {
+                    'has_resume': resume.can_resume_be_generated(p.prn),
+                    'name' : user.objects.get(username=p.prn).fullname,
+                    }
+
+        print "List of interested students is ", interested_students
+        return interested_students
 
 def handle_new_posting(sender, **kwargs):
     '''Signal handler whenever a job posting is created
