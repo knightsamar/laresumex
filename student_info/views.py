@@ -16,7 +16,7 @@ from os import path;
 from django.utils.encoding import smart_unicode;
 
 ''' import vars '''
-from laresumex.settings import ROOT,RESUME_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,DEBUG
+from laresumex.settings import ROOT,RESUME_STORE,PHOTO_STORE,RESUME_FORMAT,MEDIA_URL,FULL_PATH,DEBUG
 
 ''' import traceback for debugging '''
 if DEBUG is True: #do not import when not needed!
@@ -139,7 +139,7 @@ def submit(request, prn):
     #what is submitted ?
     print "I have got files called ", request.FILES;
 
-    photo_file=RESUME_STORE+"/photos/"+prn+".png";
+    photo_file=PHOTO_STORE+"/"+prn+".png";
     
     if path.exists(photo_file):
         photo_exists = True;  
@@ -159,7 +159,7 @@ def submit(request, prn):
 
     #TODO: check whether the photo is a photo or something else ?
     for f in request.FILES.values():
-            dest=RESUME_STORE+"/photos/"+prn+".png" #so that things remain soft-coded :P
+            dest=PHOTO_STORE+"/"+prn+".png" #so that things remain soft-coded :P
             print "files to be saved in", dest;
             destination = open(dest, 'wb+')
             print "i got the file handle as ",destination

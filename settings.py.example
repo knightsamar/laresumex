@@ -3,6 +3,7 @@
 #CUSTOM VARS
 FULL_PATH = "/home/knightsamar/learn/laresumex";
 RESUME_STORE = "%s/STORE/resumes" % (FULL_PATH);
+PHOTO_STORE = "%s/STORE/photos" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 ROOT="";
 
