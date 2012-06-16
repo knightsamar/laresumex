@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    Home
+{% endblock %}
+{% block content %}
+<style type = 'text/css'>
+
+#jobposting{
+    float : left;
+    background-image : url('{{MEDIA_URL}}/post-it.png');
+    background-repeat :no-repeat;
+    background-position:top center;
+    width : 10%;
+    margin-left:20%;
+    height:auto;
+    padding:5%;
+    text-align:center;
+}
+</style>
+<b>Hi {{user.get_full_name}}! </b>
+<br/>
+<div id = 'jobposting'>
+  <B>Job postings</b><BR><BR><BR>
+  <input type='button' value = 'Add new Jobposting' onclick="javascript:location.href='{{ROOT}}/jobposting/add';"><BR>
+<br/>
+</div>
+<a href='/socialauth/logout'>Logout</a>
+{% endblock %}
