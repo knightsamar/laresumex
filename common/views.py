@@ -39,7 +39,7 @@ def index(request):
     if 'username' not in request.session:
         request.session['redirect'] = request.get_full_path();
         print "from home to login as No session"
-        return our_redirect('/login')
+        return our_redirect('/login/')
     # see whether user has logged in...
     # if yes, see whether the user has already filled resume, then remove the create button.
     # if no.. then remove the edit and the viw resume button.

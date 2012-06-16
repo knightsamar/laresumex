@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from laresumex.settings import ROOT
 from django.shortcuts import render_to_response
 
-if ROOT == "/laresumex":
+if ROOT.strip() != "":
     from ldapAuthBackend import ldap_authenticate;
 #from django_auth_ldap.config import LDAPSearch
 #ldap_login
@@ -40,7 +40,7 @@ def login(request):
                 #comment this line when you ARE OUTSIDE SICSR!
                 status = False
                 ldap = '';
-                if ROOT == "/laresumex":
+                if ROOT.strip() != "":
                     status = ldap_authenticate(request.POST['username'],request.POST['password']);
                     ldap = True
                     print "tried ldap"
