@@ -1,0 +1,10 @@
+diff -r ffb5ba1519a0 README
+--- a/README	Mon Jun 11 16:59:04 2012 +0530
++++ b/README	Sat Jun 16 13:30:01 2012 +0530
+@@ -1,5 +1,5 @@
+ LaResume-X -- the placement software for SICSR
+-
++Working on laresume.
+ Requirements:
+   * django 1.2.5
+   * pyExcelerator

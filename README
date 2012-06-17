@@ -1,5 +1,5 @@
 LaResume-X -- the placement software for SICSR
-
+Working on laresume.
 Requirements:
   * django 1.2.5
   * pyExcelerator
