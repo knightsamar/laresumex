@@ -18,7 +18,7 @@
     <tr>
  
         <td><label for='username'>Username</label></td>
-        <td><input type='text' name='username' value='Your PRN' onFocus="if (this.value =='Your PRN') {this.value=''} " maxlength='30'/></td>
+        <td><input type='text' name='username' value='Your PRN' onblur="if(this.value == '') { this.value='Your PRN'}" onfocus="if (this.value == 'Your PRN') {this.value=''}" maxlength='30'/></td>
     </tr>
     
     
