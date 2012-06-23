@@ -399,6 +399,16 @@ function addNew(elName,val)
        {% endfor %} 
   </div>   
   <input type='button'onClick="addNew('strengths','{{p.strength}}');" value='Add Another'>    
+<div id='weakness'>
+      {% for st in p.weakness|split:',' %}
+        <li><input type="text" id="personal_weakness_{{ forloop.counter }}" value="{{ st }}" mandatory='true' datatype='string' desc='Strengths and Weaknesses'>
+            <input type='button' value='remove' onClick="remove(this.parentNode)";>
+        </li>
+        {% empty %}
+        <li><input type="text" id="personal_weakness_1" mandatory='true' datatype='string' desc='Strengths and Weaknesses'></li>
+       {% endfor %} 
+  </div>   
+  <input type='button'onClick="addNew('weakness','{{p.weakness}}');" value='Add Another'>    
 
 </div>
 <div id = 'tabs-5'>
