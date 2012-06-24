@@ -216,7 +216,7 @@ function addNew(elName,val)
 </script>
 {% endblock %}
 {% block content %}
-<h3 align='center'>Your Details</h3>
+<h3 align='center'><u>Professional Profile</u></h3>
 {% if flag == 'form' %}
 <form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{ prn }}/submit'>
 {% else %}
@@ -388,6 +388,7 @@ function addNew(elName,val)
   </table>
   <input type='button'  onClick="addNew('tr_marks_3',false);" value='Add Another'>    
 </div>
+<!--
 <div id= 'tabs-3'>
   <div id='strengths'>
       {% for st in p.strength|split:',' %}
@@ -406,11 +407,41 @@ function addNew(elName,val)
         </li>
         {% empty %}
         <li><input type="text" id="personal_weakness_1" mandatory='true' datatype='string' desc='Strengths and Weaknesses'></li>
-       {% endfor %} 
+{% endfor %} 
   </div>   
   <input type='button'onClick="addNew('weakness','{{p.weakness}}');" value='Add Another'>    
 
 </div>
+-->
+
+<div id = 'tabs-3'>
+	<ul>
+		<li>Strength 
+			<ul id = 'strength'>
+				{% for software in p.strength|split:',' %}
+				<li>    <input type='text' id="personal_strength_{{ forloop.counter }}" value="{{st}}" manadatory='true' datatype='string' desc='Strengths and Weaknesses'>
+					<input type='button' value='remove' onClick="remove(this.parentnode)";>
+				</li>	
+			{%empty%}
+		<li> <input type="text" id="personal_strength_1" manadatory='true' datatype='string' desc='Strength and Weakness'> </li>
+		{%endfor%}
+	</ul>
+	<input type='button' onClick="addNew('strength','{{p.strength}}');" value='Add Another'>
+	
+	<li>Weakness
+	<ul id = 'weakness'>
+		{% for software in p.weakness|split:','%}
+		<li><input type='text' id="personal_weakness_{{ forloop.counter }}" value="{{st}}" manadatory='true' datatype='string' desc='strength and Weakness'> 
+		<input type='button' value='remove' onClick="remove{this.parentnode}";>
+		</li>
+		{%empty%}
+		<li> <input type='text' id="personal_weakness_1" manadatory='true' datatype='string' desc='Strength and Weakness'></li>
+		
+	</ul>
+	<input type='button' onClick="addNew('weakness','{{p.weakness}}');" value='Add Another'>
+</div> 
+		
+
 <div id = 'tabs-5'>
    <ul>
             
@@ -909,7 +940,7 @@ Weak Areas
 <noscript>
     <h2 align='center' style="color: red;"> Hey, you need to enable JavaScript if you want us to help you! </h2>
 </noscript>
-{% endblock %}
-
+{% endfor %}
+{%endblock%}
 </body>
 </html>
