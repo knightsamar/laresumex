@@ -40,6 +40,11 @@ def showform(request):
         print "student Fornd...", s
         return our_redirect('/student_info/%d/edit' % prn);
     except Exception as e:
+        print "======EXCEPTION....while submitting============", e,;
+        print 
+        print "=====Traceback====="
+        exception_info = exc_info();
+        traceback.print_tb(exception_info[2]);
 
         print "student does not exist" 
         if prn.isdigit():
@@ -294,8 +299,8 @@ def submit(request, prn):
         print "======EXCEPTION....while submitting============", e,;
         print 
         print "=====Traceback====="
-        #exception_info = exc_info();
-        #traceback.print_tb(exception_info[2]);
+        exception_info = exc_info();
+        traceback.print_tb(exception_info[2]);
         return our_redirect('/form')
     
     # ============>>> MVSD <<<====================
@@ -363,3 +368,58 @@ def ajaxRequest(request):
     return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
+def nayeforms(request,prn):
+    from student_info.forms import MarksForm
+    from student_info.models import marks,student
+    from django.forms.models import modelformset_factory
+
+    #student object
+    s = student.objects.get(pk=prn)
+    #formsets 
+    marks_formset = modelformset_factory(marks,exclude=('primary_table'),extra=0)
+    are_we_editing = False
+
+    if request.method == 'POST': #the form was submitted
+        print "===POST==="
+        print request.POST
+
+        formset = marks_formset(request.POST)
+        if formset.is_valid():
+            instances = formset.save(commit=False);
+            for i in instances:
+                i.primary_table = s
+                i.save()
+
+            return HttpResponse("Danke!");
+        else:
+            print ("Invalid data! Returning form for editing");
+    else:
+        formset = marks_formset(queryset=marks.objects.filter(primary_table=prn));
+        
+    t = loader.get_template('student_info/nayaform.html')
+    c = RequestContext(request, {
+        'prn' : prn,
+        'marks_formset' : formset,
+        'ROOT' : ROOT,
+        })
+
+    return HttpResponse(t.render(c))
+
+
+#====================================================
+'''
+    if request.method == 'POST':
+        filled_form = MarksForm(request.POST);
+        
+        if filled_form.is_valid():
+            print "======POST=====",
+            print request.POST
+            f = MarksForm(request.POST, instance = marks.objects.filter(primary_table=prn)[0])
+            f.save()
+            return HttpResponse("Done!, Danke")
+        else:
+            #invalid data
+            f = MarksForm(request.POST, instance = marks.objects.filter(primary_table=prn)[0])
+    else: #no form was submitted
+        f = MarksForm(instance = marks.objects.filter(primary_table=prn)[0])
+'''

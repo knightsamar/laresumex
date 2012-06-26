@@ -49,11 +49,13 @@ class student(models.Model):
         
             
 class marks(models.Model):
+    MARK_TYPES = (('Total','Total Score'),('GPA','GPA'),('Appearing','Appearing'),('Awaiting Result','Awaiting Result'))
+
     primary_table=models.ForeignKey('student');
     course=models.CharField(max_length=30, null=False);
     uni=models.CharField(max_length=100);
     marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
-    markstype=models.CharField(max_length=15)
+    markstype=models.CharField(max_length=15,choices=MARK_TYPES,blank=False, default=('Total Score'))
     outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
     fromDate=models.DateField(null=True, blank=True);
     
@@ -152,9 +154,7 @@ class extracurricular(ExtraField):
     pass;
 
 
-    
- 
-# strores company specific details that shd not be stored in the resume
+# stores company specific details that shd not be stored in the resume
 class companySpecific(models.Model):
     Types=(('text','Simple Text'),('radio','Simple yes/No type'),('textarea','a large area'),('special','Type, to render speciallyy -> for experts ;)'))
     datatypes = (('none','none'),('numeric','numbers greater than  0'),('string','Only alphabets and spaces.'));

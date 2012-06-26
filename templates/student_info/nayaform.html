@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}
+    Naya Form
+{% endblock %}
+{% block content %}
+<form action='{{ROOT}}/student_info/{{prn}}/nayaform' method='post'>
+{% csrf_token %}
+
+{{ marks_formset.management_form }}
+{% for form in marks_formset.forms %}
+<table>
+   {% for field in form %}
+   <tr align='left'>    
+        <td width='20%'> {{ field.label_tag }} <br/>
+            <span class='help'>{{ field.help_text }}</span>
+        </th>
+        
+        <td width='50%'> 
+            {{ field }}
+            {% for error in field.errors %}
+                <p class='error'>{{ error }}</p>
+            {% endfor %}
+        </td>
+   </tr>
+   {% endfor %}
+</table>
+{% endfor %}
+<input type='submit' value='Submit'>
+</form>
+{% endblock %}
