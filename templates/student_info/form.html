@@ -243,7 +243,7 @@ function addNew(elName,val)
 
 <div id='tabs-1'>
  <label for="fullname"> <a class='tooltip'href = '#'>Full name*<span class='tooltip'>as in your certificates</span></a></label>
-        <input type="text" id='fullname' mandatory='true' size=60 value="{{ s.fullname }}" datatype='string' desc='Full Name'>
+        <input type="text" id='fullname' mandatory='rue' size=60 value="{{ s.fullname }}" datatype='string' desc='Full Name'>
      <br><BR>    
   Gender* 
   {% if s.sex == 'f' %}
@@ -389,7 +389,8 @@ function addNew(elName,val)
   <input type='button'  onClick="addNew('tr_marks_3',false);" value='Add Another'>    
 </div>
 <div id= 'tabs-3'>
-  <div id='strengths'>
+  <h3>Strengths</h3>
+<div id='strengths'>
       {% for st in p.strength|split:',' %}
         <li><input type="text" id="personal_strength_{{ forloop.counter }}" value="{{ st }}" mandatory='true' datatype='string' desc='Strengths and Weaknesses'>
             <input type='button' value='remove' onClick="remove(this.parentNode)";>
@@ -398,7 +399,18 @@ function addNew(elName,val)
         <li><input type="text" id="personal_strength_1" mandatory='true' datatype='string' desc='Strengths and Weaknesses'></li>
        {% endfor %} 
   </div>   
-  <input type='button'onClick="addNew('strengths','{{p.strength}}');" value='Add Another'>    
+  <input type='button'onClick="addNew('strengths','{{p.strength}}');" value='Add Another'> 
+ <h3>Weakness</h3>
+<div id='weaknesses'>
+      {% for st in p.weakness|split:',' %}
+        <li><input type="text" id="personal_weakness_{{ forloop.counter }}" value="{{ st }}" mandatory='true' datatype='string' desc='Strengths and Weaknesses'>
+            <input type='button' value='remove' onClick="remove(this.parentNode)";>
+        </li>
+        {% empty %}
+        <li><input type="text" id="personal_weakness_1" mandatory='true' datatype='string' desc='Strengths and Weaknesses'></li>
+       {% endfor %} 
+  </div>   
+  <input type='button'onClick="addNew('weaknesses','{{p.weakness}}');" value='Add Another'> 
 
 </div>
 <div id = 'tabs-5'>

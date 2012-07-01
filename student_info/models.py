@@ -97,6 +97,7 @@ class personal(models.Model):
      languages=models.CharField(max_length=200);
      hobbies=models.CharField(max_length=200);
      strength=models.CharField(max_length=200);
+     weakness=models.CharField(max_length=200);
      per_address=models.TextField(max_length=200,help_text='Permanent Address');
      corr_address=models.TextField(max_length=200, help_text='Correspondence Address');
      def get_age(self):
