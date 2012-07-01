@@ -51,18 +51,18 @@ class student(models.Model):
 class marks(models.Model):
     MARK_TYPES = (('Total','Total Score'),('GPA','GPA'),('Appearing','Appearing'),('Awaiting Result','Awaiting Result'))
 
-    primary_table=models.ForeignKey('student');
-    course=models.CharField(max_length=30, null=False);
-    uni=models.CharField(max_length=100);
-    marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
-    markstype=models.CharField(max_length=15,choices=MARK_TYPES,blank=False, default=('Total Score'))
-    outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True);
-    fromDate=models.DateField(null=True, blank=True);
-    
+    primary_table=models.ForeignKey('student',editable=False);
+    course=models.CharField(max_length=30, null=False,verbose_name='Course/Programme');
+    uni=models.CharField(max_length=100,verbose_name='University');
+    marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Obtained');
+    markstype=models.CharField(max_length=15,choices=MARK_TYPES,blank=False, default=('Total Score'),verbose_name='Marks Type')
+    outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Maximum');
+    fromDate=models.DateField(null=True, blank=True,verbose_name='Date of Completion',help_text='Enter the Month & Year you completed/will complete this Course.');    
+
     def __str__(self):
         if self.marks is None:
             return "%s in %s at %s" %(self.markstype,self.course,self.uni)
-        return "Obtained %s out of %s in %s at %s" % (self.marks,self.outof,self.course,self.uni)
+        return "%s Obtained %s out of %s in %s at %s" % (self.primary_table,self.marks,self.outof,self.course,self.uni)
 
 
     def get_percentage(self):
@@ -90,18 +90,18 @@ class marks(models.Model):
 
 class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
-     mother_name=models.CharField(max_length=50);
-     father_name=models.CharField(max_length=50);
+     mother_name=models.CharField(max_length=50,verbose_name="Mother's Name");
+     father_name=models.CharField(max_length=50,verbose_name="Father's Name");
      birthdate=models.DateField(null=True);
-     areasofinterest=models.CharField(max_length=100,null=True)
-     mother_occupation=models.CharField(max_length=50); 
-     father_occupation=models.CharField(max_length=50);
-     languages=models.CharField(max_length=200);
+     areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest');
+     mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation"); 
+     father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation");
+     languages=models.CharField(max_length=200,verbose_name="Languages Known");
      hobbies=models.CharField(max_length=200);
-     strength=models.CharField(max_length=200);
-     weakness=models.CharField(max_length=200);
-     per_address=models.TextField(max_length=200,help_text='Permanent Address');
-     corr_address=models.TextField(max_length=200, help_text='Correspondence Address');
+     strength=models.CharField(max_length=200,verbose_name='Strengths');
+     weakness=models.CharField(max_length=200,verbose_name='Weaknesses');
+     per_address=models.TextField(max_length=200,verbose_name='Permanent Address');
+     corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address');
      def get_age(self):
         '''returns age'''
         age=date.today()-self.birthdate
@@ -230,6 +230,3 @@ class ExtraTable(models.Model):
 class ExtraTableKaData(models.Model):
     field = models.ForeignKey('ExtraTable');
     data = models.TextField();"""
-
-
-

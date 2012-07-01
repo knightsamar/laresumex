@@ -368,43 +368,81 @@ def ajaxRequest(request):
     return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
-def nayeforms(request,prn):
-    from student_info.forms import MarksForm
-    from student_info.models import marks,student
+def nayeforms(request, prn):
+    from student_info.forms import PersonalForm,MarksForm
+    from student_info.models import student,personal,swExposure,marks,certification
     from django.forms.models import modelformset_factory
 
-    #student object
-    s = student.objects.get(pk=prn)
-    #formsets 
-    marks_formset = modelformset_factory(marks,exclude=('primary_table'),extra=0)
-    are_we_editing = False
+    #for storing the data from the table
+    data = {}
+    #for storing the factories which generate our formsets
+    formset_factories = {}
+    #for storing the formsets themselves
+    formsets = {}
+
+    invalid_data = False
+    
+    #get the student object
+    try:
+        s = student.objects.get(pk=prn)
+        are_we_editing = True
+    except student.DoesNotExist:
+        s = student.objects.create(pk=prn)
+        are_we_editing = False
 
     if request.method == 'POST': #the form was submitted
+        #formset_factories -- kind of customized factories of forms for each of our models
+        formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
+        formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
+       
+        #generate a formset -- collection of forms for editing/creating new data
+        formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
+        formsets['personal'] = formset_factories['personal'](request.POST,prefix='personal')
+
         print "===POST==="
         print request.POST
 
-        formset = marks_formset(request.POST)
-        if formset.is_valid():
-            instances = formset.save(commit=False);
-            for i in instances:
-                i.primary_table = s
-                i.save()
+        for f in formsets:
+            if formsets[f].is_valid():
+                instances = formsets[f].save(commit=False);
+                for i in instances:
+                    i.primary_table = s
+                    i.save()
+                print 'Saved all submitted data for ',f
+                invalid_data = False
+            else:
+                print 'Submitted data for %s is invalid' % (f)
+                invalid_data = True
 
+        if not invalid_data:
             return HttpResponse("Danke!");
         else:
-            print ("Invalid data! Returning form for editing");
-    else:
-        formset = marks_formset(queryset=marks.objects.filter(primary_table=prn));
-        
+            print "Invalid data! Returning form for editing";
+    else: #new form is being displayed
+        data['marks'] = marks.objects.filter(primary_table=prn)
+        data['personal'] = personal.objects.filter(primary_table=prn)
+        if len(data['marks']) == 0: #no existing data for this student
+           print "No existing marks data found for this student"
+           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=1)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=4)
+           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
+           formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
+        else: #existing data was found for this student 
+           print "Existing marks data found for this student"
+           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,exclude=('primary_table','prn','backlogs','yeardrop','certification','project','academic','extracurricular','workex','Extra_field','last_update'),extra=0)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=0,)
+           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
+           formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
+
     t = loader.get_template('student_info/nayaform.html')
     c = RequestContext(request, {
         'prn' : prn,
-        'marks_formset' : formset,
+        'marks_formset' : formsets['marks'],
+        'personal_formset' : formsets['personal'],
         'ROOT' : ROOT,
         })
 
     return HttpResponse(t.render(c))
-
 
 #====================================================
 '''
