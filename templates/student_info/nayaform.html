@@ -3,212 +3,10 @@
     Naya Form
 {% endblock %}
 {% block scripts %}
-<script language='javascript' src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
 <script language='javascript'>
-    /*function addAnother(divID,lastCount)
-    {
-        sourceDiv = document.getElementById(divID)
-        destinationDiv = sourceDiv.cloneNode(true)
-        destinationDiv.id = divID.split('_')
-
-        allInputs = destinationDiv.replace(
-    }*/
-
-/* provides the addAnother functionality -- allows to add another instance of an element by duplicating it _properly_ */
-function addNew(elName,val)
-{
-        // set the form flag which is used to set whether the remove button is to be rendered or not.
-        if(val == '[]' ) formflag = true
-        else if (!val) formflag = true
-        else formflag= false
-       
-        c=document.getElementById(elName);
-        debug(c.id + c.tagName)
-        if (formflag)
-        {
-            removeButton=document.createElement('input')
-            removeButton.type='button';
-            removeButton.value="remove";
-        }
-         {% if flag == 'form' %}
-                 formflag=true;
-        
-         {% endif %}   
-        
-        // If its a table (other fields or marks )
-        if (c.tagName=='TR' || c.tagName == 'tr')
-            {
-                noOfTR=c.parentNode.children.length; // number of TR's . = parentNode.childElementCount
-                              
-                if ((c.id.indexOf('marks')>-1) && (formflag))
-                    firstNode=c.parentNode.children[3]; // alteast 3 are compulsory.  and clone the third one. 
-                else  
-                    firstNode=c.parentNode.children[1] // if other fields. then clone the first one 
-                
-                lastNode=c.parentNode.children[noOfTR-1]
-                clone=firstNode.cloneNode(true); 
-                
-                l=lastNode.getElementsByTagName('select');
-                if (l.length ==0 ) 
-                    l = lastNode.getElementsByTagName('textarea')// Since select is in both marks and other fields. Except the Extra fields ehich has a textarea.
-                debug(lastNode.id)
-
-                
-                lastID=l[0].id.split('_')[2]                 
-                
-                newID = parseInt(lastID) + 1; // ID of the clone should be one more than the ID of the lastNOde.
-                
-                allInputs = clone.getElementsByTagName('input');
-                allSelects = clone.getElementsByTagName('select');
-                allTextAreas = clone.getElementsByTagName('textarea');
-                all = [allInputs,allSelects,allTextAreas];
-
-                //Change the ID's of all the elements in the TR
-                all = [allInputs,allSelects,allTextAreas];
-                for (var i=0;i<all.length;i++)
-                {
-                    currentColl = all[i];
-
-                    for (var j=0; j<currentColl.length; j++)
-                    {
-                        id = currentColl[j].id.split('_'); //get the number out
-                        id[2] = newID; //replace it with the incremented number
-                        currentColl[j].id = id.join('_'); //we have the new id!
-                        debug("We got an " + currentColl[j].type) 
-                        if (currentColl[j].type != 'button' && currentColl[j].type !='hidden')
-                            currentColl[j].value = ""
-                    }
-                }
-
-                //finally change the Id of the container too!
-                //writing this code seperately because can't find a way to include a single element in the above _all_ wali list :(
-                id = clone.id.split('_');
-                id[2] = newID;
-                clone.id = id.join('_')
-/*                
-                for(var i=0;i<lastNode.children.length;i++)
-                   {
-                    for (var j=0;j<lastNode.children[i].children.length;j++)
-                    {
-                        id=lastNode.children[i].children[j].id.split('_');
-                        id[2]=parseInt(id[2])+1;
-                        clone.children[i].children[j].id=id.join('_');
-                        
-                        /* if (clone.children[i].children[j].type != 'button' && (clone.children[i].children[j].tagName == 'textarea' || clone.children[i].children[j].tagName == 'TEXTAREA'))
-                        {
-                            clone.children[i].children[j].value="";
-                        }  
-                    }
-                   }
-               */
-                if((formflag)&&(c.id.indexOf('marks')>-1))
-                {
-                    removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
-                    id[1]='remove';
-                    var removeId=id.join('_');
-
-                    removeButton.id=removeId;
-                    clone.appendChild(removeButton);
-                }
-                c.parentNode.appendChild(clone);
-                clone.children[0].children[0].focus()
-
-            }
-        else // for LI type..
-        {
-            var bacche = c.children; // how many LI;s are there - for pre-filled, there will be more than one.
-            l=bacche.length;
-            
-            var clone=bacche[0].cloneNode(true); // CLone the first LI.
-            
-            id=bacche[l-1].children[0].id.split('_');
-            id[2]=parseInt(id[2])+1; // get Id of last child and increemnt by 1.
-            clone.children[0].id=id.join('_');
-            clone.children[0].value="";
-            debug(formflag)
-            
-            if(formflag) // if not-prefilled, then clonned element would not have the remove button
-            {
-                debug('ds');
-                removeButton.addEventListener('click',function(){ clone.parentNode.removeChild(clone)},false);
-                id[1]='remove';
-                var removeId=id.join('_');
-                removeButton.id=removeId;
-
-                clone.appendChild(removeButton);
- //             clone.innerHTML+="<input type='button' value='remove' onclick='removeNode(elName);'>";
-            }
-          c.appendChild(clone);
-          clone.children[0].focus()
-            
-        }
-             
-        /*
-        if (c.tagName=="TR") 
-          {  
-            c.parentNode.appendChild(c.cloneNode(true));
-            tr=document.createElement('TR');
-            c.parentNode.parentNode.appendChild(tr);
-            for(var i=0;i<l;i++)
-                { 
-                 var clone=bacche[i].cloneNode(true);
-                 id=clone.id.split('_');
-                 id[2]=parseInt(id[2])+1
-                 clone.id=id.join('_')
-                 tr.appendChild(clone);
-                 
-                 }
-          }
-        else
-        {
-            var clone=bacche[l-1].cloneNode(true);
-            id=clone.id.split('_');
-            id[2]=parseInt(id[2])+1
-            clone.id=id.join('_')
-            c.appendChild(clone);
-        }*/
- }
-
 function debug(msg)
 {
     alert(msg)
-}
-
-function idChanger(el,lastNum)
-{
-    if (!el.hasChildNodes())
-    {
-        alert("No children to process!");
-    }
-
-    children = el.childNodes
-    for (i=0;i<children.length;i++)
-    {
-        alert(children[i].tagName);
-
-        if (children[i].name)
-        {
-            alert(children[i].name)
-            oldID = children[i].name.split('-')
-            oldID[1] = lastNum + 1;
-            children[i].name = oldID.join()
-            children[i].value = ""
-        }
-        
-        if (children[i].id)
-        {
-            alert(children[i].id)
-            oldID = children[i].id.split('-')
-            oldID[1] = lastNum + 1;
-            children[i].id = oldID.join()
-        }
-
-        if (children[i].hasChildNodes())
-        {
-            alert("Changing for children")
-            idChanger(children[i],lastNum)
-        }
-    }
 }
 
 /*
@@ -222,8 +20,6 @@ The source element's ID is constructed using the divIDprefix and lastNum. The de
 incremented with 1.
 
 Conventions:
-
-
 */
 
 function addAnother(callerButton,elIDprefix,lastNum)
@@ -288,18 +84,85 @@ function addAnother(callerButton,elIDprefix,lastNum)
 }
 
 </script>
+<script type="text/javascript" src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        // Accordion
+        $("#accordion").accordion({
+            header: "h3",
+            autoHeight: false,
+            navigation: true
+            });
+
+        // Tabs
+        $('#tabs').tabs();
+
+        // Datepicker
+        $('#datepicker').datepicker({
+            inline: true
+        });
+        
+        //hover states on the static widgets
+        $('#dialog_link, ul#icons li').hover(
+            function() { $(this).addClass('ui-state-hover'); }, 
+            function() { $(this).removeClass('ui-state-hover'); }
+        );
+        
+    });
+</script>
+
 {% endblock %}
 {% block styles %}
+<link type="text/css" href="{{MEDIA_URL}}/jquery/css/cupertino/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
+
+<style type="text/css">
+body{ font: 80% "Verdana", sans-serif; margin: 50px;}
+.demoHeaders { margin-top: 2em; }
+#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+ul#icons {margin: 0; padding: 0;}
+ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+ul#icons span.ui-icon {float: left; margin: 0 4px;}
+
 .help
 {   
   color: #999999;
   font-size: 12px !important;
 }
+
+.invalid_data
+{
+    border-color: red;
+    border-width: 1.5px;
+    border-style: dashed;
+    padding: 1px;
+}
+
+</style>	
+
 {% endblock %}
 {% block content %}
-<form action='{{ROOT}}/student_info/{{prn}}/nayaform' method='post'>
+
+<!-- the onSubmitValidator() validates using JavaScript and then enables form submission -->
+<form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{prn}}/nayaform'>
 {% csrf_token %}
 
+<div id="tabs">
+    <ul>
+        <li class='sectionlinks'><a href="#tabs-1">Basic information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-2">Marks and Qualifications*</a></li>
+        <li class='sectionlinks'><a href="#tabs-3">Software Skillset*</a></li>
+        <li><a class='sectionlinks' href="#tabs-4">Other Information</a></li>
+        <!-- tabs 5,6,7,8 are in accordion in the Other Information section -->
+<!--        <li><a class='sectionlinks' href="#tabs-9">Personal Information*</a></li>
+        <li><a class='sectionlinks' href="#tabs-10">Photo *</a></li>
+        <li><a class='sectionlinks' href="#tabs-11">Company Specific information*</a></li> -->
+    </ul>
+</div>
+
+<div id='tabs-1'>
+<!-- personal information form -->
 {{ personal_formset.management_form }}
 {% for form in personal_formset.forms %}
 <div id="formset_personal_{{ forloop.counter0 }}" class="increaseable">
@@ -308,7 +171,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
    <tr align='left'>    
         <td width='20%'> {{ field.label_tag }} <br/>
             <span class='help'>{{ field.help_text }}</span>
-        </th>
+        </td>
         
         <td width='50%'> 
             {{ field }}
@@ -321,7 +184,10 @@ function addAnother(callerButton,elIDprefix,lastNum)
 </table>
 </div>
 {% endfor %}
+</div>
 
+<div id='tabs-2'>
+<!-- marks filling form -->
 {{ marks_formset.management_form }}
 {% for form in marks_formset.forms %}
 <div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
@@ -330,7 +196,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
    <tr align='left'>    
         <td width='20%'> {{ field.label_tag }} <br/>
             <span class='help'>{{ field.help_text }}</span>
-        </th>
+        </td>
         
         <td width='50%'> 
             {{ field }}
@@ -347,8 +213,181 @@ function addAnother(callerButton,elIDprefix,lastNum)
     <input type='button' value="Add Another" onClick="addAnother(this,'formset_marks',{{forloop.counter0}})">
 {% endif %}
 {% endfor %}
+</div>
 
+<!-- software exposure information form -->
+<div id='tabs-3'>
+{{ swExposure_formset.management_form }}
+{% for form in swExposure_formset.forms %}
+<div id="formset_swExposure_{{ forloop.counter0 }}" class="increaseable">
+<table>
+   {% for field in form %}
+   <tr align='left'>    
+        <td width='20%'> {{ field.label_tag }} <br/>
+            <span class='help'>{{ field.help_text }}</span>
+        </td>
+        
+        <td width='50%'> 
+            {{ field }}
+            {% for error in field.errors %}
+                <p class='error'>{{ error }}</p>
+            {% endfor %}
+        </td>
+    </tr>
+   {% endfor %}
+</table>
+</div>
+{% endfor %}
+</div>
+
+<div id='tabs-4'>
+    <div class='accordion'>
+        <div>
+            <h3><a href='#'>Work Experience</a></h3>
+            <!-- workex information form -->
+            {{ workex_formset.management_form }}
+            {% for form in workex_formset.forms %}
+            <div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
+            <table>
+               {% for field in form %}
+               <tr align='left'>    
+                    <td width='20%'> {{ field.label_tag }} <br/>
+                        <span class='help'>{{ field.help_text }}</span>
+                    </td>
+                    
+                    <td width='50%'> 
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class='error'>{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+            </div>
+            {% if forloop.last %}
+                <input type='button' value="Add Another" onClick="addAnother(this,'formset_workex',{{forloop.counter0}})">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3><a href='#'>Certificate Information</a></h3>
+            <!-- certificate information form -->
+            {{ certification_formset.management_form }}
+            {% for form in certification_formset.forms %}
+            <div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
+            <table>
+               {% for field in form %}
+               <tr align='left'>    
+                    <td width='20%'> {{ field.label_tag }} <br/>
+                        <span class='help'>{{ field.help_text }}</span>
+                    </td>
+                    
+                    <td width='50%'> 
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class='error'>{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+            </div>
+            {% if forloop.last %}
+                <input type='button' value="Add Another" onClick="addAnother(this,'formset_certification',{{forloop.counter0}})">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3><a href='#'>Academic Achievements</a></h3>
+            <!-- academic information form -->
+            {{ academic_formset.management_form }}
+            {% for form in academic_formset.forms %}
+            <div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
+            <table>
+               {% for field in form %}
+               <tr align='left'>    
+                    <td width='20%'> {{ field.label_tag }} <br/>
+                        <span class='help'>{{ field.help_text }}</span>
+                    </td>
+                    
+                    <td width='50%'> 
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class='error'>{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+            </div>
+            {% if forloop.last %}
+                <input type='button' value="Add Another" onClick="addAnother(this,'formset_academic',{{forloop.counter0}})">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3><a href='#'>Projects Undertaken</a></h3>
+            <!-- project information form -->
+            {{ project_formset.management_form }}
+            {% for form in project_formset.forms %}
+            <div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
+            <table>
+               {% for field in form %}
+               <tr align='left'>    
+                    <td width='20%'> {{ field.label_tag }} <br/>
+                        <span class='help'>{{ field.help_text }}</span>
+                    </td>
+                    
+                    <td width='50%'> 
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class='error'>{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+            </div>
+            {% if forloop.last %}
+                <input type='button' value="Add Another" onClick="addAnother(this,'formset_project',{{forloop.counter0}})">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3><a href='#'>ExtraCurricular Achievements</a></h3>
+            <!-- extracurricular information form -->
+            {{ extracurricular_formset.management_form }}
+            {% for form in extracurricular_formset.forms %}
+            <div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
+            <table>
+               {% for field in form %}
+               <tr align='left'>    
+                    <td width='20%'> {{ field.label_tag }} <br/>
+                        <span class='help'>{{ field.help_text }}</span>
+                    </td>
+                    
+                    <td width='50%'> 
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class='error'>{{ error }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+            </div>
+            {% if forloop.last %}
+                <input type='button' value="Add Another" onClick="addAnother(this,'formset_extracurricular',{{forloop.counter0}})">
+            {% endif %}
+            {% endfor %}
+        </div>
 <br/><br/>
 <input type='submit' value='Submit'>
 </form>
+</div>
 {% endblock %}

@@ -369,8 +369,8 @@ def ajaxRequest(request):
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
 def nayeforms(request, prn):
-    from student_info.forms import PersonalForm,MarksForm
-    from student_info.models import student,personal,swExposure,marks,certification
+    from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm
+    from student_info.models import student,personal,swExposure,marks,certification,workex,academic
     from django.forms.models import modelformset_factory
 
     #for storing the data from the table
@@ -394,10 +394,18 @@ def nayeforms(request, prn):
         #formset_factories -- kind of customized factories of forms for each of our models
         formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
         formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
-       
+        formset_factories['swExposure'] = modelformset_factory(swExposure, form=SwExposureForm, extra=0)
+        formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0)
+        formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
+        formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
+
         #generate a formset -- collection of forms for editing/creating new data
         formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
         formsets['personal'] = formset_factories['personal'](request.POST,prefix='personal')
+        formsets['swExposure'] = formset_factories['swExposure'](request.POST,prefix='swExposure')
+        formsets['certification'] = formset_factories['certification'](request.POST,prefix='certification')
+        formsets['workex'] = formset_factories['workex'](request.POST,prefix='workex')
+        formsets['academic'] = formset_factories['workex'](request.POST,prefix='academic')
 
         print "===POST==="
         print request.POST
@@ -420,25 +428,82 @@ def nayeforms(request, prn):
             print "Invalid data! Returning form for editing";
     else: #new form is being displayed
         data['marks'] = marks.objects.filter(primary_table=prn)
-        data['personal'] = personal.objects.filter(primary_table=prn)
+
         if len(data['marks']) == 0: #no existing data for this student
            print "No existing marks data found for this student"
-           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=1)
            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=4)
-           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
+        else:
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
+           formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
+
+        data['personal'] = personal.objects.filter(primary_table=prn)
+        if len(data['personal']) == 0:
+           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=1)
+           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
+        else:
+           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
+           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
+        
+        data['swExposure'] = swExposure.objects.filter(primary_table=prn)
+        if len(data['swExposure']) == 0:
+           formset_factories['swExposure'] = modelformset_factory(swExposure,form=SwExposureForm,extra=1)
+           formsets['swExposure'] = formset_factories['swExposure'](prefix='swExposure',queryset = data['swExposure'])
+        else:
+           formset_factories['swExposure'] = modelformset_factory(swExposure,form=SwExposureForm,extra=0)
+           formsets['swExposure'] = formset_factories['swExposure'](prefix='swExposure',queryset = data['swExposure'])
+        
+        data['certification'] = certification.objects.filter(primary_table=prn)
+        if len(data['certification']) == 0:
+           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=1)
+           formsets['certification'] = formset_factories['certification'](prefix='certification',queryset=data['certification'])
+        else:
+           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=0)
+           formsets['certification'] = formset_factories['certification'](prefix='certification',queryset = data['certification'])
+
+        data['workex'] = workex.objects.filter(primary_table=prn)
+        if len(data['workex']) == 0:
+           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=1)
+           formsets['workex'] = formset_factories['workex'](prefix='workex',queryset=data['workex'])
+        else:
+           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
+           formsets['workex'] = formset_factories['workex'](prefix='workex',queryset = data['workex'])
+
+        data['academic'] = academic.objects.filter(primary_table=prn)
+        if len(data['academic']) == 0:
+           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=1)
+           formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
         else: #existing data was found for this student 
-           print "Existing marks data found for this student"
-           formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,exclude=('primary_table','prn','backlogs','yeardrop','certification','project','academic','extracurricular','workex','Extra_field','last_update'),extra=0)
-           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=0,)
-           formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
-           formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
+           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
+           formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
+
+        data['project'] = project.objects.filter(primary_table=prn)
+        if len(data['project']) == 0:
+           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=1)
+           formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
+        else: #existing data was found for this student 
+           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
+           formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
+
+        data['extracurricular'] = extracurricular.objects.filter(primary_table=prn)
+        if len(data['extracurricular']) == 0:
+           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=1)
+           formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
+        else: #existing data was found for this student 
+           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
+           formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
 
     t = loader.get_template('student_info/nayaform.html')
     c = RequestContext(request, {
         'prn' : prn,
         'marks_formset' : formsets['marks'],
         'personal_formset' : formsets['personal'],
+        'swExposure_formset' : formsets['swExposure'],
+        'certification_formset' : formsets['certification'],
+        'workex_formset': formsets['workex'],
+        'academic_formset' : formsets['academic'],
+        'project_formset' : formsets['project'],
+        'extracurricular_formset' : formsets['extracurricular'],
         'ROOT' : ROOT,
         })
 

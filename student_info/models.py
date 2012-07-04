@@ -24,6 +24,8 @@ class student(models.Model):
     Extra_field=models.BooleanField();
     last_update=models.DateTimeField(auto_now=True);
 
+    formname = 'StudentForm'
+
     def __str__(self):
         return "%s (%s)" % (self.fullname, self.prn);
  
@@ -58,6 +60,8 @@ class marks(models.Model):
     markstype=models.CharField(max_length=15,choices=MARK_TYPES,blank=False, default=('Total Score'),verbose_name='Marks Type')
     outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Maximum');
     fromDate=models.DateField(null=True, blank=True,verbose_name='Date of Completion',help_text='Enter the Month & Year you completed/will complete this Course.');    
+
+    formname = 'MarksForm'
 
     def __str__(self):
         if self.marks is None:
@@ -102,6 +106,9 @@ class personal(models.Model):
      weakness=models.CharField(max_length=200,verbose_name='Weaknesses');
      per_address=models.TextField(max_length=200,verbose_name='Permanent Address');
      corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address');
+     
+     formname = 'PersonalForm'
+
      def get_age(self):
         '''returns age'''
         age=date.today()-self.birthdate
@@ -120,6 +127,8 @@ class swExposure(models.Model):
     swPackages = models.CharField(max_length=100)
     webTools = models.CharField(max_length=100)
   
+    formname = 'SwExposureForm'
+
     def __str__(self):
         return "Software Exposure of %s(%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -127,7 +136,7 @@ class swExposure(models.Model):
         verbose_name_plural = 'Software Exposures';
 
 class ExtraField(models.Model):
-    primary_table=models.ForeignKey('student');
+    primary_table=models.ForeignKey('student',editable=False);
     title=models.CharField(blank=False,max_length=20);
     desc = models.TextField(blank=False);
     fromDate = models.DateField(null=True,blank=True);
@@ -139,18 +148,23 @@ class ExtraField(models.Model):
         verbose_name_plural = 'ExtraField info about students';
 
 class workex(ExtraField):
+    formname = 'WorkexForm'
     pass;
         
 class certification(ExtraField):
+    formname = 'CertificationForm'
     pass;
 
 class project(ExtraField):
+    formname = 'ProjectForm'
     heading=models.CharField(max_length=40 ,blank=True);
     
 class academic(ExtraField):
+    formname = 'AcademicAchievementsForm'
     pass;
 
 class extracurricular(ExtraField):
+    formname = 'ExtraCurricularForm'
     pass;
 
 
