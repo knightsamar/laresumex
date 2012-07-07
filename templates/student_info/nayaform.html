@@ -2,6 +2,25 @@
 {% block title %}
     Naya Form
 {% endblock %}
+{% block styles %}
+.help
+{   
+  color: #999999;
+  font-size: 12px !important;
+}
+
+.error
+{
+    border-color: red;
+    border-width: 1.5px;
+    border-style: dashed;
+    padding: 1px;
+}
+</style>
+
+<link type="text/css" href="{{MEDIA_URL}}/jquery/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
+{% endblock %}
+
 {% block scripts %}
 <script language='javascript'>
 function debug(msg)
@@ -86,16 +105,18 @@ function addAnother(callerButton,elIDprefix,lastNum)
 </script>
 <script type="text/javascript" src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
 <script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.21.custom.min.js"></script>
-<script type="text/javascript">
+<script language='javascript'>
     $(function(){
         // Accordion
         $("#accordion").accordion({
             header: "h3",
             autoHeight: false,
-            navigation: true
+            navigation: true,
+            collapsible: true,
+            sortable: true,
             });
 
-        // Tabs
+        // Tabs        
         $('#tabs').tabs();
 
         // Datepicker
@@ -111,36 +132,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
         
     });
 </script>
-
-{% endblock %}
-{% block styles %}
-<link type="text/css" href="{{MEDIA_URL}}/jquery/css/cupertino/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
-
-<style type="text/css">
-body{ font: 80% "Verdana", sans-serif; margin: 50px;}
-.demoHeaders { margin-top: 2em; }
-#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
-#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
-ul#icons {margin: 0; padding: 0;}
-ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
-ul#icons span.ui-icon {float: left; margin: 0 4px;}
-
-.help
-{   
-  color: #999999;
-  font-size: 12px !important;
-}
-
-.invalid_data
-{
-    border-color: red;
-    border-width: 1.5px;
-    border-style: dashed;
-    padding: 1px;
-}
-
-</style>	
-
 {% endblock %}
 {% block content %}
 
@@ -150,244 +141,272 @@ ul#icons span.ui-icon {float: left; margin: 0 4px;}
 
 <div id="tabs">
     <ul>
-        <li class='sectionlinks'><a href="#tabs-1">Basic information*</a></li>
-        <li class='sectionlinks'><a href="#tabs-2">Marks and Qualifications*</a></li>
-        <li class='sectionlinks'><a href="#tabs-3">Software Skillset*</a></li>
-        <li><a class='sectionlinks' href="#tabs-4">Other Information</a></li>
+        <li class='sectionlinks'><a href='#tabs-1'>Basic information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-2">Personal information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-3">Marks and Qualifications*</a></li>
+        <li class='sectionlinks'><a href="#tabs-4">Software Skillset*</a></li>
+        <li class='sectionlinks'><a href="#tabs-5">Other Information</a></li>
         <!-- tabs 5,6,7,8 are in accordion in the Other Information section -->
 <!--        <li><a class='sectionlinks' href="#tabs-9">Personal Information*</a></li>
         <li><a class='sectionlinks' href="#tabs-10">Photo *</a></li>
         <li><a class='sectionlinks' href="#tabs-11">Company Specific information*</a></li> -->
     </ul>
+    
+    <div id='tabs-1'>
+	<!-- basic information form -->
+	{{ student_formset.management_form }}
+	{% for form in student_formset.forms %}
+	<div id="formset_student_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+	   {% for field in form %}
+	   <tr align='left'>    
+			<td width='20%'> {{ field.label_tag }} <br/>
+				<span class='help'>{{ field.help_text }}</span>
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+				{% for error in field.errors %}
+					<p class='error'>{{ error }}</p>
+				{% endfor %}
+			</td>
+		</tr>
+	   {% endfor %}
+	</table>
+	</div>
+	{% endfor %}
+	</div>
+
+	<div id='tabs-2'>
+	<!-- personal information form -->
+	{{ personal_formset.management_form }}
+	{% for form in personal_formset.forms %}
+	<div id="formset_personal_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+	   {% for field in form %}
+	   <tr align='left'>    
+			<td width='20%'> {{ field.label_tag }} <br/>
+				<span class='help'>{{ field.help_text }}</span>
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+				{% for error in field.errors %}
+					<p class='error'>{{ error }}</p>
+				{% endfor %}
+			</td>
+		</tr>
+	   {% endfor %}
+	</table>
+	</div>
+	{% endfor %}
+	</div>
+
+	<div id='tabs-3'>
+	<!-- marks filling form -->
+	{{ marks_formset.management_form }}
+	{% for form in marks_formset.forms %}
+	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+	   {% for field in form %}
+	   <tr align='left'>    
+			<td width='20%'> {{ field.label_tag }} <br/>
+				<span class='help'>{{ field.help_text }}</span>
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+				{% for error in field.errors %}
+					<p class='error'>{{ error }}</p>
+				{% endfor %}
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	</div>
+
+	{% if forloop.last %}
+		<input type='button' value="Add Another" onClick="addAnother(this,'formset_marks',{{forloop.counter0}})">
+	{% endif %}
+	{% endfor %}
+	</div>
+
+	<!-- software exposure information form -->
+	<div id='tabs-4'>
+	{{ swExposure_formset.management_form }}
+	{% for form in swExposure_formset.forms %}
+	<div id="formset_swExposure_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+	   {% for field in form %}
+	   <tr align='left'>    
+			<td width='20%'> {{ field.label_tag }} <br/>
+				<span class='help'>{{ field.help_text }}</span>
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+				{% for error in field.errors %}
+					<p class='error'>{{ error }}</p>
+				{% endfor %}
+			</td>
+		</tr>
+	   {% endfor %}
+	</table>
+	</div>
+	{% endfor %}
+	</div>
+
+	<div id='tabs-5'>
+		<div id='accordion'>
+			<div>
+				<h3><a href='#'>Work Experience</a></h3>
+				<!-- workex information form -->
+				{{ workex_formset.management_form }}
+				{% for form in workex_formset.forms %}
+				<div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
+				<table>
+				   {% for field in form %}
+				   <tr align='left'>    
+						<td width='20%'> {{ field.label_tag }} <br/>
+							<span class='help'>{{ field.help_text }}</span>
+						</td>
+						
+						<td width='50%'> 
+							{{ field }}
+							{% for error in field.errors %}
+								<p class='error'>{{ error }}</p>
+							{% endfor %}
+						</td>
+					</tr>
+				   {% endfor %}
+				</table>
+				</div>
+				{% if forloop.last %}
+					<input type='button' value="Add Another" onClick="addAnother(this,'formset_workex',{{forloop.counter0}})">
+				{% endif %}
+				{% endfor %}
+			</div>
+
+			<div>
+				<h3><a href='#'>Certificate Information</a></h3>
+				<!-- certificate information form -->
+				{{ certification_formset.management_form }}
+				{% for form in certification_formset.forms %}
+				<div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
+				<table>
+				   {% for field in form %}
+				   <tr align='left'>    
+						<td width='20%'> {{ field.label_tag }} <br/>
+							<span class='help'>{{ field.help_text }}</span>
+						</td>
+						
+						<td width='50%'> 
+							{{ field }}
+							{% for error in field.errors %}
+								<p class='error'>{{ error }}</p>
+							{% endfor %}
+						</td>
+					</tr>
+				   {% endfor %}
+				</table>
+				</div>
+				{% if forloop.last %}
+					<input type='button' value="Add Another" onClick="addAnother(this,'formset_certification',{{forloop.counter0}})">
+				{% endif %}
+				{% endfor %}
+			</div>
+
+			<div>
+				<h3><a href='#'>Academic Achievements</a></h3>
+				<!-- academic information form -->
+				{{ academic_formset.management_form }}
+				{% for form in academic_formset.forms %}
+				<div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
+				<table>
+				   {% for field in form %}
+				   <tr align='left'>    
+						<td width='20%'> {{ field.label_tag }} <br/>
+							<span class='help'>{{ field.help_text }}</span>
+						</td>
+						
+						<td width='50%'> 
+							{{ field }}
+							{% for error in field.errors %}
+								<p class='error'>{{ error }}</p>
+							{% endfor %}
+						</td>
+					</tr>
+				   {% endfor %}
+				</table>
+				</div>
+				{% if forloop.last %}
+					<input type='button' value="Add Another" onClick="addAnother(this,'formset_academic',{{forloop.counter0}})">
+				{% endif %}
+				{% endfor %}
+			</div>
+
+			<div>
+				<h3><a href='#'>Projects Undertaken</a></h3>
+				<!-- project information form -->
+				{{ project_formset.management_form }}
+				{% for form in project_formset.forms %}
+				<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
+				<table>
+				   {% for field in form %}
+				   <tr align='left'>    
+						<td width='20%'> {{ field.label_tag }} <br/>
+							<span class='help'>{{ field.help_text }}</span>
+						</td>
+						
+						<td width='50%'> 
+							{{ field }}
+							{% for error in field.errors %}
+								<p class='error'>{{ error }}</p>
+							{% endfor %}
+						</td>
+					</tr>
+				   {% endfor %}
+				</table>
+				</div>
+				{% if forloop.last %}
+					<input type='button' value="Add Another" onClick="addAnother(this,'formset_project',{{forloop.counter0}})">
+				{% endif %}
+				{% endfor %}
+			</div>
+
+			<div>
+				<h3><a href='#'>ExtraCurricular Achievements</a></h3>
+				<!-- extracurricular information form -->
+				{{ extracurricular_formset.management_form }}
+				{% for form in extracurricular_formset.forms %}
+				<div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
+				<table>
+				   {% for field in form %}
+				   <tr align='left'>    
+						<td width='20%'> {{ field.label_tag }} <br/>
+							<span class='help'>{{ field.help_text }}</span>
+						</td>
+						
+						<td width='50%'> 
+							{{ field }}
+							{% for error in field.errors %}
+								<p class='error'>{{ error }}</p>
+							{% endfor %}
+						</td>
+
+					</tr>
+				   {% endfor %}
+				</table>
+				</div>
+				{% if forloop.last %}
+					<input type='button' value="Add Another" onClick="addAnother(this,'formset_extracurricular',{{forloop.counter0}})">
+				{% endif %}
+				{% endfor %}
+			</div>
+			<br/><br/>
+		</div> <!-- end of accordion -->
+	</div> <!-- end of tab5 -->
 </div>
-
-<div id='tabs-1'>
-<!-- personal information form -->
-{{ personal_formset.management_form }}
-{% for form in personal_formset.forms %}
-<div id="formset_personal_{{ forloop.counter0 }}" class="increaseable">
-<table>
-   {% for field in form %}
-   <tr align='left'>    
-        <td width='20%'> {{ field.label_tag }} <br/>
-            <span class='help'>{{ field.help_text }}</span>
-        </td>
-        
-        <td width='50%'> 
-            {{ field }}
-            {% for error in field.errors %}
-                <p class='error'>{{ error }}</p>
-            {% endfor %}
-        </td>
-    </tr>
-   {% endfor %}
-</table>
-</div>
-{% endfor %}
-</div>
-
-<div id='tabs-2'>
-<!-- marks filling form -->
-{{ marks_formset.management_form }}
-{% for form in marks_formset.forms %}
-<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
-<table>
-   {% for field in form %}
-   <tr align='left'>    
-        <td width='20%'> {{ field.label_tag }} <br/>
-            <span class='help'>{{ field.help_text }}</span>
-        </td>
-        
-        <td width='50%'> 
-            {{ field }}
-            {% for error in field.errors %}
-                <p class='error'>{{ error }}</p>
-            {% endfor %}
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
-
-{% if forloop.last %}
-    <input type='button' value="Add Another" onClick="addAnother(this,'formset_marks',{{forloop.counter0}})">
-{% endif %}
-{% endfor %}
-</div>
-
-<!-- software exposure information form -->
-<div id='tabs-3'>
-{{ swExposure_formset.management_form }}
-{% for form in swExposure_formset.forms %}
-<div id="formset_swExposure_{{ forloop.counter0 }}" class="increaseable">
-<table>
-   {% for field in form %}
-   <tr align='left'>    
-        <td width='20%'> {{ field.label_tag }} <br/>
-            <span class='help'>{{ field.help_text }}</span>
-        </td>
-        
-        <td width='50%'> 
-            {{ field }}
-            {% for error in field.errors %}
-                <p class='error'>{{ error }}</p>
-            {% endfor %}
-        </td>
-    </tr>
-   {% endfor %}
-</table>
-</div>
-{% endfor %}
-</div>
-
-<div id='tabs-4'>
-    <div class='accordion'>
-        <div>
-            <h3><a href='#'>Work Experience</a></h3>
-            <!-- workex information form -->
-            {{ workex_formset.management_form }}
-            {% for form in workex_formset.forms %}
-            <div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
-            <table>
-               {% for field in form %}
-               <tr align='left'>    
-                    <td width='20%'> {{ field.label_tag }} <br/>
-                        <span class='help'>{{ field.help_text }}</span>
-                    </td>
-                    
-                    <td width='50%'> 
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <p class='error'>{{ error }}</p>
-                        {% endfor %}
-                    </td>
-                </tr>
-               {% endfor %}
-            </table>
-            </div>
-            {% if forloop.last %}
-                <input type='button' value="Add Another" onClick="addAnother(this,'formset_workex',{{forloop.counter0}})">
-            {% endif %}
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3><a href='#'>Certificate Information</a></h3>
-            <!-- certificate information form -->
-            {{ certification_formset.management_form }}
-            {% for form in certification_formset.forms %}
-            <div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
-            <table>
-               {% for field in form %}
-               <tr align='left'>    
-                    <td width='20%'> {{ field.label_tag }} <br/>
-                        <span class='help'>{{ field.help_text }}</span>
-                    </td>
-                    
-                    <td width='50%'> 
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <p class='error'>{{ error }}</p>
-                        {% endfor %}
-                    </td>
-                </tr>
-               {% endfor %}
-            </table>
-            </div>
-            {% if forloop.last %}
-                <input type='button' value="Add Another" onClick="addAnother(this,'formset_certification',{{forloop.counter0}})">
-            {% endif %}
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3><a href='#'>Academic Achievements</a></h3>
-            <!-- academic information form -->
-            {{ academic_formset.management_form }}
-            {% for form in academic_formset.forms %}
-            <div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
-            <table>
-               {% for field in form %}
-               <tr align='left'>    
-                    <td width='20%'> {{ field.label_tag }} <br/>
-                        <span class='help'>{{ field.help_text }}</span>
-                    </td>
-                    
-                    <td width='50%'> 
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <p class='error'>{{ error }}</p>
-                        {% endfor %}
-                    </td>
-                </tr>
-               {% endfor %}
-            </table>
-            </div>
-            {% if forloop.last %}
-                <input type='button' value="Add Another" onClick="addAnother(this,'formset_academic',{{forloop.counter0}})">
-            {% endif %}
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3><a href='#'>Projects Undertaken</a></h3>
-            <!-- project information form -->
-            {{ project_formset.management_form }}
-            {% for form in project_formset.forms %}
-            <div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
-            <table>
-               {% for field in form %}
-               <tr align='left'>    
-                    <td width='20%'> {{ field.label_tag }} <br/>
-                        <span class='help'>{{ field.help_text }}</span>
-                    </td>
-                    
-                    <td width='50%'> 
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <p class='error'>{{ error }}</p>
-                        {% endfor %}
-                    </td>
-                </tr>
-               {% endfor %}
-            </table>
-            </div>
-            {% if forloop.last %}
-                <input type='button' value="Add Another" onClick="addAnother(this,'formset_project',{{forloop.counter0}})">
-            {% endif %}
-            {% endfor %}
-        </div>
-
-        <div>
-            <h3><a href='#'>ExtraCurricular Achievements</a></h3>
-            <!-- extracurricular information form -->
-            {{ extracurricular_formset.management_form }}
-            {% for form in extracurricular_formset.forms %}
-            <div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
-            <table>
-               {% for field in form %}
-               <tr align='left'>    
-                    <td width='20%'> {{ field.label_tag }} <br/>
-                        <span class='help'>{{ field.help_text }}</span>
-                    </td>
-                    
-                    <td width='50%'> 
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <p class='error'>{{ error }}</p>
-                        {% endfor %}
-                    </td>
-                </tr>
-               {% endfor %}
-            </table>
-            </div>
-            {% if forloop.last %}
-                <input type='button' value="Add Another" onClick="addAnother(this,'formset_extracurricular',{{forloop.counter0}})">
-            {% endif %}
-            {% endfor %}
-        </div>
-<br/><br/>
-<input type='submit' value='Submit'>
+<div align='center'><input type='submit' value='Submit'/></div>
 </form>
-</div>
 {% endblock %}

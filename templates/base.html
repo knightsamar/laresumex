@@ -106,10 +106,10 @@
         }
     {% comment %} 
         for insertings syles 
-    {% endcomment %}
+        {% endcomment %}
     {% block styles %}
     {% endblock %}
-    </style>
+   </style>
     {% block scripts %}
     {% endblock %}
     
@@ -122,15 +122,13 @@ _gaq.push(['_setAccount', 'UA-26005401-1']);
 _gaq.push(['_trackPageview']);
 
 (function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
- })();
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 
-</script>
-
+    </script>
 </head>
-
 
 <body>
 <div id ='sid' ><!--Samar is Dog -->
@@ -149,7 +147,6 @@ _gaq.push(['_trackPageview']);
 
     <br>
     <div style ="{float:right;text-align:right;}">
-    
       This software is created and maintained by 
       {% if "1234567894375804397501834651034875601348564138905638"|random|divisibleby:2 %}
         <a href="http://www.facebook.com/knightsamar" target='_blank'>Samarendra</a>, <a href="http://www.facebook.com/apoorva.srinivasan1" target='_blank'>Apoorva Srinivasan</a>, <a href='http://www.facebook.com/ramesh.raithatha'>Ramesh</a> and <a href='http://www.facebook.com/ashwinikspy'>Ashwini Kumar</a>
@@ -157,7 +154,6 @@ _gaq.push(['_trackPageview']);
         <a href="http://www.facebook.com/apoorva.srinivasan1">Apoorva Srinivasan</a>, <a href = "http://www.facebook.com/knightsamar">Samarendra</a>, <a href='http://www.facebook.com/ramesh.raithatha'>Ramesh</a> and <a href='http://www.facebook.com/ashwinikspy'>Ashwini Kumar</a>
       {% endif %} 
       from MSc(CA)
-
       <br/>
       <BR>
       This is a <a href='http://sdrclabs.in'><img src="http://projects.sdrclabs.in/laresumex_media/SDRC_logo.gif" height="30" width="60" border=0 alt="SDRCLabs"></a>Labs creation!<br/>
@@ -169,10 +165,13 @@ _gaq.push(['_trackPageview']);
         <BR>and generates resumes using <a href='http://pypi.python.org/pypi/pisa'>pisa pdf</a>
     </div>
 
-    <br>
-    <br><BR><BR><BR><BR>
-    <div id='footer_from_sadhan' align='center'>Works best in <a href='http://getfirefox.com'>Firefox!</a></span></div>
-    <contact><a href = '/laresumex/contact/'>Contact US</a></contact>
-</div><!-- /footer-->
-</body>
+        <br>
+        <br><BR><BR><BR><BR>
+        <div id='footer_from_sadhan' align='center'>Works best in <a href='http://getfirefox.com'>Firefox!</a></span></div>
+        <contact><a href = '/laresumex/contact/'>Contact US</a></contact>
+    </div><!-- /footer-->
+
+    </div>
+
+    </body>
 </html>

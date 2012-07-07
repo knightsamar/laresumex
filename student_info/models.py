@@ -8,14 +8,14 @@ from datetime import datetime;
 class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
     graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
-    prn = models.CharField(max_length=12,unique=True,primary_key=True);
-    fullname = models.CharField("First Name", max_length=60, help_text="FULL NAME As on your certificates", blank=False)
-    sex=models.CharField(max_length=1,choices=gender);
-    email=models.EmailField(max_length=255);
+    prn = models.CharField(max_length=12,unique=True,primary_key=True,verbose_name = 'Permanent Registration Number');
+    fullname = models.CharField(max_length=60, verbose_name = 'Full Name',help_text="FULL NAME As on your certificates", blank=False)
+    sex=models.CharField(max_length=1,choices=gender, null=False, blank=False, verbose_name='Gender');
+    email=models.EmailField(max_length=255, verbose_name='Email Address',);
     phone=models.CharField(max_length=12, blank = True, null = True);
     backlogs  = models.CharField(max_length=1);
     yeardrop = models.CharField(max_length=1);
-    career_objective=models.TextField(blank=False);
+    career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
@@ -191,9 +191,6 @@ class companySpecificData(models.Model):
     def __str__(self):
         return "value of %s by %s " %(self.valueOf.displayText, self.primary_table.prn)
    
-
-
-
 #for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 

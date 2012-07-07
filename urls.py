@@ -69,4 +69,6 @@ urlpatterns = patterns('',
     #for ldap login 
     (r'^login/$','common.views.login'),
     (r'^logout/$','common.views.logout'),
+
+    (r'^foo/$','student_info.views.foo'),
 )

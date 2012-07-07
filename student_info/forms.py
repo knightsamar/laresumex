@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from student_info.models import personal, marks, swExposure, certification, workex, academic, project, extracurricular
+from student_info.models import personal, marks, swExposure, certification, workex, academic, project, extracurricular, student
 from django.forms.extras.widgets import SelectDateWidget
 
 def getYears(**kwargs):
@@ -104,4 +104,11 @@ class ExtraCurricularForm(ModelForm):
                 'fromDate' : SelectDateWidget(years = getYears(previousYears=30,nextYears=3)),
                 'endDate' : SelectDateWidget(years = getYears(previousYears=30,nextYears=3))
                 }
-               
+
+class StudentForm(ModelForm):
+    class Meta:
+        model = student
+        exclude = ('prn','backlogs','yeardrops','certification','project','academic','extracurricular','workex','Extra_field','last_update')
+        
+        #define the order of the fields on the form
+        fields = ('fullname','sex','email','phone','career_objective')

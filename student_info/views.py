@@ -3,8 +3,8 @@
 from student_info.models import *;
 from student_info import tables
 ''' import generator helpers '''
-from django.template import Context, loader
 from django.template import Context, loader, RequestContext
+from django.shortcuts import render_to_response
 from django.http import HttpResponse;
 from datetime import datetime
 
@@ -368,9 +368,16 @@ def ajaxRequest(request):
     return our_redirect('/student_info/%d/edit' %(int(request.session['username'])))
     return HttpResponse('you arent supposed to see this page. if u see this please contact apoorva')
 
+
+def foo(request):
+    c = RequestContext(request);
+    t = loader.get_template('tabs.html')
+
+    return HttpResponse(t.render(c))
+
 def nayeforms(request, prn):
-    from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm
-    from student_info.models import student,personal,swExposure,marks,certification,workex,academic
+    from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm
+    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student
     from django.forms.models import modelformset_factory
 
     #for storing the data from the table
@@ -398,6 +405,9 @@ def nayeforms(request, prn):
         formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0)
         formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
         formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
+        formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
+        formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
+        formset_factories['student'] = modelformset_factory(student, form=StudentForm, extra=0)
 
         #generate a formset -- collection of forms for editing/creating new data
         formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
@@ -405,7 +415,10 @@ def nayeforms(request, prn):
         formsets['swExposure'] = formset_factories['swExposure'](request.POST,prefix='swExposure')
         formsets['certification'] = formset_factories['certification'](request.POST,prefix='certification')
         formsets['workex'] = formset_factories['workex'](request.POST,prefix='workex')
-        formsets['academic'] = formset_factories['workex'](request.POST,prefix='academic')
+        formsets['academic'] = formset_factories['academic'](request.POST,prefix='academic')
+        formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
+        formsets['project'] = formset_factories['project'](request.POST,prefix='project')
+        formsets['student'] = formset_factories['student'](request.POST,prefix='student')
 
         print "===POST==="
         print request.POST
@@ -417,12 +430,12 @@ def nayeforms(request, prn):
                     i.primary_table = s
                     i.save()
                 print 'Saved all submitted data for ',f
-                invalid_data = False
+                valid_data = False
             else:
                 print 'Submitted data for %s is invalid' % (f)
-                invalid_data = True
+                valid_data = True
 
-        if not invalid_data:
+        if valid_data:
             return HttpResponse("Danke!");
         else:
             print "Invalid data! Returning form for editing";
@@ -493,6 +506,14 @@ def nayeforms(request, prn):
            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
 
+        data['student'] = student.objects.filter(pk=prn)
+        if len(data['student']) == 0:
+           formset_factories['student'] = modelformset_factory(student, form=StudentForm, extra=1)
+           formsets['student'] = formset_factories['student'](prefix='student',queryset=data['student'])
+        else: #existing data was found for this student 
+           formset_factories['student'] = modelformset_factory(student, form=StudentForm, extra=0)
+           formsets['student'] = formset_factories['student'](prefix='student',queryset=data['student'])
+
     t = loader.get_template('student_info/nayaform.html')
     c = RequestContext(request, {
         'prn' : prn,
@@ -504,25 +525,8 @@ def nayeforms(request, prn):
         'academic_formset' : formsets['academic'],
         'project_formset' : formsets['project'],
         'extracurricular_formset' : formsets['extracurricular'],
+        'student_formset' : formsets['student'],
         'ROOT' : ROOT,
         })
 
     return HttpResponse(t.render(c))
-
-#====================================================
-'''
-    if request.method == 'POST':
-        filled_form = MarksForm(request.POST);
-        
-        if filled_form.is_valid():
-            print "======POST=====",
-            print request.POST
-            f = MarksForm(request.POST, instance = marks.objects.filter(primary_table=prn)[0])
-            f.save()
-            return HttpResponse("Done!, Danke")
-        else:
-            #invalid data
-            f = MarksForm(request.POST, instance = marks.objects.filter(primary_table=prn)[0])
-    else: #no form was submitted
-        f = MarksForm(instance = marks.objects.filter(primary_table=prn)[0])
-'''
