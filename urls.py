@@ -54,10 +54,7 @@ urlpatterns = patterns('',
     (r'^PT/reports',"company.views.got_placed"),
     
     # student_info
-    (r'^student_info/(?P<prn>\d+)/edit',"student_info.views.edit"),
-    (r'^student_info/form',"student_info.views.showform"),
-    (r'^student_info/(?P<prn>\d+)/submit',"student_info.views.submit"),
-    (r'^form',"student_info.views.showform"),
+    (r'^student_info/(?P<prn>\d+)/form',"student_info.views.nayeforms"),
     (r'^student_info/(?P<prn>\d+)/nayaform',"student_info.views.nayeforms"),
 
     #trying out django social auth
