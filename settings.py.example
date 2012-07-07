@@ -100,7 +100,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.webdesign',
-     # Uncomment the next line to enable the admin:
+    # Uncomment the next line to enable the admin:
      'django.contrib.admin',
     #Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
@@ -109,7 +109,7 @@ INSTALLED_APPS = (
     'laresumex.jobposting',
     'laresumex.company',
     'laresumex.ldap_login',
-    'social_auth'
+    'social_auth',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -122,7 +122,7 @@ AUTHENTICATION_BACKENDS = (
 TEMPLATE_CONTEXT_PREPROCESSORS = (
     'django.contrib.messages.context_processors.messages',
 )
-
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 FACEBOOK_APP_ID = '262186370481378'
 FACEBOOK_API_SECRET = '817980f27ad9a339ba0f154aa1a1ba7b'
 FACEBOOK_EXTENDED_PERMISSION = ['user_about_me','email']

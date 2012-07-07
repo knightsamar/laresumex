@@ -135,6 +135,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
 {% endblock %}
 {% block content %}
 
+{% if messages %}
+<span class='message'>Following errors were encountered when processing your form:</span>
+<ul class="messages">
+   {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+   {% endfor %}
+</ul>
+{% endif %}
 <!-- the onSubmitValidator() validates using JavaScript and then enables form submission -->
 <form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{prn}}/nayaform'>
 {% csrf_token %}

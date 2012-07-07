@@ -7,7 +7,8 @@ from django.template import Context, loader, RequestContext
 from django.shortcuts import render_to_response
 from django.http import HttpResponse;
 from datetime import datetime
-
+from django.core.exceptions import ValidationError 
+from django.contrib import messages
 
 ''' import utility functions '''
 from student_info.utility import our_redirect,errorMaker, debugger;
@@ -420,25 +421,30 @@ def nayeforms(request, prn):
         formsets['project'] = formset_factories['project'](request.POST,prefix='project')
         formsets['student'] = formset_factories['student'](request.POST,prefix='student')
 
-        print "===POST==="
-        print request.POST
-
+        #print "===POST==="
+        #print request.POST
+        valid_data = False
         for f in formsets:
-            if formsets[f].is_valid():
-                instances = formsets[f].save(commit=False);
-                for i in instances:
-                    i.primary_table = s
-                    i.save()
-                print 'Saved all submitted data for ',f
-                valid_data = False
+            #formsets[f].clean()
+            valid_data = formsets[f].is_valid()
+            if valid_data:
+               instances = formsets[f].save(commit=False)
+               for i in instances:
+                   i.primary_table = s
+                   i.save()
+                   print 'Saved all submitted data for ',f
             else:
-                print 'Submitted data for %s is invalid' % (f)
-                valid_data = True
-
+                #Error!!
+                print "==================="
+                print "Error with %s is :" % (f)
+                print formsets[f].errors;
+                #Add the error message to be displayed in the template
+                messages.error(request, formsets[f].errors); 
+        '''
         if valid_data:
             return HttpResponse("Danke!");
         else:
-            print "Invalid data! Returning form for editing";
+            print "Invalid data! Returning form for editing";'''
     else: #new form is being displayed
         data['marks'] = marks.objects.filter(primary_table=prn)
 
