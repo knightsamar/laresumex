@@ -1,3 +1,9 @@
+
+1. Photo display and field + saving in the nayaform
+2. Rendering, saving and fetching of CSV fields
+
+
+
 <<<------ URGENT  -------->>>
 How to fix the bug in JobPosting ?
 1. Solve the problem of saving partial username when a socialauth user puts up a jobposting...

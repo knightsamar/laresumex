@@ -111,4 +111,4 @@ class StudentForm(ModelForm):
         exclude = ('prn','backlogs','yeardrops','certification','project','academic','extracurricular','workex','Extra_field','last_update')
         
         #define the order of the fields on the form
-        fields = ('fullname','sex','email','phone','career_objective')
+        fields = ('fullname','sex','email','phone','career_objective','photo')

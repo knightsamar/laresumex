@@ -162,11 +162,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
     
     <div id='tabs-1'>
 	<!-- basic information form -->
-	{{ student_formset.management_form }}
-	{% for form in student_formset.forms %}
-	<div id="formset_student_{{ forloop.counter0 }}" class="increaseable">
+	<div id="form_student" class="non_increaseable">
 	<table>
-	   {% for field in form %}
+	   {% for field in student_form %}
 	   <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
@@ -181,8 +179,12 @@ function addAnother(callerButton,elIDprefix,lastNum)
 		</tr>
 	   {% endfor %}
 	</table>
-	</div>
-	{% endfor %}
+    </div>
+    {% if photo %}
+        <div id='photo'>
+            <img src='{{ photo.url }}'/>
+        </div>
+    {% endif %}
 	</div>
 
 	<div id='tabs-2'>

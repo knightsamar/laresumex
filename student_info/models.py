@@ -10,12 +10,14 @@ class student(models.Model):
     graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
     prn = models.CharField(max_length=12,unique=True,primary_key=True,verbose_name = 'Permanent Registration Number');
     fullname = models.CharField(max_length=60, verbose_name = 'Full Name',help_text="FULL NAME As on your certificates", blank=False)
-    sex=models.CharField(max_length=1,choices=gender, null=False, blank=False, verbose_name='Gender');
+    sex = models.CharField(max_length=1, choices=gender, null=False, blank=False, verbose_name='Gender');
     email=models.EmailField(max_length=255, verbose_name='Email Address',);
     phone=models.CharField(max_length=12, blank = True, null = True);
     backlogs  = models.CharField(max_length=1);
     yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
+    photo = models.ImageField(upload_to = 'photos', null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
+  
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
@@ -96,7 +98,7 @@ class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
      mother_name=models.CharField(max_length=50,verbose_name="Mother's Name");
      father_name=models.CharField(max_length=50,verbose_name="Father's Name");
-     birthdate=models.DateField(null=True);
+     birthdate=models.DateField(null=False,verbose_name='Your BirthDate');
      areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest');
      mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation"); 
      father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation");
@@ -204,7 +206,7 @@ def handle_student_updates(sender, **kwargs):
     print "The instance which forced the signal to sent was ", kwargs['instance']
     print 
     #would be applicable if we would be processing post_save
-    print "Was a new job instance created ?", kwargs['created']
+    print "Was a new student instance created ?", kwargs['created']
     try:
        if kwargs['instance'].primary_table:
            s = kwargs['instance'].primary_table;
