@@ -219,6 +219,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id='tabs-3'>
 	<!-- marks filling form -->
 	{{ marks_formset.management_form }}
+    <p align='left'>You need to specify your score for Xth, XIIth and Graduation till now</p>
 	{% for form in marks_formset.forms %}
 	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
 	<table>

@@ -9,15 +9,15 @@ class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
     graduation=['Bsc(H) Computer Science', 'Bsc(IT)']
     prn = models.CharField(max_length=12,unique=True,primary_key=True,verbose_name = 'Permanent Registration Number');
-    fullname = models.CharField(max_length=60, verbose_name = 'Full Name',help_text="FULL NAME As on your certificates", blank=False)
-    sex = models.CharField(max_length=1, choices=gender, null=False, blank=False, verbose_name='Gender');
+    fullname = models.CharField(max_length=60, verbose_name = 'Full Name',help_text="FULL NAME as on your certificates", blank=False)
+    sex=models.CharField(max_length=1,choices=gender, null=False, blank=False, verbose_name='Gender');
     email=models.EmailField(max_length=255, verbose_name='Email Address',);
     phone=models.CharField(max_length=12, blank = True, null = True);
     backlogs  = models.CharField(max_length=1);
     yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
     photo = models.ImageField(upload_to = 'photos', null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
-  
+
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
@@ -99,13 +99,13 @@ class personal(models.Model):
      mother_name=models.CharField(max_length=50,verbose_name="Mother's Name");
      father_name=models.CharField(max_length=50,verbose_name="Father's Name");
      birthdate=models.DateField(null=False,verbose_name='Your BirthDate');
-     areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest');
-     mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation"); 
+     areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest', help_text='Enter areas of interest seperated by commas');
+     mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation");
      father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation");
-     languages=models.CharField(max_length=200,verbose_name="Languages Known");
-     hobbies=models.CharField(max_length=200);
-     strength=models.CharField(max_length=200,verbose_name='Strengths');
-     weakness=models.CharField(max_length=200,verbose_name='Weaknesses');
+     languages=models.CharField(max_length=200,verbose_name="Languages Known",help_text='Enter languages seperated by commas');
+     hobbies=models.CharField(max_length=200,help_text='Enter hobbies seperated by commas');
+     strength=models.CharField(max_length=200,verbose_name='Strengths',help_text='Enter strengths seperated by commas');
+     weakness=models.CharField(max_length=200,verbose_name='Weaknesses',help_text='Enter weaknesses seperated by commas');
      per_address=models.TextField(max_length=200,verbose_name='Permanent Address');
      corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address');
      
@@ -123,11 +123,11 @@ class personal(models.Model):
 
 class swExposure(models.Model):
     primary_table=models.ForeignKey('student', null=False);
-    programming = models.CharField(max_length=100);
-    databases = models.CharField(max_length=100)
-    OS = models.CharField(max_length=100)
-    swPackages = models.CharField(max_length=100)
-    webTools = models.CharField(max_length=100)
+    programming = models.CharField(max_length=100,verbose_name='Programming Languages',help_text='Enter Programming Languages that you know seperated by commas');
+    databases = models.CharField(max_length=100,verbose_name='Databases',help_text='Enter Databases that you know seperated by commas')
+    OS = models.CharField(max_length=100,verbose_name='Operating Systems',help_text='Enter Operating Systems that you know seperated by commas')
+    swPackages = models.CharField(max_length=100,verbose_name='Software Packages',help_text='Enter Software Packages that you know seperated by commas')
+    webTools = models.CharField(max_length=100,verbose_name='Web Tools', help_text='Enter Web Tools seperated by commas')
   
     formname = 'SwExposureForm'
 
@@ -206,7 +206,7 @@ def handle_student_updates(sender, **kwargs):
     print "The instance which forced the signal to sent was ", kwargs['instance']
     print 
     #would be applicable if we would be processing post_save
-    print "Was a new student instance created ?", kwargs['created']
+    print "Was a new instance created ?", kwargs['created']
     try:
        if kwargs['instance'].primary_table:
            s = kwargs['instance'].primary_table;
@@ -220,26 +220,8 @@ def handle_student_updates(sender, **kwargs):
         print "Exception %s occured" % e;
     print "++++++++++++++++++++++++++++++++++++++++++++"
 
-#Whenever a posting is saved, signal!
+#Whenever any student related data is saved, signal!
 #Refer: http://localhost/docs/django-docs/topics/signals.html#listening-to-signals for syntax of the below and why weak is kept False.
 for k,model in tables.items():
     post_save.connect(handle_student_updates,sender=eval(model),weak=False,dispatch_uid='studentUpdateSignal');
 
-
-#In sabko ume actually use karna hai jab hum version treat karenge au
-"""
-class ExtraTable(models.Model):
-    tables = (('p','personal'),('sw','software_exposure'),('ex','extraField'),('m','marks'),('s','student'))
-    Column_Type = (('MVOLD','Multi-valued one line display'),
-                   ('MVMLD','Multi-valued multiple line display'),
-                   ('SVOLD','Single-valued one line display')
-                   );
-
-    column_name = models.CharField(max_length=50);
-    column_type = models.CharField(max_length=5,choices=Column_Type);
-    column_length = models.PositiveIntegerField();
-    column_title = models.CharField(max_length=2,choices=tables);
-
-class ExtraTableKaData(models.Model):
-    field = models.ForeignKey('ExtraTable');
-    data = models.TextField();"""
