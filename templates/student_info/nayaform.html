@@ -23,9 +23,13 @@
 
 {% block scripts %}
 <script language='javascript'>
+var DEBUG = false    
 function debug(msg)
 {
-    alert(msg)
+    if (DEBUG)
+    {
+        alert(msg)
+    }
 }
 
 /*
