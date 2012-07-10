@@ -3,7 +3,6 @@
 #CUSTOM VARS
 FULL_PATH = "/home/knightsamar/learn/laresumex";
 RESUME_STORE = "%s/STORE/resumes" % (FULL_PATH);
-PHOTO_STORE = "%s/STORE/photos" % (FULL_PATH);
 RESUME_FORMAT = "%s/templates/moderncv" % (FULL_PATH);
 ROOT="";
 
@@ -59,7 +58,7 @@ MEDIA_ROOT = FULL_PATH + "/media";
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost/laresumex_media';
+MEDIA_URL = 'http://localhost/laresumex_media/';
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -104,12 +103,13 @@ INSTALLED_APPS = (
      'django.contrib.admin',
     #Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'laresumex.student_info',
-    'laresumex.generate_resume',
-    'laresumex.jobposting',
-    'laresumex.company',
-    'laresumex.ldap_login',
-    'social_auth',
+    'laresumex.student_info', #for handling student information
+    'laresumex.generate_resume', #for providing resume generation
+    'laresumex.jobposting', #for providing jobposting
+    'laresumex.company', #for providing company specific functionality
+    'laresumex.ldap_login', #for logging in using ldap
+    'social_auth', #for integrating with social media 
+    'sorl.thumbnail', #for doing thumbnails of photos
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -140,5 +140,11 @@ LOAD_EXTRA_DATA = True
 #necessary for error email logs and other such mails to be sent
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 #the directory where emails will be stored
-EMAIL_FILE_PATH = '/home/knightsamar/learn/laresumex/emails' # change this to a proper location
+EMAIL_FILE_PATH = FULL_PATH + '/emails' # change this to a proper location
 DEFAULT_FROM_EMAIL = 'testing@testing.localhost'
+
+#variables used throughout laresumex for cross-app interaction
+PHOTO_STORE='STORE/photos' #this is a relative path and will be automatically attached to the MEDIA_ROOT by the apps
+
+#for caching -- needed for thumbnails and doing things fast
+CACHE_BACKEND = 'dummy://'

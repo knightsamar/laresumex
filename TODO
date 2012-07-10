@@ -1,8 +1,9 @@
 
-1. Photo display and field + saving in the nayaform
-2. Rendering, saving and fetching of CSV fields
-
-
+1. Photo display and field + saving in the nayaform - DONE
+2. Rendering, saving and fetching of CSV fields - DONE
+3. Adding company specific dynamic fields
+4. Write a django command for migrating old data  
+5. Write a cronjob for clearing the image cache bi-weekly ?
 
 <<<------ URGENT  -------->>>
 How to fix the bug in JobPosting ?

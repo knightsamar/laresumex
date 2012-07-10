@@ -2,6 +2,7 @@ from django.db import models
 from datetime  import datetime, date; #for django
 from django.db.models.signals import post_save
 from datetime import datetime;
+from laresumex.settings import PHOTO_STORE
 
 # Create your models here.
 
@@ -16,7 +17,7 @@ class student(models.Model):
     backlogs  = models.CharField(max_length=1);
     yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
-    photo = models.ImageField(upload_to = 'photos', null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
+    photo = models.ImageField(upload_to = PHOTO_STORE, null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
 
     certification=models.BooleanField();
     project=models.BooleanField();
@@ -140,12 +141,15 @@ class swExposure(models.Model):
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student',editable=False);
     title=models.CharField(blank=False,max_length=20);
-    desc = models.TextField(blank=False);
-    fromDate = models.DateField(null=True,blank=True);
-    endDate = models.DateField(null=True,blank=True);
+    desc = models.TextField(blank=False,verbose_name='Description',help_text='Describe it in brief.');
+    fromDate = models.DateField(null=True,blank=True, verbose_name='From Date',help_text='Enter the Month and Year when you started this');
+    endDate = models.DateField(null=True,blank=True, verbose_name='To Date',help_text='Enter the Month and Year when you completed/will complete this');
+
+    formname = 'ExtraFieldForm'
+
     def __str__(self):
         return "Details about %s  of %s" % (self.title,self.primary_table.fullname);
-
+    
     class Meta:
         verbose_name_plural = 'ExtraField info about students';
 

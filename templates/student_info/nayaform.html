@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
+
 {% block title %}
     Naya Form
 {% endblock %}
@@ -158,10 +160,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
         <li class='sectionlinks'><a href="#tabs-3">Marks and Qualifications*</a></li>
         <li class='sectionlinks'><a href="#tabs-4">Software Skillset*</a></li>
         <li class='sectionlinks'><a href="#tabs-5">Other Information</a></li>
-        <!-- tabs 5,6,7,8 are in accordion in the Other Information section -->
-<!--        <li><a class='sectionlinks' href="#tabs-9">Personal Information*</a></li>
-        <li><a class='sectionlinks' href="#tabs-10">Photo *</a></li>
-        <li><a class='sectionlinks' href="#tabs-11">Company Specific information*</a></li> -->
+        <li class='sectionlinks'><a href='#tabs-6'>Extra Information</a></li>
+        <!-- tabs 6,7,8 are in accordion in the Other Information section -->
+        <li><a class='sectionlinks' href="#tabs-7">Company Specific information*</a></li>
     </ul>
     
     <div id='tabs-1'>
@@ -186,7 +187,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
     </div>
     {% if photo %}
         <div id='photo'>
-            <img src='{{ photo.url }}'/>
+            {% thumbnail photo.url "180x150" crop="50% center" as im %}
+                <img src='{{ im.url }}'>
+            {% endthumbnail %}
         </div>
     {% endif %}
 	</div>
@@ -219,7 +222,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id='tabs-3'>
 	<!-- marks filling form -->
 	{{ marks_formset.management_form }}
-    <p align='left'>You need to specify your score for Xth, XIIth and Graduation till now</p>
+    <p align='left'>You need to specify your score for (atleast) Xth, XIIth and Graduation till now</p>
 	{% for form in marks_formset.forms %}
 	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
 	<table>
@@ -270,6 +273,12 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	</div>
 	{% endfor %}
 	</div>
+
+    <div id='tabs-7'>
+    <!-- company specific information wala tab -->
+
+    </div>
+
 
 	<div id='tabs-5'>
 		<div id='accordion'>
@@ -421,6 +430,36 @@ function addAnother(callerButton,elIDprefix,lastNum)
 			<br/><br/>
 		</div> <!-- end of accordion -->
 	</div> <!-- end of tab5 -->
+
+    <!-- un-categorized information section -->
+	<div id='tabs-6'>
+	<p align='left'>Here you can specify any extra information which doesn't fit in any of the other sections</p>
+    {{ extrafield_formset.management_form }}
+	{% for form in extrafield_formset.forms %}
+	<div id="formset_extrafield_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+	   {% for field in form %}
+	   <tr align='left'>    
+			<td width='20%'> {{ field.label_tag }} <br/>
+				<span class='help'>{{ field.help_text }}</span>
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+				{% for error in field.errors %}
+					<p class='error'>{{ error }}</p>
+				{% endfor %}
+			</td>
+		</tr>
+	   {% endfor %}
+	</table>
+	</div>
+        {% if forloop.last %}
+            <input type='button' value="Add Another" onClick="addAnother(this,'formset_extrafield',{{forloop.counter0}})">
+        {% endif %}
+    {% endfor %}
+	</div>
+
 </div>
 <div align='center'><input type='submit' value='Submit'/></div>
 </form>
