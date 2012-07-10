@@ -427,8 +427,6 @@ def nayeforms(request, prn):
         formsets['project'] = formset_factories['project'](request.POST,prefix='project')
         sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
         
-        import pdb;
-        pdb.set_trace()
         student_data_valid = False
         other_data_valid = False
 
@@ -442,7 +440,7 @@ def nayeforms(request, prn):
             print "Error with Student data :",
             print sf.errors;
             #Add the error message to be displayed in the template
-            messages.error(request, sf.errors); 
+            messages.error(request, "Basic Information: " + sf.errors); 
             
         for f in formsets:
             #formsets[f].clean()
@@ -460,7 +458,7 @@ def nayeforms(request, prn):
                 print "Error with %s is :" % (f)
                 print formsets[f].errors;
                 #Add the error message to be displayed in the template
-                messages.error(request, formsets[f].errors); 
+                messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
        
         if student_data_valid and other_data_valid:
             return HttpResponse("Danke!");
