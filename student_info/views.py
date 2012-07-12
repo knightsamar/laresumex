@@ -108,10 +108,10 @@ def edit(request,prn):
         b) cs are the data filled by this partucular student.
         Main table fetches all the data to be collected per student. CS is the data ctually filled by the students. this is used to prefill the foem while editing.and the maintable is required for the "form" for a new user.
         '''
+      
+        cs = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
+        maintable = companySpecific.objects.exclude(fieldType='special').exclude(companyspecificdata__in = cs).order_by('displayText');
 
-       
-        cs=companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
-        maintable=companySpecific.objects.exclude(fieldType='special').exclude(companyspecificdata__in = cs).order_by('displayText');
         print "CS ====",cs
         print "Maintable....",maintable
         
@@ -128,8 +128,6 @@ def edit(request,prn):
 ##########################################################################
 #################### STUDENT FORM SUBMIT #################################
 ##########################################################################
-
-
 def submit(request, prn):
     '''processes submissions of NEW forms and also EDIT forms!'''
 
@@ -378,7 +376,7 @@ def foo(request):
 
 def nayeforms(request, prn):
     from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm, ExtraFieldForm 
-    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,ExtraField
+    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,ExtraField, companySpecific, companySpecificData
     from django.forms.models import modelformset_factory
 
     print "Doing everything for prn", prn
@@ -432,6 +430,30 @@ def nayeforms(request, prn):
         
         student_data_valid = False
         other_data_valid = False
+       
+        #WORST way of identifiying Company Specific fields for processing -- but can't find a better way, for now.
+        for field,data in request.POST.lists():
+            field_name = field.split('_')
+            print "Field ",field
+            print "Data ",data
+            if (field_name[0] == 'companySpecific'):
+                try:
+                    print 'On',field, 'and Data',data
+                    cs = companySpecific.objects.get(key=field_name[1])    
+                    print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
+                    
+                    value = str(data[0]);
+                    for d in data[1:]:
+                        value += ',' + d
+                    
+                    csd, created_or_found = companySpecificData.objects.get_or_create(valueOf=cs,primary_table=s)
+                    csd.value = value
+                    csd.save()
+
+                    other_data_valid = True;
+                except Exception as e:
+                    other_data_valid = False;
+                    messages.error(request, "Company Specific Info : %s" % e)
 
         print 'Processing student data',
         if sf.is_valid():
@@ -546,7 +568,16 @@ def nayeforms(request, prn):
        
         data['student'] = s
         sf = StudentForm(prefix='student',instance=data['student'])
-
+      
+        #Company Specific fields -- special thingys ;)
+        data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
+        if (data['companySpecificData'].count()) == 0:
+            #provide for new fields to be used
+            data['companySpecificFields'] = companySpecific.objects.exclude(fieldType='special').order_by('displayText');
+            data_for_company_specifics = False;
+        else:
+            data_for_company_specifics = True;
+            
     t = loader.get_template('student_info/nayaform.html')
     context = {
         'prn' : prn,
@@ -560,10 +591,15 @@ def nayeforms(request, prn):
         'extracurricular_formset' : formsets['extracurricular'],
         'extrafield_formset':formsets['extrafield'],
         'student_form' : sf,
+        's':s, #student object
         'ROOT' : ROOT,
         }
     
-
+    if data_for_company_specifics:
+        context['companySpecificData'] = data['companySpecificData']
+    else:
+        context['companySpecificFields'] = data['companySpecificFields']
+ 
     if s is not None and s.photo:
         context['photo'] = s.photo
 
