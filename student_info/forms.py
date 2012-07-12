@@ -24,7 +24,7 @@ class PersonalForm(ModelForm):
     
     class Meta:
         model = personal;
-        exclude=('primary_table','prn','backlogs','yeardrop','certification','project','academic','extracurricular','workex','Extra_field','last_update')
+        exclude=('id','primary_table','prn','backlogs','yeardrop','certification','project','academic','extracurricular','workex','Extra_field','last_update')
         widgets = {
                 'birthdate' : SelectDateWidget(years = getYears(previousYears=30))
                }
@@ -42,7 +42,7 @@ class SwExposureForm(ModelForm):
     class Meta:
         model = swExposure
         required_css_class = 'required_fields'
-        exclude=('primary_table')
+        exclude=('id','primary_table')
 
 class CertificationForm(ModelForm):
     class Meta:
@@ -52,7 +52,7 @@ class CertificationForm(ModelForm):
         #define the order of the fields on the form
         fields = ('title','desc','fromDate','endDate')
 
-        exclude=('primary_table')
+        exclude=('id','primary_table')
         widgets = {
                 'fromDate' : SelectDateWidget(years = getYears(previousYears=30,nextYears=3)),
                 'endDate' : SelectDateWidget(years = getYears(previousYears=30,nextYears=3))
@@ -61,7 +61,7 @@ class CertificationForm(ModelForm):
 class WorkexForm(ModelForm):
     class Meta:
         model = workex
-        exclude = ('primary_table')
+        exclude = ('id','primary_table','extrafield_ptr')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form
@@ -75,7 +75,7 @@ class WorkexForm(ModelForm):
 class AcademicAchievementsForm(ModelForm):
     class Meta:
         model = academic
-        exclude = ('primary_table')
+        exclude = ('id','primary_table')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form
@@ -89,7 +89,7 @@ class AcademicAchievementsForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = project
-        exclude = ('primary_table')
+        exclude = ('id','primary_table')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form
@@ -103,7 +103,7 @@ class ProjectForm(ModelForm):
 class ExtraCurricularForm(ModelForm):
     class Meta:
         model = extracurricular
-        exclude = ('primary_table')
+        exclude = ('id','primary_table')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form
@@ -117,7 +117,7 @@ class ExtraCurricularForm(ModelForm):
 class StudentForm(ModelForm):
     class Meta:
         model = student
-        exclude = ('prn','backlogs','yeardrops','certification','project','academic','extracurricular','workex','Extra_field','last_update')
+        exclude = ('id','prn','backlogs','yeardrops','certification','project','academic','extracurricular','workex','Extra_field','last_update')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form
@@ -126,7 +126,7 @@ class StudentForm(ModelForm):
 class ExtraFieldForm(ModelForm):
     class Meta:
         model = ExtraField
-        exclude = ('primary_table')
+        exclude = ('id','primary_table')
         required_css_class = 'required_fields'
 
         #define the order of the fields on the form

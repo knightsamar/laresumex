@@ -374,7 +374,22 @@ def foo(request):
 
     return HttpResponse(t.render(c))
 
+
+'''
+New form(s) implemented using ModelForm and ModelFormset functionality
+Named in plural because there are actually multiple forms goin around in this function.
+'''
 def nayeforms(request, prn):
+    #login checker
+    if "username" not in request.session:
+       print "No session found!"
+       request.session['redirect'] = request.get_full_path();
+       return our_redirect("/ldap_login")
+    elif prn != request.session['username']:
+       print "prn", prn, type(prn)
+       print "username", request.session['username'],type(request.session['username'])
+       return HttpResponse('<b>Please edit your own form! :@</b>')
+
     from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm, ExtraFieldForm 
     from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,ExtraField, companySpecific, companySpecificData
     from django.forms.models import modelformset_factory
@@ -568,10 +583,16 @@ def nayeforms(request, prn):
        
         #Company Specific fields -- special thingys ;) 
 	    #These provide dynamic fields in the form which can be added in the form by the placement team.
-        #existing data 
+        
+        #existing data for company specific fields
         data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
         already_filled_list = data['companySpecificData'].values_list('valueOf')
-        #provide for new fields to be used
+
+        #provide for new fields to be displayed to user
+        #here we select only those fields which haven't been filled by the user as obtained in the above list.
+        #basically this is a query which says -->
+        #"Give me all Company Specific fields excluding those whose values have been filled by the user and order them by their displayText"
+
         data['companySpecificFields'] = companySpecific.objects.all().exclude(fieldType='special').exclude(id__in=already_filled_list).order_by('displayText') 
         
         #Student Data 
@@ -593,11 +614,10 @@ def nayeforms(request, prn):
         'student_form' : sf,
         's' : s, #student object
         'ROOT' : ROOT,
+        'companySpecificData': data['companySpecificData'],
+        'companySpecificFields': data['companySpecificFields'],
         }
     
-    context['companySpecificData'] = data['companySpecificData']
-    context['companySpecificFields'] = data['companySpecificFields']
- 
     if s is not None and s.photo:
         context['photo'] = s.photo
 

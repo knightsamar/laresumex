@@ -19,6 +19,12 @@
     border-style: dashed;
     padding: 1px;
 }
+
+.notice
+{
+    color: green;
+    font-style: italic;
+}
 </style>
 
 <link type="text/css" href="{{MEDIA_URL}}/jquery/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
@@ -26,13 +32,19 @@
 
 {% block scripts %}
 <script language='javascript'>
-var DEBUG = false    
+var DEBUG = false
 function debug(msg)
 {
     if (DEBUG)
     {
         alert(msg)
     }
+}
+
+function onSubmitValidator()
+{
+    //insert JavaScript validation code for all fields here
+    return true;
 }
 
 /*
@@ -161,9 +173,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
         <li class='sectionlinks'><a href="#tabs-3">Marks and Qualifications*</a></li>
         <li class='sectionlinks'><a href="#tabs-4">Software Skillset*</a></li>
         <li class='sectionlinks'><a href="#tabs-5">Other Information</a></li>
+            <!-- there is an accordion in the Other Information section -->
         <li class='sectionlinks'><a href='#tabs-6'>Extra Information</a></li>
-        <!-- tabs 6,7,8 are in accordion in the Other Information section -->
-        <li><a class='sectionlinks' href="#tabs-7">Company Specific information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-7">Company Specific information*</a></li>
     </ul>
     
     <div id='tabs-1'>
@@ -188,8 +200,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
     </div>
     {% if photo %}
         <div id='photo'>
-            {% thumbnail photo.url "180x150" crop="50% center" as im %}
-                <img src='{{ im.url }}'>
+            {% thumbnail photo.url "180x150" crop="50% center" as img %}
+                <img src='{{ img.url }}'>
             {% endthumbnail %}
         </div>
     {% endif %}
@@ -223,7 +235,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id='tabs-3'>
 	<!-- marks filling form -->
 	{{ marks_formset.management_form }}
-    <p align='left'>You need to specify your score for (atleast) Xth, XIIth and Graduation till now</p>
+    <p class='notice'>You need to specify your score for (atleast) Xth, XIIth and Graduation till now</p>
 	{% for form in marks_formset.forms %}
 	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
 	<table>
@@ -281,7 +293,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 			<div>
 				<h3><a href='#'>Work Experience</a></h3>
 				<!-- workex information form -->
-				{{ workex_formset.management_form }}
+                <div class='wrapper'>
+                {{ workex_formset.management_form }}
 				{% for form in workex_formset.forms %}
 				<div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
 				<table>
@@ -304,12 +317,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% if forloop.last %}
 					<input type='button' value="Add Another" onClick="addAnother(this,'formset_workex',{{forloop.counter0}})">
 				{% endif %}
-				{% endfor %}
+                {% endfor %}
+                </div>
 			</div>
 
 			<div>
 				<h3><a href='#'>Certificate Information</a></h3>
-				<!-- certificate information form -->
+                <!-- certificate information form -->
+                <div class='wrapper'>
 				{{ certification_formset.management_form }}
 				{% for form in certification_formset.forms %}
 				<div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
@@ -333,13 +348,15 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% if forloop.last %}
 					<input type='button' value="Add Another" onClick="addAnother(this,'formset_certification',{{forloop.counter0}})">
 				{% endif %}
-				{% endfor %}
+                {% endfor %}
+                </div>
 			</div>
 
 			<div>
 				<h3><a href='#'>Academic Achievements</a></h3>
 				<!-- academic information form -->
-				{{ academic_formset.management_form }}
+                <div class='wrapper'>
+                {{ academic_formset.management_form }}
 				{% for form in academic_formset.forms %}
 				<div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
 				<table>
@@ -362,11 +379,13 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% if forloop.last %}
 					<input type='button' value="Add Another" onClick="addAnother(this,'formset_academic',{{forloop.counter0}})">
 				{% endif %}
-				{% endfor %}
+                {% endfor %}
+                </div>
 			</div>
 
 			<div>
-				<h3><a href='#'>Projects Undertaken</a></h3>
+                <h3><a href='#'>Projects Undertaken</a></h3>
+                <div>
 				<!-- project information form -->
 				{{ project_formset.management_form }}
 				{% for form in project_formset.forms %}
@@ -391,13 +410,15 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% if forloop.last %}
 					<input type='button' value="Add Another" onClick="addAnother(this,'formset_project',{{forloop.counter0}})">
 				{% endif %}
-				{% endfor %}
+                {% endfor %}
+                </div>
 			</div>
 
 			<div>
 				<h3><a href='#'>ExtraCurricular Achievements</a></h3>
 				<!-- extracurricular information form -->
-				{{ extracurricular_formset.management_form }}
+                <div>
+                {{ extracurricular_formset.management_form }}
 				{% for form in extracurricular_formset.forms %}
 				<div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
 				<table>
@@ -421,7 +442,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% if forloop.last %}
 					<input type='button' value="Add Another" onClick="addAnother(this,'formset_extracurricular',{{forloop.counter0}})">
 				{% endif %}
-				{% endfor %}
+                {% endfor %}
+                </div>
 			</div>
 			<br/><br/>
 		</div> <!-- end of accordion -->
@@ -429,7 +451,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 
     <!-- un-categorized information section -->
 	<div id='tabs-6'>
-	<p align='left'>Here you can specify any extra information which doesn't fit in any of the other sections</p>
+	<p class='notice'>Here you can specify any extra information which doesn't fit in any of the other sections</p>
     {{ extrafield_formset.management_form }}
 	{% for form in extrafield_formset.forms %}
 	<div id="formset_extrafield_{{ forloop.counter0 }}" class="increaseable">
@@ -458,78 +480,83 @@ function addAnother(callerButton,elIDprefix,lastNum)
     
     <div id='tabs-7'>
     <!-- company specific information wala tab -->
-    {% for c in companySpecificData %}
-    <!-- {{ c }} -->
-       {% if c.valueOf.fieldType == 'special' %}
-       <!-- We got a special -->
-        {% if c.valueOf.key == 'strongAreas' %}
-        Strong Areas 
-            <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple>
-                {% for a in c.value|split:',' %}
-                    <option selected >{{a}}</option>     
-                {% endfor %}
-            </select>
-        {% endif %}<!-- end of strong areas wala if -->
-        {% if c.valueOf.key == 'weakAreas' %}
-        Weak Areas
-            <select  id ="companySpecific_weakAreas" name = 'weakAreas' onFocus="fillOptions(this)" multiple=true>
-                {% for a in c.value|split:',' %}
-                    <option selected >{{a}}</option>     
-                {% endfor %}
+    {% if not companySpecificData and not companySpecificFields %}
+       <p class='notice'>No data currently required for Company!</p> 
+    {% else %}
+       <p class='notice'>This is the information required by a Company for the Placement Process</p> 
+         {% for c in companySpecificData %}
+        <!-- {{ c }} -->
+           {% if c.valueOf.fieldType == 'special' %}
+           <!-- We got a special -->
+            {% if c.valueOf.key == 'strongAreas' %}
+            Strong Areas 
+                <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple>
+                    {% for a in c.value|split:',' %}
+                        <option selected >{{a}}</option>     
+                    {% endfor %}
+                </select>
+            {% endif %}<!-- end of strong areas wala if -->
+            {% if c.valueOf.key == 'weakAreas' %}
+            Weak Areas
+                <select  id ="companySpecific_weakAreas" name = 'weakAreas' onFocus="fillOptions(this)" multiple=true>
+                    {% for a in c.value|split:',' %}
+                        <option selected >{{a}}</option>     
+                    {% endfor %}
 
-            </select>
-            <BR><BR>
-        {% endif %} <!-- end of weak areas wala if -->
-       {% endif %} <!-- special field type wala if -->
-    {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
+                </select>
+                <BR><BR>
+            {% endif %} <!-- end of weak areas wala if -->
+           {% endif %} <!-- special field type wala if -->
+        {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
+            <BR>
+            <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{% endif %}
+             {% if c.valueOf.fieldType == 'radio' %}
+                <!-- got a radio -->
+                {% if c.value == 'yes' %}
+                 Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes' checked>
+                 No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no'>
+                {% else %}
+                 Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes'>
+                 No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no' checked>
+                {% endif%}
+             {% endif %} <!-- end of radio wala if-->
+             
+             {% if c.valueOf.fieldType == 'textarea'%}
+                <textarea name='companySpecific_{{c.valueOf.key}}' id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
+             {% endif %}
+             
+             {% if c.valueOf.fieldType == 'text' %} 
+                <input type='text' name='companySpecific_{{c.valueOf.key}}' id='companySpecific_{{c.valueOf.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
+             {% endif %} <!-- fieldtypes wala if -->
+        {% empty %}
+            &nbsp;
+            {% comment %}
+            This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
+            Strong Areas
+            <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+            Weak Areas
+            <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+
+            {% endcomment %}
+        {% endfor%}
+
+        <!-- unfilled items -->
+        {% for c in companySpecificFields %}
         <BR>
-        <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{% endif %}
-         {% if c.valueOf.fieldType == 'radio' %}
-            <!-- got a radio -->
-            {% if c.value == 'yes' %}
-             Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes' checked>
-             No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no'>
-            {% else %}
-             Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes'>
-             No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no' checked>
-            {% endif%}
-         {% endif %} <!-- end of radio wala if-->
-         
-         {% if c.valueOf.fieldType == 'textarea'%}
-            <textarea name='companySpecific_{{c.valueOf.key}}' id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
-         {% endif %}
-         
-         {% if c.valueOf.fieldType == 'text' %} 
-            <input type='text' name='companySpecific_{{c.valueOf.key}}' id='companySpecific_{{c.valueOf.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
-         {% endif %} <!-- fieldtypes wala if -->
-    {% empty %}
-        &nbsp;
-        {% comment %}
-        This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
-        Strong Areas
-        <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
-        Weak Areas
-        <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
-
-        {% endcomment %}
-    {% endfor%}
-
-    <!-- unfilled items -->
-    {% for c in companySpecificFields %}
-    <BR>
-        <B>{{c.displayText}}</b> {%if c.is_mandatory %}<b><sup>*</sup></b>{% endif %}
-        {% if c.fieldType == 'radio' %}
-             Yes  <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}'  value='yes'>
-             No   <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' {% if c.is_mandatory %} checked {% endif %} value='no'>
-        {% endif %}
-        {% if c.fieldType == 'textarea' %}
-           <textarea name='companySpecific_{{c.key}}' id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
-        {% endif %}
-        {% if c.fieldType == 'text' %}
-            <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' id='companySpecific_{{c.key}}' {%if c.is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'>
-        {% endif %}
-    {% endfor %}
-    </div> 
+            <B>{{c.displayText}}</b> {%if c.is_mandatory %}<b><sup>*</sup></b>{% endif %}
+            {% if c.fieldType == 'radio' %}
+                 Yes  <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}'  value='yes'>
+                 No   <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' {% if c.is_mandatory %} checked {% endif %} value='no'>
+            {% endif %}
+            {% if c.fieldType == 'textarea' %}
+               <textarea name='companySpecific_{{c.key}}' id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
+            {% endif %}
+            {% if c.fieldType == 'text' %}
+                <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' id='companySpecific_{{c.key}}' {%if c.is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %} 
     </div>
 
 
