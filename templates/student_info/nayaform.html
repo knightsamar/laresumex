@@ -458,25 +458,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
     
     <div id='tabs-7'>
     <!-- company specific information wala tab -->
-    Do you have any active backlogs?
-    {% if s.backlogs %}
-              <input type="radio"  name="backlogs" value='yes' checked = true>Yes
-              <input type="radio"  name="backlogs" value=''>No<br><br>
-       {% else %}      
-              <input type="radio"  name="backlogs" value='yes' >Yes
-              <input type="radio"  name="backlogs" value='' checked = true>No<br><BR><br>
-      {% endif %} 
-    <BR><BR>
-    Did you have any year drop ?
-    {% if s.yeardrop %}
-              <input type="radio"  name="yeardrop" value='yes' checked = true>Yes
-              <input type="radio"  name="yeardrop" value='' >No<br><br>
-       {% else %}       
-              <input type="radio"  name="yeardrop" value='yes' >Yes
-              <input type="radio"  name="yeardrop" value='' checked = true>No<br><BR><br>
-      {% endif %} 
-    <BR><BR>
-
     {% for c in companySpecificData %}
     <!-- {{ c }} -->
        {% if c.valueOf.fieldType == 'special' %}
@@ -502,8 +483,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
        {% endif %} <!-- special field type wala if -->
     {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
         <BR>
-        <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{%endif%}
-        {% if c.valueOf.fieldType == 'radio' %}
+        <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{% endif %}
+         {% if c.valueOf.fieldType == 'radio' %}
             <!-- got a radio -->
             {% if c.value == 'yes' %}
              Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes' checked>
@@ -511,23 +492,26 @@ function addAnother(callerButton,elIDprefix,lastNum)
             {% else %}
              Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes'>
              No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no' checked>
-             {% endif%}
+            {% endif%}
          {% endif %} <!-- end of radio wala if-->
+         
          {% if c.valueOf.fieldType == 'textarea'%}
-            <textarea id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
-         {% else %} 
-            <input type='{{c.valueOf.fieldType}}' name='companySpecific_{{c.valueOf.key}}' id='companySpecific_{{c.valueOf.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
-        {% endif %}<!-- fieldtypes wala if -->
+            <textarea name='companySpecific_{{c.valueOf.key}}' id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
+         {% endif %}
+         
+         {% if c.valueOf.fieldType == 'text' %} 
+            <input type='text' name='companySpecific_{{c.valueOf.key}}' id='companySpecific_{{c.valueOf.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
+         {% endif %} <!-- fieldtypes wala if -->
     {% empty %}
-    &nbsp;
-    {% comment %}
-    This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
-    Strong Areas
-    <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
-    Weak Areas
-    <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+        &nbsp;
+        {% comment %}
+        This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
+        Strong Areas
+        <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+        Weak Areas
+        <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
 
-    {% endcomment %}
+        {% endcomment %}
     {% endfor%}
 
     <!-- unfilled items -->
@@ -537,13 +521,13 @@ function addAnother(callerButton,elIDprefix,lastNum)
         {% if c.fieldType == 'radio' %}
              Yes  <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}'  value='yes'>
              No   <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' {% if c.is_mandatory %} checked {% endif %} value='no'>
-         {% else %}
-         {% if c.fieldType == 'textarea' %}
-            <textarea id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
-         {% else %} 
+        {% endif %}
+        {% if c.fieldType == 'textarea' %}
+           <textarea name='companySpecific_{{c.key}}' id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
+        {% endif %}
+        {% if c.fieldType == 'text' %}
             <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' id='companySpecific_{{c.key}}' {%if c.is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'>
         {% endif %}
-        {%endif%}
     {% endfor %}
     </div> 
     </div>

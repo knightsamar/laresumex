@@ -14,19 +14,20 @@ class student(models.Model):
     sex=models.CharField(max_length=1,choices=gender, null=False, blank=False, verbose_name='Gender');
     email=models.EmailField(max_length=255, verbose_name='Email Address',);
     phone=models.CharField(max_length=12, blank = True, null = True);
-    backlogs  = models.CharField(max_length=1);
-    yeardrop = models.CharField(max_length=1);
     career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
     photo = models.ImageField(upload_to = PHOTO_STORE, null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
-
+    
+    #boolean fields
     certification=models.BooleanField();
     project=models.BooleanField();
     academic=models.BooleanField();
     extracurricular=models.BooleanField();
     workex=models.BooleanField();
     Extra_field=models.BooleanField();
-    last_update=models.DateTimeField(auto_now=True);
-
+    
+    #when was this record and corresponding information for the student in various tables last updated on?
+    #this field is also updated by the handle_student_updates signal handler 
+    last_update=models.DateTimeField(auto_now=True,verbose_name='Last Updated on');
     formname = 'StudentForm'
 
     def __str__(self):
@@ -45,14 +46,15 @@ class student(models.Model):
 
     def get_resume_path(self):
         from generate_resume.models import resume
-        
         try :
             r = resume.objects.get(prn = self.prn);
             return r.get_pdf_path()
         except resume.DoesNotExist as e:
             return None
-        
-            
+    
+    class Meta:
+        verbose_name_plural = "Student's Information"
+    
 class marks(models.Model):
     MARK_TYPES = (('Total','Total Score'),('GPA','GPA'),('Appearing','Appearing'),('Awaiting Result','Awaiting Result'))
 
@@ -93,7 +95,7 @@ class marks(models.Model):
         except Exception as e:
             return 'not mentioned';
     class Meta:
-        verbose_name_plural = 'Marks of Students';
+        verbose_name_plural = 'Marks + Qualification Info of Students';
 
 class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
@@ -120,7 +122,7 @@ class personal(models.Model):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
      class Meta:
-        verbose_name_plural = 'Personal Info about students';
+        verbose_name_plural = 'Personal Info of Students';
 
 class swExposure(models.Model):
     primary_table=models.ForeignKey('student', null=False);
@@ -136,7 +138,7 @@ class swExposure(models.Model):
         return "Software Exposure of %s(%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
     class Meta:
-        verbose_name_plural = 'Software Exposures';
+        verbose_name_plural = 'Software Exposure info of students';
 
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student',editable=False);
@@ -151,52 +153,70 @@ class ExtraField(models.Model):
         return "Details about %s  of %s" % (self.title,self.primary_table.fullname);
     
     class Meta:
-        verbose_name_plural = 'ExtraField info about students';
+        verbose_name_plural = 'Uncategorized Extra Info of Students';
 
 class workex(ExtraField):
+    
     formname = 'WorkexForm'
-    pass;
-        
+    
+    class Meta:
+        verbose_name_plural = "Work Experience Info of Students"
+
 class certification(ExtraField):
     formname = 'CertificationForm'
-    pass;
+    
+    class Meta:
+        verbose_name_plural = "Certification Info of students"
 
 class project(ExtraField):
-    formname = 'ProjectForm'
     heading=models.CharField(max_length=40 ,blank=True);
     
+    formname = 'ProjectForm'
+    class Meta:
+        verbose_name_plural = 'Project Info of Students'
+
 class academic(ExtraField):
     formname = 'AcademicAchievementsForm'
-    pass;
+
+    class Meta:
+        verbose_name_plural = 'Academic Info of Student'
 
 class extracurricular(ExtraField):
     formname = 'ExtraCurricularForm'
-    pass;
-
+    class Meta:
+        verbose_name_plural = 'Extra Curricular Infor of Students'
 
 # stores company specific details that shd not be stored in the resume
 class companySpecific(models.Model):
     Types=(('text','Simple Text'),('radio','Simple yes/No type'),('textarea','a large area'),('special','Type, to render speciallyy -> for experts ;)'))
-    datatypes = (('none','none'),('numeric','numbers greater than  0'),('string','Only alphabets and spaces.'));
+    datatypes = (('none','none'),('numeric','numbers greater than  0'),('string','Only letters from the alphabet and spaces.'));
     
-    fieldType=models.CharField(max_length=50,default='text',choices=Types)
-    key = models.CharField(max_length=100, help_text="enter a key for internal purposes, WITHOUT SPACES or UNDERSCORE(_)")
-    displayText=models.CharField(max_length=100,help_text="The text you want to appear on the form");
-    is_mandatory = models.BooleanField(help_text= 'Should this field be mandatory' );
-    dataType = models.CharField(max_length = 10, help_text = 'What kinds of imput are allowed???', default = 'none' , choices = datatypes)
-    createdOn = models.DateTimeField(auto_now_add = True);
+    fieldType=models.CharField(max_length=50,default='text',choices=Types, help_text='Field Type', verbose_name='Type of Field')
+    key = models.CharField(max_length=100, help_text="Enter a key for internal purposes, WITHOUT SPACES or UNDERSCORE(_)", verbose_name='Internal Field Name')
+    displayText = models.CharField(max_length=100, help_text="What name should be displayed to the student filling details?", verbose_name='Field label displayed to Student');
+    is_mandatory = models.BooleanField(help_text= 'Should this field be made mandatory?',verbose_name='Is mandatory?');
+    dataType = models.CharField(max_length = 10, help_text = 'What kinds of inputs are allowed?', default = 'none' , choices = datatypes, verbose_name='Type of Data allowed')
+    createdOn = models.DateTimeField(auto_now_add = True, verbose_name='Field was created on', editable=False);
 
     def __str__(self):
         return self.displayText;
 
+    class Meta:
+        verbose_name_plural = 'Company Specific Fields'
+        verbose_name = 'Company Specific Field'
 
 class companySpecificData(models.Model):
-    primary_table=models.ForeignKey('student')
-    valueOf=models.ForeignKey('companySpecific');
-    value=models.CharField(max_length=100,blank=True);
+    primary_table=models.ForeignKey('student',verbose_name='Info filled by')
+    valueOf=models.ForeignKey('companySpecific',verbose_name='Value for field');
+    value=models.CharField(max_length=100,blank=True, verbose_name='Value filled');
+
     def __str__(self):
-        return "value of %s by %s " %(self.valueOf.displayText, self.primary_table.prn)
+        return "Value for '%s' by '%s' " %(self.valueOf.displayText, self.primary_table.prn)
    
+    class Meta:
+        verbose_name_plural = "Data for Company Specific Fields"
+        verbose_name = 'Data for Company Specific Field'
+
 #for references inside various views
 tables = {'p':'personal', 'c':'certification','sw':'swExposure','m':'marks','pro':'project','a':'academic','w':'workex','ex':'ExtraField', 'e':'extracurricular'}
 

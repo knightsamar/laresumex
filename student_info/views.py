@@ -494,7 +494,7 @@ def nayeforms(request, prn):
 
         data['marks'] = marks.objects.filter(primary_table=prn)
 
-        if len(data['marks']) == 0: #no existing data for this student
+        if data['marks'].count() == 0: #no existing data for this student
            print "No existing marks data found for this student"
            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=3)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
@@ -503,7 +503,7 @@ def nayeforms(request, prn):
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
 
         data['personal'] = personal.objects.filter(primary_table=prn)
-        if len(data['personal']) == 0:
+        if data['personal'].count() == 0:
            formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=1)
            formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
         else:
@@ -511,7 +511,7 @@ def nayeforms(request, prn):
            formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
         
         data['swExposure'] = swExposure.objects.filter(primary_table=prn)
-        if len(data['swExposure']) == 0:
+        if data['swExposure'].count() == 0:
            formset_factories['swExposure'] = modelformset_factory(swExposure,form=SwExposureForm,extra=1)
            formsets['swExposure'] = formset_factories['swExposure'](prefix='swExposure',queryset = data['swExposure'])
         else:
@@ -519,7 +519,7 @@ def nayeforms(request, prn):
            formsets['swExposure'] = formset_factories['swExposure'](prefix='swExposure',queryset = data['swExposure'])
         
         data['certification'] = certification.objects.filter(primary_table=prn)
-        if len(data['certification']) == 0:
+        if data['certification'].count() == 0:
            formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=1)
            formsets['certification'] = formset_factories['certification'](prefix='certification',queryset=data['certification'])
         else:
@@ -527,7 +527,7 @@ def nayeforms(request, prn):
            formsets['certification'] = formset_factories['certification'](prefix='certification',queryset = data['certification'])
 
         data['workex'] = workex.objects.filter(primary_table=prn)
-        if len(data['workex']) == 0:
+        if data['workex'].count() == 0:
            formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=1)
            formsets['workex'] = formset_factories['workex'](prefix='workex',queryset=data['workex'])
         else:
@@ -535,7 +535,7 @@ def nayeforms(request, prn):
            formsets['workex'] = formset_factories['workex'](prefix='workex',queryset = data['workex'])
 
         data['academic'] = academic.objects.filter(primary_table=prn)
-        if len(data['academic']) == 0:
+        if data['academic'].count() == 0:
            formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=1)
            formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
         else: #existing data was found for this student 
@@ -543,7 +543,7 @@ def nayeforms(request, prn):
            formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
 
         data['project'] = project.objects.filter(primary_table=prn)
-        if len(data['project']) == 0:
+        if data['project'].count() == 0:
            formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=1)
            formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
         else: #existing data was found for this student 
@@ -551,7 +551,7 @@ def nayeforms(request, prn):
            formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
 
         data['extracurricular'] = extracurricular.objects.filter(primary_table=prn)
-        if len(data['extracurricular']) == 0:
+        if data['extracurricular'].count() == 0:
            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=1)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
         else: #existing data was found for this student 
@@ -559,25 +559,25 @@ def nayeforms(request, prn):
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
  
         data['extrafield'] = ExtraField.objects.filter(primary_table=prn)
-        if len(data['extrafield']) == 0:
+        if data['extrafield'].count() == 0:
            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=1)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
         else: #existing data was found for this student 
            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
        
+        #Company Specific fields -- special thingys ;) 
+	    #These provide dynamic fields in the form which can be added in the form by the placement team.
+        #existing data 
+        data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
+        already_filled_list = data['companySpecificData'].values_list('valueOf')
+        #provide for new fields to be used
+        data['companySpecificFields'] = companySpecific.objects.all().exclude(fieldType='special').exclude(id__in=already_filled_list).order_by('displayText') 
+        
+        #Student Data 
         data['student'] = s
         sf = StudentForm(prefix='student',instance=data['student'])
-      
-        #Company Specific fields -- special thingys ;)
-        data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
-        if (data['companySpecificData'].count()) == 0:
-            #provide for new fields to be used
-            data['companySpecificFields'] = companySpecific.objects.exclude(fieldType='special').order_by('displayText');
-            data_for_company_specifics = False;
-        else:
-            data_for_company_specifics = True;
-            
+
     t = loader.get_template('student_info/nayaform.html')
     context = {
         'prn' : prn,
@@ -591,14 +591,12 @@ def nayeforms(request, prn):
         'extracurricular_formset' : formsets['extracurricular'],
         'extrafield_formset':formsets['extrafield'],
         'student_form' : sf,
-        's':s, #student object
+        's' : s, #student object
         'ROOT' : ROOT,
         }
     
-    if data_for_company_specifics:
-        context['companySpecificData'] = data['companySpecificData']
-    else:
-        context['companySpecificFields'] = data['companySpecificFields']
+    context['companySpecificData'] = data['companySpecificData']
+    context['companySpecificFields'] = data['companySpecificFields']
  
     if s is not None and s.photo:
         context['photo'] = s.photo
