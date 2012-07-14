@@ -133,6 +133,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
             navigation: true,
             collapsible: true,
             sortable: true,
+	        active: false,
             });
 
         // Tabs        
@@ -182,8 +183,12 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<!-- basic information form -->
 	<div id="form_student" class="non_increaseable">
 	<table>
-	   {% for field in student_form %}
-	   <tr align='left'>    
+       {% for field in student_form %}
+       {% comment %}
+        This is for hiding id and primary_key fields (Ref #154)
+       {% endcomment %}
+       {% if not field.is_hidden %}
+       <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
 			</td>
@@ -194,7 +199,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 					<p class='error'>{{ error }}</p>
 				{% endfor %}
 			</td>
-		</tr>
+        </tr>
+       {% endif %}
 	   {% endfor %}
 	</table>
     </div>
@@ -214,7 +220,11 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id="formset_personal_{{ forloop.counter0 }}" class="increaseable">
 	<table>
 	   {% for field in form %}
-	   <tr align='left'>    
+       {% comment %}
+        This is for hiding id and primary_key fields (Ref #154)
+       {% endcomment %}
+       {% if not field.is_hidden %}
+       <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
 			</td>
@@ -225,7 +235,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 					<p class='error'>{{ error }}</p>
 				{% endfor %}
 			</td>
-		</tr>
+        </tr>
+       {% endif %}
 	   {% endfor %}
 	</table>
 	</div>
@@ -240,7 +251,11 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
 	<table>
 	   {% for field in form %}
-	   <tr align='left'>    
+	   {% comment %}
+        This is for hiding id and primary_key fields (Ref #154)
+       {% endcomment %}
+       {% if not field.is_hidden %}
+        <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
 			</td>
@@ -251,8 +266,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
 					<p class='error'>{{ error }}</p>
 				{% endfor %}
 			</td>
-		</tr>
-		{% endfor %}
+        </tr>
+       {% endif %}
+	   {% endfor %}
 	</table>
 	</div>
 
@@ -269,7 +285,11 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<div id="formset_swExposure_{{ forloop.counter0 }}" class="increaseable">
 	<table>
 	   {% for field in form %}
-	   <tr align='left'>    
+       {% comment %}
+       This is for hiding id and primary_key fields (Ref #154)
+       {% endcomment %}
+       {% if not field.is_hidden %}
+       <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
 			</td>
@@ -281,7 +301,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% endfor %}
 			</td>
 		</tr>
-	   {% endfor %}
+       {% endif %} 
+       {% endfor %}
 	</table>
 	</div>
 	{% endfor %}
@@ -299,7 +320,11 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				<div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
 				<table>
 				   {% for field in form %}
-				   <tr align='left'>    
+                    {% comment %}
+                    This is for hiding id and primary_key fields (Ref #154)
+                    {% endcomment %}
+                    {% if not field.is_hidden %}
+                   <tr align='left'>    
 						<td width='20%'> {{ field.label_tag }} <br/>
 							<span class='help'>{{ field.help_text }}</span>
 						</td>
@@ -311,7 +336,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 							{% endfor %}
 						</td>
 					</tr>
-				   {% endfor %}
+                   {% endif %} 
+                   {% endfor %}
 				</table>
 				</div>
 				{% if forloop.last %}
@@ -330,7 +356,11 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				<div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
 				<table>
 				   {% for field in form %}
-				   <tr align='left'>    
+                   {% comment %}
+                   This is for hiding id and primary_key fields (Ref #154)
+                   {% endcomment %}
+                   {% if not field.is_hidden %}
+                  <tr align='left'>    
 						<td width='20%'> {{ field.label_tag }} <br/>
 							<span class='help'>{{ field.help_text }}</span>
 						</td>
@@ -341,7 +371,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 								<p class='error'>{{ error }}</p>
 							{% endfor %}
 						</td>
-					</tr>
+                    </tr>
+                   {% endif %}
 				   {% endfor %}
 				</table>
 				</div>
@@ -361,6 +392,10 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				<div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
 				<table>
 				   {% for field in form %}
+                   {% comment %}
+                   This is for hiding id and primary_key fields (Ref #154)
+                   {% endcomment %}
+                   {% if not field.is_hidden %}
 				   <tr align='left'>    
 						<td width='20%'> {{ field.label_tag }} <br/>
 							<span class='help'>{{ field.help_text }}</span>
@@ -372,7 +407,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 								<p class='error'>{{ error }}</p>
 							{% endfor %}
 						</td>
-					</tr>
+                    </tr>
+                   {% endif %}
 				   {% endfor %}
 				</table>
 				</div>
@@ -392,6 +428,10 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
 				<table>
 				   {% for field in form %}
+                   {% comment %}
+                   This is for hiding id and primary_key fields (Ref #154)
+                   {% endcomment %}
+                   {% if not field.is_hidden %}
 				   <tr align='left'>    
 						<td width='20%'> {{ field.label_tag }} <br/>
 							<span class='help'>{{ field.help_text }}</span>
@@ -403,7 +443,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 								<p class='error'>{{ error }}</p>
 							{% endfor %}
 						</td>
-					</tr>
+                    </tr>
+                   {% endif %}
 				   {% endfor %}
 				</table>
 				</div>
@@ -422,21 +463,26 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{% for form in extracurricular_formset.forms %}
 				<div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
 				<table>
-				   {% for field in form %}
-				   <tr align='left'>    
+                    {% for field in form %}
+                    {% comment %}
+                    This is for hiding id and primary_key fields (Ref #154)
+                    {% endcomment %}
+                    {% if not field.is_hidden %}
+				    <tr align='left'>    
 						<td width='20%'> {{ field.label_tag }} <br/>
 							<span class='help'>{{ field.help_text }}</span>
 						</td>
 						
-						<td width='50%'> 
+						<td width='50%'>
 							{{ field }}
 							{% for error in field.errors %}
 								<p class='error'>{{ error }}</p>
 							{% endfor %}
 						</td>
 
-					</tr>
-				   {% endfor %}
+                     </tr>
+                    {% endif %}
+				    {% endfor %}
 				</table>
 				</div>
 				{% if forloop.last %}
@@ -451,13 +497,17 @@ function addAnother(callerButton,elIDprefix,lastNum)
 
     <!-- un-categorized information section -->
 	<div id='tabs-6'>
-	<p class='notice'>Here you can specify any extra information which doesn't fit in any of the other sections</p>
+	<p class='notice'>Here you can specify any extra section for info that doesn't fit in any of the other sections</p>
     {{ extrafield_formset.management_form }}
 	{% for form in extrafield_formset.forms %}
 	<div id="formset_extrafield_{{ forloop.counter0 }}" class="increaseable">
 	<table>
-	   {% for field in form %}
-	   <tr align='left'>    
+        {% for field in form %}
+        {% comment %}
+        This is for hiding id and primary_key fields (Ref #154)
+        {% endcomment %}
+        {% if not field.is_hidden %}
+	    <tr align='left'>    
 			<td width='20%'> {{ field.label_tag }} <br/>
 				<span class='help'>{{ field.help_text }}</span>
 			</td>
@@ -468,7 +518,8 @@ function addAnother(callerButton,elIDprefix,lastNum)
 					<p class='error'>{{ error }}</p>
 				{% endfor %}
 			</td>
-		</tr>
+        </tr>
+        {% endif %}
 	   {% endfor %}
 	</table>
 	</div>

@@ -384,7 +384,7 @@ def nayeforms(request, prn):
     if "username" not in request.session:
        print "No session found!"
        request.session['redirect'] = request.get_full_path();
-       return our_redirect("/ldap_login")
+       return our_redirect("/login")
     elif prn != request.session['username']:
        print "prn", prn, type(prn)
        print "username", request.session['username'],type(request.session['username'])
@@ -511,10 +511,10 @@ def nayeforms(request, prn):
 
         if data['marks'].count() == 0: #no existing data for this student
            print "No existing marks data found for this student"
-           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=3)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=3, can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
         else:
-           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0,can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
 
         data['personal'] = personal.objects.filter(primary_table=prn)
@@ -535,50 +535,50 @@ def nayeforms(request, prn):
         
         data['certification'] = certification.objects.filter(primary_table=prn)
         if data['certification'].count() == 0:
-           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=1)
+           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=1,can_delete=True)
            formsets['certification'] = formset_factories['certification'](prefix='certification',queryset=data['certification'])
         else:
-           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=0)
+           formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=0,can_delete=True)
            formsets['certification'] = formset_factories['certification'](prefix='certification',queryset = data['certification'])
 
         data['workex'] = workex.objects.filter(primary_table=prn)
         if data['workex'].count() == 0:
-           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=1)
+           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=1,can_delete=True)
            formsets['workex'] = formset_factories['workex'](prefix='workex',queryset=data['workex'])
         else:
-           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
+           formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0,can_delete=True)
            formsets['workex'] = formset_factories['workex'](prefix='workex',queryset = data['workex'])
 
         data['academic'] = academic.objects.filter(primary_table=prn)
         if data['academic'].count() == 0:
-           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=1)
+           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=1,can_delete=True)
            formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
         else: #existing data was found for this student 
-           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
+           formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0,can_delete=True)
            formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
 
         data['project'] = project.objects.filter(primary_table=prn)
         if data['project'].count() == 0:
-           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=1)
+           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=1,can_delete=True)
            formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
         else: #existing data was found for this student 
-           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
+           formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0,can_delete=True)
            formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
 
         data['extracurricular'] = extracurricular.objects.filter(primary_table=prn)
         if data['extracurricular'].count() == 0:
-           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=1)
+           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=1,can_delete=True)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
         else: #existing data was found for this student 
-           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
+           formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
  
         data['extrafield'] = ExtraField.objects.filter(primary_table=prn)
         if data['extrafield'].count() == 0:
-           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=1)
+           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=1,can_delete=True)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
         else: #existing data was found for this student 
-           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0)
+           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0,can_delete=True)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
        
         #Company Specific fields -- special thingys ;) 
