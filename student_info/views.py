@@ -629,9 +629,6 @@ def nayeforms(request, prn):
         'companySpecificFields': data['companySpecificFields'],
         }
     
-    if s is not None and s.photo:
-        context['photo'] = s.photo
-
     c = RequestContext(request,context)
     
     return HttpResponse(t.render(c))
