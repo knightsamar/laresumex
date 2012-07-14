@@ -642,6 +642,10 @@ function addAnother(callerButton,elIDprefix,lastNum)
 
 
 </div>
-<div align='center'><input type='submit' value='Submit'/></div>
+<!--<div align='center'><input type='submit' value='Submit'/></div>-->
+<div id='buttons' class='#' style='text-align:center;'>	
+<input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home'">	
+<input type='submit' value='Submit Information!'><input type='reset'>
+</div>
 </form>
 {% endblock %}
