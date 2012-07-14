@@ -446,60 +446,72 @@ def nayeforms(request, prn):
         student_data_valid = False
         other_data_valid = False
        
-        #WORST way of identifiying Company Specific fields for processing -- but can't find a better way, for now.
-        for field,data in request.POST.lists():
-            field_name = field.split('_')
-            print "Field ",field
-            print "Data ",data
-            if (field_name[0] == 'companySpecific'):
-                try:
-                    print 'On',field, 'and Data',data
-                    cs = companySpecific.objects.get(key=field_name[1])    
-                    print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", data, type(data);
-                    
-                    value = str(data[0]);
-                    for d in data[1:]:
-                        value += ',' + d
-                    
-                    csd, created_or_found = companySpecificData.objects.get_or_create(valueOf=cs,primary_table=s)
-                    csd.value = value
-                    csd.save()
+        print 'Starting to save data'
+        try:
+            #WORST way of identifiying Company Specific fields for processing -- but can't find a better way, for now.
+            for field,value in request.POST.lists():
+                field_name = field.split('_')
+                print "Field ",field
+                print "Value ",value
+                if (field_name[0] == 'companySpecific'):
+                    try:
+                        print 'On',field, 'and Data',value
+                        cs = companySpecific.objects.get(key=field_name[1])    
+                        print "\n\n\nCOMPANY SPECIFIC...!!!!!!...", value, type(value);
+                        
+                        final_value = str(value[0]);
+                        for v in value[1:]:
+                            final_value += ',' + v
+                        
+                        csd, created_or_found = companySpecificData.objects.get_or_create(valueOf=cs,primary_table=s)
+                        csd.value = value
+                        csd.save()
 
-                    other_data_valid = True;
-                except Exception as e:
-                    other_data_valid = False;
-                    messages.error(request, "Company Specific Info : %s" % e)
+                        other_data_valid = True;
+                    except Exception as e:
+                        other_data_valid = False;
+                        messages.error(request, "Company Specific Info : %s" % e)
 
-        print 'Processing student data',
-        if sf.is_valid():
-            sf.save()
-            student_data_valid = True
-        else:
-            student_data_valid = False;
-            print "==================="
-            print "Error with Student data :",
-            print sf.errors;
-            #Add the error message to be displayed in the template
-            messages.error(request, "Basic Information: %s" % sf.errors); 
-            
-        for f in formsets:
-            #formsets[f].clean()
-            print 'Processing ',f
-            other_data_valid = formsets[f].is_valid()
-            if other_data_valid:
-                instances = formsets[f].save(commit=False)
-                for i in instances:
-                    i.primary_table = s
-                    i.save()
-                    print 'Saved all submitted data for ',f
+            print 'Processing student data',
+            if sf.is_valid():
+                sf.save()
+                student_data_valid = True
             else:
-                #Error!!
+                student_data_valid = False;
                 print "==================="
-                print "Error with %s is :" % (f)
-                print formsets[f].errors;
+                print "Error with Student data :",
+                print sf.errors;
                 #Add the error message to be displayed in the template
-                messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
-       
+                messages.error(request, "Basic Information: %s" % sf.errors); 
+                
+            for f in formsets:
+                #formsets[f].clean()
+                print 'Processing ',f
+                other_data_valid = formsets[f].is_valid()
+                if other_data_valid:
+                    instances = formsets[f].save(commit=False)
+                    for i in instances:
+                        i.primary_table = s
+                        i.save()
+                        print 'Saved all submitted data for ',f
+                else:
+                    #Error!!
+                    print "==================="
+                    print "Error with %s is :" % (f)
+                    print formsets[f].errors;
+                    #Add the error message to be displayed in the template
+                    messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
+        except:
+            if (not student_data_valid) and (not are_we_editing): #we were trying to save a NEW student's data and encountered problem
+                s.delete()
+            elif (not student_data_valid) and (are_we_editing): #we were trying to save a OLD student's data and encountered errors
+                pass #the data wasn't actually saved because of django's mechanisms
+            elif (not other_data_valid) and (not are_we_editing):
+                print "Figure out what to do in case tehre are errors in saving NEW data for a student in various models"
+                pass
+            elif (not other_data_valid) and (are_we_editing):
+                pass #the data wasn't actually saved because of django's mechanisms
+
         if student_data_valid and other_data_valid:
             return our_redirect('/common/Submitted/done');
         else:
@@ -583,7 +595,6 @@ def nayeforms(request, prn):
        
         #Company Specific fields -- special thingys ;) 
 	    #These provide dynamic fields in the form which can be added in the form by the placement team.
-        
         #existing data for company specific fields
         data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
         already_filled_list = data['companySpecificData'].values_list('valueOf')
