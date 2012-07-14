@@ -480,7 +480,7 @@ def nayeforms(request, prn):
             print "Error with Student data :",
             print sf.errors;
             #Add the error message to be displayed in the template
-            messages.error(request, "Basic Information: " + sf.errors); 
+            messages.error(request, "Basic Information: %s" % sf.errors); 
             
         for f in formsets:
             #formsets[f].clean()
@@ -501,7 +501,7 @@ def nayeforms(request, prn):
                 messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
        
         if student_data_valid and other_data_valid:
-            return HttpResponse("Danke!");
+            return our_redirect('/common/Submitted/done');
         else:
             print "Invalid data! Returning form for editing";
     else: #new form is being displayed
