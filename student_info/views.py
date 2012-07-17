@@ -419,35 +419,35 @@ def nayeforms(request, prn):
         #print "===POST==="
         #print request.POST
  
-        #formset_factories -- kind of customized factories of forms for each of our models
-        formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
-        formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
-        formset_factories['swExposure'] = modelformset_factory(swExposure, form=SwExposureForm, extra=0)
-        formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0)
-        formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
-        formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
-        formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
-        formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
-        formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0)
-
-        #generate a formset -- collection of forms for editing/creating new data
-        formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
-        formsets['personal'] = formset_factories['personal'](request.POST,prefix='personal')
-        formsets['swExposure'] = formset_factories['swExposure'](request.POST,prefix='swExposure')
-        formsets['certification'] = formset_factories['certification'](request.POST,prefix='certification')
-        formsets['workex'] = formset_factories['workex'](request.POST,prefix='workex')
-        formsets['academic'] = formset_factories['academic'](request.POST,prefix='academic')
-        formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
-        formsets['project'] = formset_factories['project'](request.POST,prefix='project')
-        formsets['extrafield'] = formset_factories['extrafield'](request.POST,prefix='extrafield')
-
-        sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
-        
-        student_data_valid = False
-        other_data_valid = False
-       
-        print 'Starting to save data'
         try:
+            student_data_valid = False
+            other_data_valid = False
+    
+            #formset_factories -- kind of customized factories of forms for each of our models
+            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
+            formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
+            formset_factories['swExposure'] = modelformset_factory(swExposure, form=SwExposureForm, extra=0)
+            formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0)
+            formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
+            formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
+            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
+            formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
+            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0)
+
+            #generate a formset -- collection of forms for editing/creating new data
+            formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
+            formsets['personal'] = formset_factories['personal'](request.POST,prefix='personal')
+            formsets['swExposure'] = formset_factories['swExposure'](request.POST,prefix='swExposure')
+            formsets['certification'] = formset_factories['certification'](request.POST,prefix='certification')
+            formsets['workex'] = formset_factories['workex'](request.POST,prefix='workex')
+            formsets['academic'] = formset_factories['academic'](request.POST,prefix='academic')
+            formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
+            formsets['project'] = formset_factories['project'](request.POST,prefix='project')
+            formsets['extrafield'] = formset_factories['extrafield'](request.POST,prefix='extrafield')
+
+            sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
+            
+            print 'Starting to save data'
             #WORST way of identifiying Company Specific fields for processing -- but can't find a better way, for now.
             for field,value in request.POST.lists():
                 field_name = field.split('_')
@@ -503,30 +503,45 @@ def nayeforms(request, prn):
                     messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
         except:
             if (not student_data_valid) and (not are_we_editing): #we were trying to save a NEW student's data and encountered problem
+                print 'Student data is invalid and we are creating new record',
                 s.delete()
             elif (not student_data_valid) and (are_we_editing): #we were trying to save a OLD student's data and encountered errors
+                print 'Student data is invalid and we are editing',
                 pass #the data wasn't actually saved because of django's mechanisms
             elif (not other_data_valid) and (not are_we_editing):
                 print "Figure out what to do in case tehre are errors in saving NEW data for a student in various models"
                 pass
             elif (not other_data_valid) and (are_we_editing):
+                print 'Other data is invalid and we are editing existing details'
                 pass #the data wasn't actually saved because of django's mechanisms
 
         if student_data_valid and other_data_valid:
             return our_redirect('/common/Submitted/done');
         else:
+            #Company Specific fields -- special thingys ;) 
+    	    #These provide dynamic fields in the form which can be added in the form by the placement team.
+            #existing data for company specific fields
+            data['companySpecificData'] = companySpecificData.objects.filter(primary_table=s).order_by('valueOf')
+            already_filled_list = data['companySpecificData'].values_list('valueOf')
+
+            #provide for new fields to be displayed to user
+            #here we select only those fields which haven't been filled by the user as obtained in the above list.
+            #basically this is a query which says -->
+            #"Give me all Company Specific fields excluding those whose values have been filled by the user and order them by their displayText"
+
+            data['companySpecificFields'] = companySpecific.objects.all().exclude(fieldType='special').exclude(id__in=already_filled_list).order_by('displayText') 
+
             print "Invalid data! Returning form for editing";
     else: #new form is being displayed
         print 'Displaying new/edit form'
 
         data['marks'] = marks.objects.filter(primary_table=prn)
-
         if data['marks'].count() == 0: #no existing data for this student
            print "No existing marks data found for this student"
            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=3, can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
         else:
-           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0,can_delete=True)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
 
         data['personal'] = personal.objects.filter(primary_table=prn)
@@ -592,7 +607,7 @@ def nayeforms(request, prn):
         else: #existing data was found for this student 
            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0,can_delete=True)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
-       
+
         #Company Specific fields -- special thingys ;) 
 	    #These provide dynamic fields in the form which can be added in the form by the placement team.
         #existing data for company specific fields

@@ -25,9 +25,22 @@
     color: green;
     font-style: italic;
 }
+
+.add_link
+{
+    color:#234F32;
+    font-weight: bold;
+}
+
+.remove_link
+{
+    color: #990000;
+    font-weight: bold;
+}
 </style>
 
 <link type="text/css" href="{{MEDIA_URL}}/jquery/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
+
 {% endblock %}
 
 {% block scripts %}
@@ -124,6 +137,99 @@ function addAnother(callerButton,elIDprefix,lastNum)
 </script>
 <script type="text/javascript" src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
 <script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type='text/javascript' src='{{MEDIA_URL}}/jquery/js/jquery.formset.js'></script>
+<script type="text/javascript">
+    $(function() 
+            {
+                   $('.marks_table').formset({
+                    prefix: 'marks',
+                    addText: 'Add another Marks/Qualification section',
+                    deleteText: 'Remove this Marks/Qualification section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.workex_table').formset({
+                    prefix: 'workex',
+                    addText: 'Add another Work Experience section',
+                    deleteText: 'Remove this Work Experience section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.certification_table').formset({
+                    prefix: 'certification',
+                    addText: 'Add another Certification section',
+                    deleteText: 'Remove this Certification section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.academic_table').formset({
+                    prefix: 'academic',
+                    addText: 'Add another Academic Achievement section',
+                    deleteText: 'Remove this Academic Achievement section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.project_table').formset({
+                    prefix: 'project',
+                    addText: 'Add another Project section',
+                    deleteText: 'Remove this Project section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.extracurricular_table').formset({
+                    prefix: 'extracurricular',
+                    addText: 'Add another ExtraCurricular Achievements section',
+                    deleteText: 'Remove this ExtraCurricular Achievements section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.project_table').formset({
+                    prefix: 'project',
+                    addText: 'Add another Project section',
+                    deleteText: 'Remove this Project section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.extrafield_table').formset({
+                    prefix: 'extrafield',
+                    addText: 'Add another Project section',
+                    deleteText: 'Remove this Project section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+
+</script>
+
 <script language='javascript'>
     $(function(){
         // Accordion
@@ -255,21 +361,22 @@ function addAnother(callerButton,elIDprefix,lastNum)
     <p class='notice'>You need to specify your score for (atleast) Xth, XIIth and Graduation till now</p>
 	{% for form in marks_formset.forms %}
 	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
-	<table>
+    <br/>
+	<table class='marks_table'>
        {% for field in form %}
        <tr align='left'>    
-           <td width='20%'>
+            <td width='20%'>
                 {% comment %}
-                  This is for hiding LABELS for id and primary_key fields (Ref #154)
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                 {% endcomment %}
-                {% if not field.is_hidden %}
+                {% if not field.is_hidden and not 'DELETE' in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
                 {% else %}
                     &nbsp;
                 {% endif %}
-			</td>
-			
+            </td>
+						
 			<td width='50%'> 
 				{{ field }}
 				{% for error in field.errors %}
@@ -280,11 +387,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	   {% endfor %}
 	</table>
 	</div>
-
-	{% if forloop.last %}
-		<input type='button' value="Add Another" onClick="addAnother(this,'formset_marks',{{forloop.counter0}})">
-	{% endif %}
-	{% endfor %}
+    {% endfor %}
 	</div>
 
 	<!-- software exposure information form -->
@@ -295,17 +398,17 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	<table>
        {% for field in form %}
        <tr align='left'>    
-           <td width='20%'>
+            <td width='20%'>
                 {% comment %}
-                  This is for hiding LABELS for id and primary_key fields (Ref #154)
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                 {% endcomment %}
-                {% if not field.is_hidden %}
+                {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
                 {% else %}
                     &nbsp;
                 {% endif %}
-			</td>
+            </td>
 			
 			<td width='50%'> 
 				{{ field }}
@@ -330,14 +433,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {{ workex_formset.management_form }}
 				{% for form in workex_formset.forms %}
 				<div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
-                <table>
+                <table class='workex_table'>
                    {% for field in form %}
                    <tr align='left'>    
                        <td width='20%'>
                             {% comment %}
-                              This is for hiding LABELS for id and primary_key fields (Ref #154)
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                             {% endcomment %}
-                            {% if not field.is_hidden %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
                             {% else %}
@@ -355,9 +458,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
                    {% endfor %}
 				</table>
 				</div>
-				{% if forloop.last %}
-					<input type='button' value="Add Another" onClick="addAnother(this,'formset_workex',{{forloop.counter0}})">
-				{% endif %}
                 {% endfor %}
                 </div>
 			</div>
@@ -369,14 +469,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{{ certification_formset.management_form }}
 				{% for form in certification_formset.forms %}
 				<div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
-                <table>
+                <table class='certification_table'>
                    {% for field in form %}
                    <tr align='left'>    
                        <td width='20%'>
                             {% comment %}
-                              This is for hiding LABELS for id and primary_key fields (Ref #154)
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                             {% endcomment %}
-                            {% if not field.is_hidden %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
                             {% else %}
@@ -394,9 +494,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				   {% endfor %}
 				</table>
 				</div>
-				{% if forloop.last %}
-					<input type='button' value="Add Another" onClick="addAnother(this,'formset_certification',{{forloop.counter0}})">
-				{% endif %}
                 {% endfor %}
                 </div>
 			</div>
@@ -408,14 +505,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {{ academic_formset.management_form }}
 				{% for form in academic_formset.forms %}
 				<div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
-                <table>
+                <table class='academic_table'>
                    {% for field in form %}
                    <tr align='left'>    
                        <td width='20%'>
                             {% comment %}
-                              This is for hiding LABELS for id and primary_key fields (Ref #154)
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                             {% endcomment %}
-                            {% if not field.is_hidden %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
                             {% else %}
@@ -433,9 +530,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				   {% endfor %}
 				</table>
 				</div>
-				{% if forloop.last %}
-					<input type='button' value="Add Another" onClick="addAnother(this,'formset_academic',{{forloop.counter0}})">
-				{% endif %}
                 {% endfor %}
                 </div>
 			</div>
@@ -447,14 +541,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				{{ project_formset.management_form }}
 				{% for form in project_formset.forms %}
 				<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
-                <table>
+                <table class='project_table'>
                    {% for field in form %}
                    <tr align='left'>    
                        <td width='20%'>
                             {% comment %}
-                              This is for hiding LABELS for id and primary_key fields (Ref #154)
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                             {% endcomment %}
-                            {% if not field.is_hidden %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
                             {% else %}
@@ -472,9 +566,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				   {% endfor %}
 				</table>
 				</div>
-				{% if forloop.last %}
-					<input type='button' value="Add Another" onClick="addAnother(this,'formset_project',{{forloop.counter0}})">
-				{% endif %}
                 {% endfor %}
                 </div>
 			</div>
@@ -486,14 +577,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {{ extracurricular_formset.management_form }}
 				{% for form in extracurricular_formset.forms %}
 				<div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
-                <table>
+                <table class='extracurricular_table'>
                    {% for field in form %}
                    <tr align='left'>    
                        <td width='20%'>
                             {% comment %}
-                              This is for hiding LABELS for id and primary_key fields (Ref #154)
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                             {% endcomment %}
-                            {% if not field.is_hidden %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
                             {% else %}
@@ -512,9 +603,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				    {% endfor %}
 				</table>
 				</div>
-				{% if forloop.last %}
-					<input type='button' value="Add Another" onClick="addAnother(this,'formset_extracurricular',{{forloop.counter0}})">
-				{% endif %}
                 {% endfor %}
                 </div>
 			</div>
@@ -528,14 +616,14 @@ function addAnother(callerButton,elIDprefix,lastNum)
     {{ extrafield_formset.management_form }}
 	{% for form in extrafield_formset.forms %}
 	<div id="formset_extrafield_{{ forloop.counter0 }}" class="increaseable">
-    <table>
+    <table class='extrafield_table'>
        {% for field in form %}
        <tr align='left'>    
            <td width='20%'>
                 {% comment %}
-                  This is for hiding LABELS for id and primary_key fields (Ref #154)
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                 {% endcomment %}
-                {% if not field.is_hidden %}
+                {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
                 {% else %}
@@ -553,9 +641,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 	   {% endfor %}
 	</table>
 	</div>
-        {% if forloop.last %}
-            <input type='button' value="Add Another" onClick="addAnother(this,'formset_extrafield',{{forloop.counter0}})">
-        {% endif %}
     {% endfor %}
 	</div>
     
