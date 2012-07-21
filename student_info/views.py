@@ -424,15 +424,15 @@ def nayeforms(request, prn):
             other_data_valid = False
     
             #formset_factories -- kind of customized factories of forms for each of our models
-            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0)
+            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0,can_delete=True)
             formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=0)
             formset_factories['swExposure'] = modelformset_factory(swExposure, form=SwExposureForm, extra=0)
-            formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0)
-            formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0)
-            formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0)
-            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0)
-            formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0)
-            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0)
+            formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0,can_delete=True)
+            formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0,can_delete=True)
+            formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0,can_delete=True)
+            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
+            formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0,can_delete=True)
+            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0,can_delete=True)
 
             #generate a formset -- collection of forms for editing/creating new data
             formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
@@ -541,11 +541,12 @@ def nayeforms(request, prn):
            formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,exclude=('primary_table'),extra=3, can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
         else:
-           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,can_delete=True)
+           formset_factories['marks'] = modelformset_factory(marks,form=MarksForm,extra=0,can_delete=True)
            formsets['marks'] = formset_factories['marks'](prefix='marks',queryset = data['marks'])
 
         data['personal'] = personal.objects.filter(primary_table=prn)
         if data['personal'].count() == 0:
+           print "No existing personal data found for this student"
            formset_factories['personal'] = modelformset_factory(personal,form=PersonalForm,extra=1)
            formsets['personal'] = formset_factories['personal'](prefix='personal',queryset = data['personal'])
         else:
@@ -554,6 +555,7 @@ def nayeforms(request, prn):
         
         data['swExposure'] = swExposure.objects.filter(primary_table=prn)
         if data['swExposure'].count() == 0:
+           print "No existing software exposure data found for this student"
            formset_factories['swExposure'] = modelformset_factory(swExposure,form=SwExposureForm,extra=1)
            formsets['swExposure'] = formset_factories['swExposure'](prefix='swExposure',queryset = data['swExposure'])
         else:
@@ -562,6 +564,7 @@ def nayeforms(request, prn):
         
         data['certification'] = certification.objects.filter(primary_table=prn)
         if data['certification'].count() == 0:
+           print "No existing certification data found for this student"
            formset_factories['certification'] = modelformset_factory(certification,form=CertificationForm,extra=1,can_delete=True)
            formsets['certification'] = formset_factories['certification'](prefix='certification',queryset=data['certification'])
         else:
@@ -570,6 +573,7 @@ def nayeforms(request, prn):
 
         data['workex'] = workex.objects.filter(primary_table=prn)
         if data['workex'].count() == 0:
+           print "No existing workex data found for this student"
            formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=1,can_delete=True)
            formsets['workex'] = formset_factories['workex'](prefix='workex',queryset=data['workex'])
         else:
@@ -578,6 +582,7 @@ def nayeforms(request, prn):
 
         data['academic'] = academic.objects.filter(primary_table=prn)
         if data['academic'].count() == 0:
+           print "No existing academic data found for this student"
            formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=1,can_delete=True)
            formsets['academic'] = formset_factories['academic'](prefix='academic',queryset=data['academic'])
         else: #existing data was found for this student 
@@ -586,6 +591,7 @@ def nayeforms(request, prn):
 
         data['project'] = project.objects.filter(primary_table=prn)
         if data['project'].count() == 0:
+           print "No existing project data found for this student"
            formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=1,can_delete=True)
            formsets['project'] = formset_factories['project'](prefix='project',queryset=data['project'])
         else: #existing data was found for this student 
@@ -594,6 +600,7 @@ def nayeforms(request, prn):
 
         data['extracurricular'] = extracurricular.objects.filter(primary_table=prn)
         if data['extracurricular'].count() == 0:
+           print "No existing extracurricular data found for this student"
            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=1,can_delete=True)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
         else: #existing data was found for this student 
@@ -602,6 +609,7 @@ def nayeforms(request, prn):
  
         data['extrafield'] = ExtraField.objects.filter(primary_table=prn)
         if data['extrafield'].count() == 0:
+           print "No existing extrafield data found for this student"
            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=1,can_delete=True)
            formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
         else: #existing data was found for this student 
