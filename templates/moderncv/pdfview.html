@@ -1,3 +1,4 @@
+{% load thumbnail %}
 {% load some_tags %}
 <html>
 <head>
@@ -24,12 +25,22 @@ h3{
 div {
     border:0px;
 }
+
+#photo {
+    float: left;
+}
+
 </style>
 </head>
+<body>
 <div style = "{border-style:double;}">
-    <div style="{float:left}">
-        <img src="{{MEDIA_URL}}/STORE/photos/{{s.prn}}.png" height='150' width='200'>
-    </div>
+    {% if s.photo %}
+        <div id='photo'>
+            {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
+                <img src='{{ img.url }}'>
+            {% endthumbnail %}
+        </div>
+    {% endif %}
     <div style="{float:'right';position:relative}">
         <h2> {{ s.fullname }}</h2>
         <pre>
@@ -58,18 +69,21 @@ div {
         <li> {{per}}</li></td>
    </tr>
      {% endfor %}
-     {% endif %}
+   {% endif %}
    {% if p.weakness %}
    <tr>
-   <td><b>Weakness</b></td>
+       <td>
+           <b>Weakness</b>
+       </td>
    </tr>
    <tr>
-   <td>
-   {% for per in p.weakness|split:',' % }
-        <li> {{per}}</li></td>
-    </tr>
-      {% endfor %}
-      {% endif %} 
+   {% for per in p.weakness|split:',' %}
+    <td>
+        <li> {{per}}</li>
+    </td>
+   {% endfor %}
+   </tr>
+   {% endif %} 
  </table>  
 </div>
 {% endif %}
@@ -284,3 +298,5 @@ div {
 {{s.fullname}}<br>Pune
 </div>
 </div>
+</body>
+</html>
