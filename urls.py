@@ -54,8 +54,9 @@ urlpatterns = patterns('',
     (r'^PT/reports',"company.views.got_placed"),
     
     # student_info
+    (r'^student_info/(?P<prn>\d+)/nayeforms',"student_info.views.nayeforms"),
+    #alias for supporting any old view refernces
     (r'^student_info/(?P<prn>\d+)/form',"student_info.views.nayeforms"),
-    (r'^student_info/(?P<prn>\d+)/nayaform',"student_info.views.nayeforms"),
 
     #trying out django social auth
     (r'^socialauth/login/',"socialauth.views.loginHandler"),
@@ -66,6 +67,4 @@ urlpatterns = patterns('',
     #for ldap login 
     (r'^login/$','common.views.login'),
     (r'^logout/$','common.views.logout'),
-
-    (r'^foo/$','student_info.views.foo'),
 )

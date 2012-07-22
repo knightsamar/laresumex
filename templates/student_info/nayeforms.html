@@ -60,85 +60,12 @@ function onSubmitValidator()
     return true;
 }
 
-/*
-provides the addAnother functionality -- allows to add another instance of an element by duplicating it _properly_
-
-duplicates an element(which an also be a collection of elements) which has the given elIDprefix and lastNum and adds
-the element obtained to the original element's parentNode.
-Both are required to be passed seperately so that things are easier for processing.
-
-The source element's ID is constructed using the divIDprefix and lastNum. The destinationElement is named same with the lastNum
-incremented with 1.
-
-Conventions:
-*/
-
-function addAnother(callerButton,elIDprefix,lastNum)
-{
-    //is this a formset element ? -- elements which contains form fields (to know what is a formset refer Django Doc/ask Samar)
-    if (elIDprefix.indexOf('form') != -1)
-    {
-        isForm = true;
-    }
-
-    //clone the element
-    var sourceElID = elIDprefix + "_" + lastNum;
-    var sourceEl = document.getElementById(sourceElID)
-    debug("Got sourceEl " + sourceElID);
-
-    var destinationElID = elIDprefix + "_" + (lastNum + 1);
-    var destinationEl = sourceEl.cloneNode(true)
-    debug("Created destinationEl " + destinationElID);
-
-    destinationEl.id = destinationElID
-
-    if (isForm)
-    { 
-        //Change the ID's of all the form elements in the given element
-        var allInputs = destinationEl.getElementsByTagName('input');
-        var allSelects = destinationEl.getElementsByTagName('select');
-        var allTextAreas = destinationEl.getElementsByTagName('textarea');
-        var all = [allInputs,allSelects,allTextAreas];
-
-        for (var i=0;i<all.length;i++)
-        {
-            currentColl = all[i];
-
-            for (var j=0; j<currentColl.length; j++)
-            {
-                id = currentColl[j].id.split('-'); //get the number out
-                id[1] = lastNum+1; //replace it with the incremented number
-                currentColl[j].id = id.join('-'); //we have the new id!
-                debug("We got an " + currentColl[j].type) 
-                if (currentColl[j].type != 'button' && currentColl[j].type !='hidden')
-                    currentColl[j].value = ""
-            }
-        }
-        
-        //alter the management form to reflect the changes (see Django doc/ask Samar for what is a management form)
-        //document.getElementById('id_form-TOTAL_FORMS').value = parseInt(document.getElementById('id_form-TOTAL_FORMS').value) + 1
-    }
-
-    sourceEl.parentNode.appendChild(destinationEl)
-
-    //fix the add Another button now
-    var fCall = callerButton.getAttribute('onClick').split(',')
-    fCall[2] = lastNum + 1
-    fCall[2] += ")" //add the closing bracket
-
-    callerButton.setAttribute('onClick',fCall)
-    callerButton.parentNode = ""
-    sourceEl.parentNode.appendChild(callerButton)
-
-    //$('.add').remove;
-    //$(destinationDivID).appendTo('.increaseable:last');
-}
-
 </script>
 <script type="text/javascript" src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
 <script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.21.custom.min.js"></script>
 <script type='text/javascript' src='{{MEDIA_URL}}/jquery/js/jquery.formset.js'></script>
 <script type="text/javascript">
+    //Allow Add Another and Remove Functionality
     $(function() 
             {
                    $('.marks_table').formset({
@@ -220,6 +147,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
 </script>
 
 <script language='javascript'>
+    //Add Tabs and Accordion
     $(function(){
         // Accordion
         $("#accordion").accordion({
@@ -234,11 +162,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
         // Tabs        
         $('#tabs').tabs();
 
-        // Datepicker
-        $('#datepicker').datepicker({
-            inline: true
-        });
-        
+        //TODO: Find out how needed is the below thing ?
         //hover states on the static widgets
         $('#dialog_link, ul#icons li').hover(
             function() { $(this).addClass('ui-state-hover'); }, 
@@ -290,6 +214,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {% if not field.is_hidden %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
+       				{% for error in field.errors %}
+	    				<p class='error'>{{ error }}</p>
+		    		{% endfor %}
                 {% else %}
                     &nbsp;
                 {% endif %}
@@ -297,9 +224,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 
 			<td width='50%'> 
 				{{ field }}
-				{% for error in field.errors %}
-					<p class='error'>{{ error }}</p>
-				{% endfor %}
 			</td>
         </tr>
 	   {% endfor %}
@@ -329,6 +253,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {% if not field.is_hidden %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
+       				{% for error in field.errors %}
+	    				<p class='error'>{{ error }}</p>
+		    		{% endfor %}
                 {% else %}
                     &nbsp;
                 {% endif %}
@@ -336,9 +263,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 			
 			<td width='50%'> 
 				{{ field }}
-				{% for error in field.errors %}
-					<p class='error'>{{ error }}</p>
-				{% endfor %}
 			</td>
         </tr>
 	   {% endfor %}
@@ -364,6 +288,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {% if not field.is_hidden and not 'DELETE' in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
                 {% else %}
                     &nbsp;
                 {% endif %}
@@ -371,9 +298,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 						
 			<td width='50%'> 
 				{{ field }}
-				{% for error in field.errors %}
-					<p class='error'>{{ error }}</p>
-				{% endfor %}
 			</td>
         </tr>
 	   {% endfor %}
@@ -397,6 +321,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
                 {% else %}
                     &nbsp;
                 {% endif %}
@@ -404,9 +331,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 			
 			<td width='50%'> 
 				{{ field }}
-				{% for error in field.errors %}
-					<p class='error'>{{ error }}</p>
-				{% endfor %}
 			</td>
 		</tr>
        {% endfor %}
@@ -435,6 +359,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                             {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
+                        		{% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -442,10 +369,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
                                             
 						<td width='50%'> 
 							{{ field }}
-							{% for error in field.errors %}
-								<p class='error'>{{ error }}</p>
-							{% endfor %}
-						</td>
+					    </td>
 					</tr>
                    {% endfor %}
 				</table>
@@ -471,6 +395,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                             {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
+                                {% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -478,9 +405,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 						
 						<td width='50%'> 
 							{{ field }}
-							{% for error in field.errors %}
-								<p class='error'>{{ error }}</p>
-							{% endfor %}
 						</td>
                     </tr>
 				   {% endfor %}
@@ -507,6 +431,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                             {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
+                                {% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -514,9 +441,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 						
 						<td width='50%'> 
 							{{ field }}
-							{% for error in field.errors %}
-								<p class='error'>{{ error }}</p>
-							{% endfor %}
 						</td>
                     </tr>
 				   {% endfor %}
@@ -543,6 +467,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                             {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
+    							{% for error in field.errors %}
+	    							<p class='error'>{{ error }}</p>
+		    					{% endfor %}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -550,9 +477,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 						
 						<td width='50%'> 
 							{{ field }}
-							{% for error in field.errors %}
-								<p class='error'>{{ error }}</p>
-							{% endfor %}
 						</td>
                     </tr>
 				   {% endfor %}
@@ -579,6 +503,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                             {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                                 {{ field.label_tag }} <br/>
                                 <span class='help'>{{ field.help_text }}</span>
+  	    						{% for error in field.errors %}
+		    						<p class='error'>{{ error }}</p>
+			    				{% endfor %}
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -586,9 +513,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 						
 						<td width='50%'>
 							{{ field }}
-							{% for error in field.errors %}
-								<p class='error'>{{ error }}</p>
-							{% endfor %}
 						</td>
 
                      </tr>
@@ -618,6 +542,9 @@ function addAnother(callerButton,elIDprefix,lastNum)
                 {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
                     {{ field.label_tag }} <br/>
                     <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
                 {% else %}
                     &nbsp;
                 {% endif %}
@@ -625,9 +552,6 @@ function addAnother(callerButton,elIDprefix,lastNum)
 				
 			<td width='50%'> 
 				{{ field }}
-				{% for error in field.errors %}
-					<p class='error'>{{ error }}</p>
-				{% endfor %}
 			</td>
         </tr>
 	   {% endfor %}
@@ -639,7 +563,7 @@ function addAnother(callerButton,elIDprefix,lastNum)
     <div id='tabs-7'>
     <!-- company specific information wala tab -->
     {% if not companySpecificData and not companySpecificFields %}
-       <p class='notice'>No data currently required for Company!</p> 
+       <p class='notice'>No data currently required by any Company!</p> 
     {% else %}
        <p class='notice'>This is the information required by a Company for the Placement Process</p> 
          {% for c in companySpecificData %}
