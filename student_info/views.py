@@ -448,6 +448,7 @@ def nayeforms(request, prn):
             sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
             
             print 'Starting to save data'
+            print 'Processing Company Specific info'
             #WORST way of identifiying Company Specific fields for processing -- but can't find a better way, for now.
             for field,value in request.POST.lists():
                 field_name = field.split('_')
@@ -466,24 +467,35 @@ def nayeforms(request, prn):
                         csd, created_or_found = companySpecificData.objects.get_or_create(valueOf=cs,primary_table=s)
                         csd.value = value
                         csd.save()
+                        print 'Saving Company Specific Data'
 
                         other_data_valid = True;
                     except Exception as e:
+                        print "==================="
+                        print "Error with Company data :",
+                        print e
                         other_data_valid = False;
-                        messages.error(request, "Company Specific Info : %s" % e)
+                        #Add the error message to be displayed in the template
+                        messages.error(request, "<b>Company Specific Info :</b> %s" % e)
+                        #raise exception so that we can go back to displaying the form
+                        raise Exception;
 
             print 'Processing student data',
-            if sf.is_valid():
+            student_data_valid = sf.is_valid()
+
+            if student_data_valid:
+                print 'Saved all submitted data for Student Basic info'
                 sf.save()
-                student_data_valid = True
             else:
-                student_data_valid = False;
                 print "==================="
                 print "Error with Student data :",
                 print sf.errors;
                 #Add the error message to be displayed in the template
-                messages.error(request, "Basic Information: %s" % sf.errors); 
-                
+                messages.error(request, "<b>Basic Information: </b>%s" % sf.errors); 
+                #raise exception so that we can go back to displaying the form
+                raise Exception;
+
+            print 'Student data validity status : %s' % student_data_valid
             for f in formsets:
                 #formsets[f].clean()
                 print 'Processing ',f
@@ -499,8 +511,11 @@ def nayeforms(request, prn):
                     print "==================="
                     print "Error with %s is :" % (f)
                     print formsets[f].errors;
+                    print 'Other data validity status is : %s' % other_data_valid 
                     #Add the error message to be displayed in the template
-                    messages.error(request, "%s : %s " % (f.title(),formsets[f].errors)); 
+                    messages.error(request, "<b>%s :</b> %s " % (f.title(),formsets[f].errors)); 
+                    #raise exception so that we can go back to displaying the form
+                    raise Exception;
         except:
             if (not student_data_valid) and (not are_we_editing): #we were trying to save a NEW student's data and encountered problem
                 print 'Student data is invalid and we are creating new record',
@@ -653,5 +668,5 @@ def nayeforms(request, prn):
         }
     
     c = RequestContext(request,context)
-    
+
     return HttpResponse(t.render(c))
