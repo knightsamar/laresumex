@@ -223,11 +223,6 @@ def pisapdf(request,prn,return_PDF_directly=True):
     '''
     if prn is not None:
         s = student.objects.get(pk=prn);
-        data = tables.get_tables(s);
-        t = loader.get_template('moderncv/pdfview.html')
-        c = Context(data);
-        c.update({'pagesize':'A4'});
-        html = t.render(c)
     else:
         return HttpResponse("Pass me a prn, dude!");
 

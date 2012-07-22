@@ -60,10 +60,10 @@ class marks(models.Model):
 
     primary_table=models.ForeignKey('student',editable=False);
     course=models.CharField(max_length=30, null=False,verbose_name='Course/Programme');
-    uni=models.CharField(max_length=100,verbose_name='University');
-    marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Obtained');
+    uni=models.CharField(max_length=100,verbose_name='University/Board');
+    marks=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Obtained Score/GPA');
     markstype=models.CharField(max_length=15,choices=MARK_TYPES,blank=False, default=('Total Score'),verbose_name='Marks Type')
-    outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Maximum');
+    outof=models.DecimalField(max_digits=10,decimal_places=4, blank=True, null=True,verbose_name='Maximum Score/GPA');
     fromDate=models.DateField(null=True, blank=True,verbose_name='Date of Completion',help_text='Enter the Month & Year you completed/will complete this Course.');    
 
     formname = 'MarksForm'
