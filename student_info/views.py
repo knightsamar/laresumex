@@ -44,8 +44,8 @@ def nayeforms(request, prn):
        print "username", request.session['username'],type(request.session['username'])
        return HttpResponse('<b>Please edit your own form! :@</b>')
 
-    from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm, ExtraFieldForm 
-    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,ExtraField, companySpecific, companySpecificData
+    from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm, AdditionalInfoForm
+    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,AdditionalInfo, companySpecific, companySpecificData
     from django.forms.models import modelformset_factory
 
     print "Doing everything for prn", prn
@@ -86,7 +86,7 @@ def nayeforms(request, prn):
             formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0,can_delete=True)
             formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
             formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0,can_delete=True)
-            formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0,can_delete=True)
+            formset_factories['additionalInfo'] = modelformset_factory(AdditionalInfo, form=AdditionalInfoForm, extra=0,can_delete=True)
 
             #generate a formset -- collection of forms for editing/creating new data
             formsets['marks'] = formset_factories['marks'](request.POST,prefix='marks')
@@ -97,7 +97,7 @@ def nayeforms(request, prn):
             formsets['academic'] = formset_factories['academic'](request.POST,prefix='academic')
             formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
             formsets['project'] = formset_factories['project'](request.POST,prefix='project')
-            formsets['extrafield'] = formset_factories['extrafield'](request.POST,prefix='extrafield')
+            formsets['additionalInfo'] = formset_factories['additionalInfo'](request.POST,prefix='additionalInfo')
 
             sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
             
@@ -275,15 +275,18 @@ def nayeforms(request, prn):
         else: #existing data was found for this student 
            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
- 
-        data['extrafield'] = ExtraField.objects.filter(primary_table=prn)
-        if data['extrafield'].count() == 0:
-           print "No existing extrafield data found for this student"
-           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=1,can_delete=True)
-           formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
+
+        import pdb;
+        pdb.set_trace()
+
+        data['additionalInfo'] = AdditionalInfo.objects.filter(primary_table=prn)
+        if data['additionalInfo'].count() == 0:
+           print "No existing additionalInfo data found for this student"
+           formset_factories['additionalInfo'] = modelformset_factory(AdditionalInfo, form=AdditionalInfoForm, extra=1,can_delete=True)
+           formsets['additionalInfo'] = formset_factories['additionalInfo'](prefix='additionalInfo',queryset=data['additionalInfo'])
         else: #existing data was found for this student 
-           formset_factories['extrafield'] = modelformset_factory(ExtraField, form=ExtraFieldForm, extra=0,can_delete=True)
-           formsets['extrafield'] = formset_factories['extrafield'](prefix='extrafield',queryset=data['extrafield'])
+           formset_factories['additionalInfo'] = modelformset_factory(AdditionalInfo, form=AdditionalInfoForm, extra=0,can_delete=True)
+           formsets['additionalInfo'] = formset_factories['additionalInfo'](prefix='additionalInfo',queryset=data['additionalInfo'])
 
         #Company Specific fields -- special thingys ;) 
 	    #These provide dynamic fields in the form which can be added in the form by the placement team.
@@ -313,7 +316,7 @@ def nayeforms(request, prn):
         'academic_formset' : formsets['academic'],
         'project_formset' : formsets['project'],
         'extracurricular_formset' : formsets['extracurricular'],
-        'extrafield_formset':formsets['extrafield'],
+        'additionalInfo_formset':formsets['additionalInfo'],
         'student_form' : sf,
         's' : s, #student object
         'ROOT' : ROOT,

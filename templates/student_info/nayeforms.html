@@ -134,8 +134,8 @@ function onSubmitValidator()
 
     $(function() 
             {
-                   $('.extrafield_table').formset({
-                    prefix: 'extrafield',
+                   $('.additionalInfo_table').formset({
+                    prefix: 'additionalInfo',
                     addText: 'Add another Extra Information section',
                     deleteText: 'Remove this Extra Information section',
                     addCssClass: 'add_link',
@@ -528,11 +528,11 @@ function onSubmitValidator()
 
     <!-- un-categorized information section -->
 	<div id='tabs-6'>
-	<p class='notice'>Here you can specify any extra section for info that doesn't fit in any of the other sections</p>
-    {{ extrafield_formset.management_form }}
-	{% for form in extrafield_formset.forms %}
-	<div id="formset_extrafield_{{ forloop.counter0 }}" class="increaseable">
-    <table class='extrafield_table'>
+	<p class='notice'>Here you can specify any additional section for info that doesn't fit in any of the other sections</p>
+    {{ additionalInfo_formset.management_form }}
+	{% for form in additionalInfo_formset.forms %}
+	<div id="formset_additionalInfo_{{ forloop.counter0 }}" class="increaseable">
+    <table class='additionalInfo_table'>
        {% for field in form %}
        <tr align='left'>    
            <td width='20%'>

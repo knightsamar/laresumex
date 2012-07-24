@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from student_info.models import personal, marks, swExposure, certification, workex, academic, project, extracurricular, student, ExtraField
+from student_info.models import personal, marks, swExposure, certification, workex, academic, project, extracurricular, student, AdditionalInfo
 from django.forms.extras.widgets import SelectDateWidget
 
 def getYears(**kwargs):
@@ -123,9 +123,9 @@ class StudentForm(ModelForm):
         #define the order of the fields on the form
         fields = ('fullname','sex','email','phone','career_objective','photo')
 
-class ExtraFieldForm(ModelForm):
+class AdditionalInfoForm(ModelForm):
     class Meta:
-        model = ExtraField
+        model = AdditionalInfo
         exclude = ('id','primary_table')
         required_css_class = 'required_fields'
 

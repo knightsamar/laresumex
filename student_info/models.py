@@ -147,16 +147,10 @@ class ExtraField(models.Model):
     fromDate = models.DateField(null=True,blank=True, verbose_name='From Date',help_text='Enter the Month and Year when you started this');
     endDate = models.DateField(null=True,blank=True, verbose_name='To Date',help_text='Enter the Month and Year when you completed/will complete this');
 
-    formname = 'ExtraFieldForm'
-
     def __str__(self):
         return "Details about %s  of %s" % (self.title,self.primary_table.fullname);
     
-    class Meta:
-        verbose_name_plural = 'Uncategorized Extra Info of Students';
-
 class workex(ExtraField):
-    
     formname = 'WorkexForm'
     
     class Meta:
@@ -185,6 +179,12 @@ class extracurricular(ExtraField):
     formname = 'ExtraCurricularForm'
     class Meta:
         verbose_name_plural = 'Extra Curricular Infor of Students'
+
+class AdditionalInfo(ExtraField):
+    formname = 'ExtraFieldForm'
+    
+    class Meta:
+        verbose_name_plural = 'Uncategorized Extra Info of Students';
 
 # stores company specific details that shd not be stored in the resume
 class companySpecific(models.Model):
