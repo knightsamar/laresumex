@@ -1,3 +1,4 @@
+{% load thumbnail %}
 {% load some_tags %}
 <html>
 <head>
@@ -26,9 +27,13 @@ div {
 </style>
 </head>
 <div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}">
-    <div style="{float:left}">
-        <img src="{{MEDIA_URL}}/STORE/photos/{{s.prn}}.png" height='150' width='180'>
-    </div>
+    {% if s.photo %}
+        <div id='photo'>
+            {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
+                <img src='{{ img.url }}'>
+            {% endthumbnail %}
+        </div>
+    {% endif %}
     <div style="{float:'right';position:relative}">
         <h2> {{ s.fullname }}</h2>
         <pre>
@@ -46,9 +51,20 @@ div {
 {% if p.strength %}
 <div>
 <br>
-<h3>Personality Traits</h3>
+<h3>Strengths</h3>
 <ul>
 	{% for per in p.strength|split:',' %} 
+        <li> {{per}}</li>
+     {% endfor %}   
+</div>
+{% endif %}
+
+{% if p.weakness %}
+<div>
+<br>
+<h3>Weakness</h3>
+<ul>
+	{% for per in p.weakness|split:',' %} 
         <li> {{per}}</li>
      {% endfor %}   
 </div>
