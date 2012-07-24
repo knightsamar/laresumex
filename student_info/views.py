@@ -276,9 +276,6 @@ def nayeforms(request, prn):
            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
            formsets['extracurricular'] = formset_factories['extracurricular'](prefix='extracurricular',queryset=data['extracurricular'])
 
-        import pdb;
-        pdb.set_trace()
-
         data['additionalInfo'] = AdditionalInfo.objects.filter(primary_table=prn)
         if data['additionalInfo'].count() == 0:
            print "No existing additionalInfo data found for this student"
