@@ -178,7 +178,7 @@ class academic(ExtraField):
 class extracurricular(ExtraField):
     formname = 'ExtraCurricularForm'
     class Meta:
-        verbose_name_plural = 'Extra Curricular Infor of Students'
+        verbose_name_plural = 'Extra Curricular Info of Students'
 
 class AdditionalInfo(ExtraField):
     formname = 'ExtraFieldForm'
