@@ -15,7 +15,7 @@ class student(models.Model):
     email=models.EmailField(max_length=255, verbose_name='Email Address',);
     phone=models.CharField(max_length=12, blank = True, null = True);
     career_objective=models.TextField(blank=False, help_text='Keep it short and sweet');
-    photo = models.ImageField(upload_to = PHOTO_STORE, null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
+    photo = models.ImageField(upload_to=PHOTO_STORE, null = False, blank=False, verbose_name='Your Photo',help_text='Your photo which will be displayed in resume and stored in records')
     
     #boolean fields
     certification=models.BooleanField();
@@ -99,18 +99,18 @@ class marks(models.Model):
 
 class personal(models.Model):
      primary_table=models.ForeignKey('student', null=False, unique=True);
-     mother_name=models.CharField(max_length=50,verbose_name="Mother's Name");
-     father_name=models.CharField(max_length=50,verbose_name="Father's Name");
-     birthdate=models.DateField(null=False,verbose_name='Your BirthDate');
-     areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest', help_text='Enter areas of interest seperated by commas');
+     mother_name=models.CharField(max_length=50,verbose_name="Mother's Name",blank=False);
+     father_name=models.CharField(max_length=50,verbose_name="Father's Name",blank=False);
+     birthdate=models.DateField(null=False,verbose_name='Your BirthDate',blank=False);
+     areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest', help_text='Enter areas of interest seperated by commas',blank=False);
      mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation");
      father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation");
-     languages=models.CharField(max_length=200,verbose_name="Languages Known",help_text='Enter languages seperated by commas');
-     hobbies=models.CharField(max_length=200,help_text='Enter hobbies seperated by commas');
-     strength=models.CharField(max_length=200,verbose_name='Strengths',help_text='Enter strengths seperated by commas');
-     weakness=models.CharField(max_length=200,verbose_name='Weaknesses',help_text='Enter weaknesses seperated by commas');
-     per_address=models.TextField(max_length=200,verbose_name='Permanent Address');
-     corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address');
+     languages=models.CharField(max_length=200,verbose_name="Languages Known",help_text='Enter languages seperated by commas',blank=False);
+     hobbies=models.CharField(max_length=200,help_text='Enter hobbies seperated by commas',blank=False);
+     strength=models.CharField(max_length=200,verbose_name='Strengths',help_text='Enter strengths seperated by commas',blank=False);
+     weakness=models.CharField(max_length=200,verbose_name='Weaknesses',help_text='Enter weaknesses seperated by commas',blank=False);
+     per_address=models.TextField(max_length=200,verbose_name='Permanent Address',blank=False);
+     corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address',blank=False);
      
      formname = 'PersonalForm'
 
@@ -126,11 +126,11 @@ class personal(models.Model):
 
 class swExposure(models.Model):
     primary_table=models.ForeignKey('student', null=False);
-    programming = models.CharField(max_length=100,verbose_name='Programming Languages',help_text='Enter Programming Languages that you know seperated by commas');
-    databases = models.CharField(max_length=100,verbose_name='Databases',help_text='Enter Databases that you know seperated by commas')
-    OS = models.CharField(max_length=100,verbose_name='Operating Systems',help_text='Enter Operating Systems that you know seperated by commas')
-    swPackages = models.CharField(max_length=100,verbose_name='Software Packages',help_text='Enter Software Packages that you know seperated by commas')
-    webTools = models.CharField(max_length=100,verbose_name='Web Tools', help_text='Enter Web Tools seperated by commas')
+    programming = models.CharField(max_length=100,verbose_name='Programming Languages',help_text='Enter Programming Languages that you know seperated by commas',blank=True);
+    databases = models.CharField(max_length=100,verbose_name='Databases',help_text='Enter Databases that you know seperated by commas',blank=True)
+    OS = models.CharField(max_length=100,verbose_name='Operating Systems',help_text='Enter Operating Systems that you know seperated by commas',blank=True)
+    swPackages = models.CharField(max_length=100,verbose_name='Software Packages',help_text='Enter Software Packages that you know seperated by commas',blank=True)
+    webTools = models.CharField(max_length=100,verbose_name='Web Tools', help_text='Enter Web Tools seperated by commas',blank=True)
   
     formname = 'SwExposureForm'
 
