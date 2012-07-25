@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+ Students who are interested in Job Posting(s)
+{% endblock %}
+{% block content %}
+
+{% for jp,students in jpStudents.items %}
+   <h4>---- {{ jp }} ----</h4>
+   <!-- <a href='generate_resume/jp/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
+   <ul>
+       {% for prn, details in students.items %}
+       {% if details.has_resume %}
+           <li>{{prn}} -- <a href="{% url generate_resume.views.pisapdf prn %}">Get Resume (PDF)</a></li>
+       {% else %}
+           <li>{{prn}} -- <i>No details available!</i></li>
+       {% endif %}
+       {% empty %}
+             <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
+   {% endfor %}
+   </ul>
+{% endfor %}
+
+<input type='button' value='Go back' onclick="history.go(-1);return true;">
+{% endblock %}

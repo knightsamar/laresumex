@@ -1,0 +1,7 @@
+# This is database changes in student_info_personal table where one column weakness is added . 
+# This column is part of resume format . 
+# its a db modification for resolving issue number #72 and #147. 
+************************************************************************************************
+
+
+Mysql> ALTER TABLE student_info_personal add weakness varchar2 (200);

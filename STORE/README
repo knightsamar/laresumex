@@ -1,0 +1,10 @@
+This directory will store :
+    1. Resumes - .tex, .html, .pdf
+    2. Photos - of the candidates
+All inside a PRN/ directory for each candidate.
+
+
+This directory must be _recursively_ rwx by the user which is used to run the webserver, otherwise many things will fail.
+eg. For apache on OpenSuSE 11.2
+
+chown -vR www-run:www STORE/*
