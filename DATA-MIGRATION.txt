@@ -1,0 +1,28 @@
+This details how data was migrated after the major changes brought in by nayeforms.
+
+What were the table Changes
+-------------
+student_info_student
+    removed backlogs, yeardrops
+    a new field called photo - which stores the path to the photo file.
+
+student_info_personal
+    added weakness and strengths instead of just strength
+
+How was the new database prepared ?
+-----------------------------------
+    * Data was imported using INSERT INTO ... SELECT command from the original database on the server.
+    * Since we had photos already stored in STORE/photos with the name of the file as the prn of the student,
+	UPDATE student_info_student SET photo=CONCAT('STORE/photos/',prn,'.png');
+    * The tables that were dropped are:
+	ldap_login_user_group_backup
+	ldap_login_user_backup
+    * To support the UNICODE data being imported from original data, the following was done:
+	ALTER TABLE `student_info_marks` CHANGE `uni` `uni` LONGTEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL ;	
+	ALTER TABLE `student_info_marks` CHANGE `course` `course` LONGTEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL ;
+	ALTER TABLE `student_info_extrafield` CHANGE `desc` `desc` LONGTEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL ;
+	ALTER TABLE `student_info_student` CHANGE `career_objective` `career_objective` LONGTEXT CHARACTER SET utf8 COLLATE utf8_bin NOT NULL ;
+	ALTER TABLE `student_info_extrafield` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+	ALTER TABLE `student_info_student` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+	alter database laresumex collate utf8_bin character set utf8;
+	

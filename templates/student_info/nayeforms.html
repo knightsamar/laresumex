@@ -1,0 +1,652 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load some_tags %}
+
+{% block title %}
+    Naya Form
+{% endblock %}
+{% block styles %}
+.help
+{   
+  color: #999999;
+  font-size: 12px !important;
+}
+
+.error
+{
+    border-color: red;
+    border-width: 1.5px;
+    border-style: dashed;
+    padding: 1px;
+}
+
+.notice
+{
+    color: green;
+    font-style: italic;
+}
+
+.add_link
+{
+    color:#234F32;
+    font-weight: bold;
+}
+
+.remove_link
+{
+    color: #990000;
+    font-weight: bold;
+}
+</style>
+
+<link type="text/css" href="{{MEDIA_URL}}/jquery/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />	
+
+{% endblock %}
+
+{% block scripts %}
+<script language='javascript'>
+var DEBUG = false
+function debug(msg)
+{
+    if (DEBUG)
+    {
+        alert(msg)
+    }
+}
+
+function onSubmitValidator()
+{
+    //insert JavaScript validation code for all fields here
+    return true;
+}
+
+</script>
+<script type="text/javascript" src='{{MEDIA_URL}}/jquery/js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript" src="{{MEDIA_URL}}/jquery/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type='text/javascript' src='{{MEDIA_URL}}/jquery/js/jquery.formset.js'></script>
+<script type="text/javascript">
+    //Allow Add Another and Remove Functionality
+    $(function() 
+            {
+                   $('.marks_table').formset({
+                    prefix: 'marks',
+                    addText: 'Add another Marks/Qualification section',
+                    deleteText: 'Remove this Marks/Qualification section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.workex_table').formset({
+                    prefix: 'workex',
+                    addText: 'Add another Work Experience section',
+                    deleteText: 'Remove this Work Experience section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.certification_table').formset({
+                    prefix: 'certification',
+                    addText: 'Add another Certification section',
+                    deleteText: 'Remove this Certification section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.academic_table').formset({
+                    prefix: 'academic',
+                    addText: 'Add another Academic Achievement section',
+                    deleteText: 'Remove this Academic Achievement section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.extracurricular_table').formset({
+                    prefix: 'extracurricular',
+                    addText: 'Add another ExtraCurricular Achievements section',
+                    deleteText: 'Remove this ExtraCurricular Achievements section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.project_table').formset({
+                    prefix: 'project',
+                    addText: 'Add another Project section',
+                    deleteText: 'Remove this Project section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+    $(function() 
+            {
+                   $('.additionalInfo_table').formset({
+                    prefix: 'additionalInfo',
+                    addText: 'Add another Extra Information section',
+                    deleteText: 'Remove this Extra Information section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
+
+
+</script>
+
+<script language='javascript'>
+    //Add Tabs and Accordion
+    $(function(){
+        // Accordion
+        $("#accordion").accordion({
+            header: "h3",
+            autoHeight: false,
+            navigation: true,
+            collapsible: true,
+            sortable: true,
+	        active: false,
+            });
+
+        // Tabs        
+        $('#tabs').tabs();
+
+        //TODO: Find out how needed is the below thing ?
+        //hover states on the static widgets
+        $('#dialog_link, ul#icons li').hover(
+            function() { $(this).addClass('ui-state-hover'); }, 
+            function() { $(this).removeClass('ui-state-hover'); }
+        );
+        
+    });
+</script>
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+{% comment %} We need to disable autoescaping of variable data {% endcomment %}
+{% autoescape off %}
+<span class='message'>Following errors were encountered when processing your form:</span>
+<ul class="messages">
+   {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+   {% endfor %}
+</ul>
+{% endautoescape %}
+{% endif %}
+
+<!-- the onSubmitValidator() validates using JavaScript and then enables form submission -->
+<form name='f' id='info_form' onsubmit="return onSubmitValidator();" method='post' enctype='multipart/form-data'  action='#' original_action='{{ROOT}}/student_info/{{prn}}/nayaform'>
+{% csrf_token %}
+<div id="tabs">
+    <ul>
+        <li class='sectionlinks'><a href='#tabs-1'>Basic information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-2">Personal information*</a></li>
+        <li class='sectionlinks'><a href="#tabs-3">Marks and Qualifications*</a></li>
+        <li class='sectionlinks'><a href="#tabs-4">Software Skillset</a></li>
+        <li class='sectionlinks'><a href="#tabs-5">Other Information</a></li>
+            <!-- there is an accordion in the Other Information section -->
+        <li class='sectionlinks'><a href='#tabs-6'>Extra Information</a></li>
+        <li class='sectionlinks'><a href="#tabs-7">Company Specific information</a></li>
+    </ul>
+    
+    <div id='tabs-1'>
+	<!-- basic information form -->
+	<div id="form_student" class="non_increaseable">
+	<table>
+       {% for field in student_form %}
+       <tr align='left'>    
+           <td width='20%'>
+                {% comment %}
+                  This is for hiding LABELS for id and primary_key fields (Ref #154)
+                {% endcomment %}
+                {% if not field.is_hidden %}
+                    {{ field.label_tag }} <br/>
+                    <span class='help'>{{ field.help_text }}</span>
+       				{% for error in field.errors %}
+	    				<p class='error'>{{ error }}</p>
+		    		{% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+			</td>
+
+			<td width='50%'> 
+				{{ field }}
+			</td>
+        </tr>
+	   {% endfor %}
+	</table>
+    </div>
+    {% if s.photo %}
+        <div id='photo'>
+            {% thumbnail s.photo.url "180x150" crop="50% center" as img %}
+                <img src='{{ img.url }}'>
+            {% endthumbnail %}
+        </div>
+    {% endif %}
+	</div>
+
+	<div id='tabs-2'>
+	<!-- personal information form -->
+	{{ personal_formset.management_form }}
+	{% for form in personal_formset.forms %}
+	<div id="formset_personal_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+       {% for field in form %}
+       <tr align='left'>    
+           <td width='20%'>
+                {% comment %}
+                  This is for hiding LABELS for id and primary_key fields (Ref #154)
+                {% endcomment %}
+                {% if not field.is_hidden %}
+                    {{ field.label_tag }} <br/>
+                    <span class='help'>{{ field.help_text }}</span>
+       				{% for error in field.errors %}
+	    				<p class='error'>{{ error }}</p>
+		    		{% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+			</td>
+			
+			<td width='50%'> 
+				{{ field }}
+			</td>
+        </tr>
+	   {% endfor %}
+	</table>
+	</div>
+	{% endfor %}
+	</div>
+
+	<div id='tabs-3'>
+	<!-- marks filling form -->
+	{{ marks_formset.management_form }}
+    <p class='notice'>You need to specify your score for (atleast) Xth, XIIth and Graduation till now</p>
+	{% for form in marks_formset.forms %}
+	<div id="formset_marks_{{ forloop.counter0 }}" class="increaseable">
+    <br/>
+	<table class='marks_table'>
+       {% for field in form %}
+       <tr align='left'>    
+            <td width='20%'>
+                {% comment %}
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                {% endcomment %}
+                {% if not field.is_hidden and not 'DELETE' in field.label_tag %}
+                    {{ field.label_tag }} <br/>
+                    <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+						
+			<td width='50%'> 
+				{{ field }}
+			</td>
+        </tr>
+	   {% endfor %}
+	</table>
+	</div>
+    {% endfor %}
+	</div>
+
+	<!-- software exposure information form -->
+	<div id='tabs-4'>
+	{{ swExposure_formset.management_form }}
+	{% for form in swExposure_formset.forms %}
+	<div id="formset_swExposure_{{ forloop.counter0 }}" class="increaseable">
+	<table>
+       {% for field in form %}
+       <tr align='left'>    
+            <td width='20%'>
+                {% comment %}
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                {% endcomment %}
+                {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                    {{ field.label_tag }} <br/>
+                    <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+			
+			<td width='50%'> 
+				{{ field }}
+			</td>
+		</tr>
+       {% endfor %}
+	</table>
+	</div>
+	{% endfor %}
+	</div>
+
+    
+	<div id='tabs-5'>
+		<div id='accordion'>
+			<div>
+				<h3><a href='#'>Work Experience</a></h3>
+				<!-- workex information form -->
+                <div class='wrapper'>
+                {{ workex_formset.management_form }}
+				{% for form in workex_formset.forms %}
+				<div id="formset_workex_{{ forloop.counter0 }}" class="increaseable">
+                <table class='workex_table'>
+                   {% for field in form %}
+                   <tr align='left'>    
+                       <td width='20%'>
+                            {% comment %}
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                            {% endcomment %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                                {{ field.label_tag }} <br/>
+                                <span class='help'>{{ field.help_text }}</span>
+                        		{% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+                                            
+						<td width='50%'> 
+							{{ field }}
+					    </td>
+					</tr>
+                   {% endfor %}
+				</table>
+				</div>
+                {% endfor %}
+                </div>
+			</div>
+
+			<div>
+				<h3><a href='#'>Certificate Information</a></h3>
+                <!-- certificate information form -->
+                <div class='wrapper'>
+				{{ certification_formset.management_form }}
+				{% for form in certification_formset.forms %}
+				<div id="formset_certification_{{ forloop.counter0 }}" class="increaseable">
+                <table class='certification_table'>
+                   {% for field in form %}
+                   <tr align='left'>    
+                       <td width='20%'>
+                            {% comment %}
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                            {% endcomment %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                                {{ field.label_tag }} <br/>
+                                <span class='help'>{{ field.help_text }}</span>
+                                {% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+						
+						<td width='50%'> 
+							{{ field }}
+						</td>
+                    </tr>
+				   {% endfor %}
+				</table>
+				</div>
+                {% endfor %}
+                </div>
+			</div>
+
+			<div>
+				<h3><a href='#'>Academic Achievements</a></h3>
+				<!-- academic information form -->
+                <div class='wrapper'>
+                {{ academic_formset.management_form }}
+				{% for form in academic_formset.forms %}
+				<div id="formset_academic_{{ forloop.counter0 }}" class="increaseable">
+                <table class='academic_table'>
+                   {% for field in form %}
+                   <tr align='left'>    
+                       <td width='20%'>
+                            {% comment %}
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                            {% endcomment %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                                {{ field.label_tag }} <br/>
+                                <span class='help'>{{ field.help_text }}</span>
+                                {% for error in field.errors %}
+						    		<p class='error'>{{ error }}</p>
+							    {% endfor %}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+						
+						<td width='50%'> 
+							{{ field }}
+						</td>
+                    </tr>
+				   {% endfor %}
+				</table>
+				</div>
+                {% endfor %}
+                </div>
+			</div>
+
+			<div>
+                <h3><a href='#'>Projects Undertaken</a></h3>
+                <div>
+				<!-- project information form -->
+				{{ project_formset.management_form }}
+				{% for form in project_formset.forms %}
+				<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
+                <table class='project_table'>
+                   {% for field in form %}
+                   <tr align='left'>    
+                       <td width='20%'>
+                            {% comment %}
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                            {% endcomment %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                                {{ field.label_tag }} <br/>
+                                <span class='help'>{{ field.help_text }}</span>
+    							{% for error in field.errors %}
+	    							<p class='error'>{{ error }}</p>
+		    					{% endfor %}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+						
+						<td width='50%'> 
+							{{ field }}
+						</td>
+                    </tr>
+				   {% endfor %}
+				</table>
+				</div>
+                {% endfor %}
+                </div>
+			</div>
+
+			<div>
+				<h3><a href='#'>ExtraCurricular Achievements</a></h3>
+				<!-- extracurricular information form -->
+                <div>
+                {{ extracurricular_formset.management_form }}
+				{% for form in extracurricular_formset.forms %}
+				<div id="formset_extracurricular_{{ forloop.counter0 }}" class="increaseable">
+                <table class='extracurricular_table'>
+                   {% for field in form %}
+                   <tr align='left'>    
+                       <td width='20%'>
+                            {% comment %}
+                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                            {% endcomment %}
+                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                                {{ field.label_tag }} <br/>
+                                <span class='help'>{{ field.help_text }}</span>
+  	    						{% for error in field.errors %}
+		    						<p class='error'>{{ error }}</p>
+			    				{% endfor %}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+						
+						<td width='50%'>
+							{{ field }}
+						</td>
+
+                     </tr>
+				    {% endfor %}
+				</table>
+				</div>
+                {% endfor %}
+                </div>
+			</div>
+			<br/><br/>
+		</div> <!-- end of accordion -->
+	</div> <!-- end of tab5 -->
+
+    <!-- un-categorized information section -->
+	<div id='tabs-6'>
+	<p class='notice'>Here you can specify any additional section for info that doesn't fit in any of the other sections</p>
+    {{ additionalInfo_formset.management_form }}
+	{% for form in additionalInfo_formset.forms %}
+	<div id="formset_additionalInfo_{{ forloop.counter0 }}" class="increaseable">
+    <table class='additionalInfo_table'>
+       {% for field in form %}
+       <tr align='left'>    
+           <td width='20%'>
+                {% comment %}
+                  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+                {% endcomment %}
+                {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+                    {{ field.label_tag }} <br/>
+                    <span class='help'>{{ field.help_text }}</span>
+                    {% for error in field.errors %}
+                        <p class='error'>{{ error }}</p>
+                    {% endfor %}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+				
+			<td width='50%'> 
+				{{ field }}
+			</td>
+        </tr>
+	   {% endfor %}
+	</table>
+	</div>
+    {% endfor %}
+	</div>
+    
+    <div id='tabs-7'>
+    <!-- company specific information wala tab -->
+    {% if not companySpecificData and not companySpecificFields %}
+       <p class='notice'>No data currently required by any Company!</p> 
+    {% else %}
+       <p class='notice'>This is the information required by a Company for the Placement Process</p> 
+         {% for c in companySpecificData %}
+        <!-- {{ c }} -->
+           {% if c.valueOf.fieldType == 'special' %}
+           <!-- We got a special -->
+            {% if c.valueOf.key == 'strongAreas' %}
+            Strong Areas 
+                <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple>
+                    {% for a in c.value|split:',' %}
+                        <option selected >{{a}}</option>     
+                    {% endfor %}
+                </select>
+            {% endif %}<!-- end of strong areas wala if -->
+            {% if c.valueOf.key == 'weakAreas' %}
+            Weak Areas
+                <select  id ="companySpecific_weakAreas" name = 'weakAreas' onFocus="fillOptions(this)" multiple=true>
+                    {% for a in c.value|split:',' %}
+                        <option selected >{{a}}</option>     
+                    {% endfor %}
+
+                </select>
+                <BR><BR>
+            {% endif %} <!-- end of weak areas wala if -->
+           {% endif %} <!-- special field type wala if -->
+        {% comment %} Have to d this because there is no elif in django template syntax {% endcomment%}
+            <BR>
+            <B>{{c.valueOf.displayText}}</b>{% if c.valueOf.is_mandatory %}<B><sup>*</sup></B>{% endif %}
+             {% if c.valueOf.fieldType == 'radio' %}
+                <!-- got a radio -->
+                {% if c.value == 'yes' %}
+                 Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes' checked>
+                 No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no'>
+                {% else %}
+                 Yes  <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='yes'>
+                 No   <input type='radio' name='companySpecific_{{c.valueOf.key}}' value='no' checked>
+                {% endif%}
+             {% endif %} <!-- end of radio wala if-->
+             
+             {% if c.valueOf.fieldType == 'textarea'%}
+                <textarea name='companySpecific_{{c.valueOf.key}}' id = 'companySpecific_{{c.valueOf.key}}' {% if c.valueOf.is_mandatory %} mandatory='true'{% endif %} datatype = '{{c.valueOf.dataType}}'>{{c.value}}</textarea>
+             {% endif %}
+             
+             {% if c.valueOf.fieldType == 'text' %} 
+                <input type='text' name='companySpecific_{{c.valueOf.key}}' id='companySpecific_{{c.valueOf.key}}'  {% if c.valueOf.is_mandatory%} mandatory='true'{% endif%} datatype = '{{c.valueOf.dataType}}' value = '{{c.value}}'>
+             {% endif %} <!-- fieldtypes wala if -->
+        {% empty %}
+            &nbsp;
+            {% comment %}
+            This area and the above id for rendering the special Field types... Write here, the code when there is no pror submission. and in the above 'if' , write the code where there IS propr submission. Take strong and weak areas for example
+            Strong Areas
+            <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+            Weak Areas
+            <select id = "companySpecific_strongAreas" name = 'strongAreas' onFocus="fillOptions(this)" multiple></select>
+
+            {% endcomment %}
+        {% endfor%}
+
+        <!-- unfilled items -->
+        {% for c in companySpecificFields %}
+        <BR>
+            <B>{{c.displayText}}</b> {%if c.is_mandatory %}<b><sup>*</sup></b>{% endif %}
+            {% if c.fieldType == 'radio' %}
+                 Yes  <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}'  value='yes'>
+                 No   <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' {% if c.is_mandatory %} checked {% endif %} value='no'>
+            {% endif %}
+            {% if c.fieldType == 'textarea' %}
+               <textarea name='companySpecific_{{c.key}}' id = 'companySpecific_{{c.key}}' {% if is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'></textarea>
+            {% endif %}
+            {% if c.fieldType == 'text' %}
+                <input type='{{c.fieldType}}' name='companySpecific_{{c.key}}' id='companySpecific_{{c.key}}' {%if c.is_mandatory %} mandatory = 'true' {% endif %} datatype = '{{c.dataType}}'>
+            {% endif %}
+        {% endfor %}
+    
+    </div>
+    {% endif %} 
+    </div>
+</div>
+
+<!--<div align='center'><input type='submit' value='Submit'/></div>-->
+<div id='buttons' class='#' style='text-align:center;'>	
+<input type='button' value='Home' onclick="javascript:location.href='{{ROOT}}/home'">	
+<input type='submit' value='Submit Information!'><input type='reset'>
+</div>
+</form>
+{% endblock %}
