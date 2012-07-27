@@ -142,7 +142,7 @@ class swExposure(models.Model):
 
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student',editable=False);
-    title=models.CharField(blank=False,max_length=20);
+    title=models.CharField(blank=False,max_length=100);
     desc = models.TextField(blank=False,verbose_name='Description',help_text='Describe it in brief.');
     fromDate = models.DateField(null=True,blank=True, verbose_name='From Date',help_text='Enter the Month and Year when you started this');
     endDate = models.DateField(null=True,blank=True, verbose_name='To Date',help_text='Enter the Month and Year when you completed/will complete this');
@@ -163,7 +163,7 @@ class certification(ExtraField):
         verbose_name_plural = "Certification Info of students"
 
 class project(ExtraField):
-    heading=models.CharField(max_length=40 ,blank=True);
+    heading=models.CharField(max_length=100,blank=True);
     
     formname = 'ProjectForm'
     class Meta:
