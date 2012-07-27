@@ -212,7 +212,7 @@ function onSubmitValidator()
                   This is for hiding LABELS for id and primary_key fields (Ref #154)
                 {% endcomment %}
                 {% if not field.is_hidden %}
-                    {{ field.label_tag }} <br/>
+                    {{ field.label_tag }} {% if field.field.required %}<sup>*</sup>{% endif %}<br/>
                     <span class='help'>{{ field.help_text }}</span>
        				{% for error in field.errors %}
 	    				<p class='error'>{{ error }}</p>
@@ -251,7 +251,8 @@ function onSubmitValidator()
                   This is for hiding LABELS for id and primary_key fields (Ref #154)
                 {% endcomment %}
                 {% if not field.is_hidden %}
-                    {{ field.label_tag }} <br/>
+                    {{ field.label_tag }}{% if field.field.required %}<sup>*</sup>{% endif %}
+                    <br/>
                     <span class='help'>{{ field.help_text }}</span>
        				{% for error in field.errors %}
 	    				<p class='error'>{{ error }}</p>
@@ -286,7 +287,7 @@ function onSubmitValidator()
                   This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                 {% endcomment %}
                 {% if not field.is_hidden and not 'DELETE' in field.label_tag %}
-                    {{ field.label_tag }} <br/>
+                    {{ field.label_tag }} {% if field.field.required %}<sup>*</sup>{% endif %}<br/>
                     <span class='help'>{{ field.help_text }}</span>
                     {% for error in field.errors %}
                         <p class='error'>{{ error }}</p>
@@ -319,7 +320,7 @@ function onSubmitValidator()
                   This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
                 {% endcomment %}
                 {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
-                    {{ field.label_tag }} <br/>
+                    {{ field.label_tag }} {% if field.field.required %}<sup>*</sup>{% endif %}<br/>
                     <span class='help'>{{ field.help_text }}</span>
                     {% for error in field.errors %}
                         <p class='error'>{{ error }}</p>
