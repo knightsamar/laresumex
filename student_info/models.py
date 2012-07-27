@@ -4,7 +4,11 @@ from django.db.models.signals import post_save
 from datetime import datetime;
 from laresumex.settings import PHOTO_STORE
 
-# Create your models here.
+#Some guidelines:
+'''
+Any new model that you create, please name it with a Capital first letter. This will make this more sane than the current state.
+Specify explicitly whether blank=True or not (blank=True means field is non-mandatory in the form). This will render things accordingly in the form
+'''
 
 class student(models.Model):
     gender=(('m',"Male"),('f',"Female"))
@@ -103,12 +107,12 @@ class personal(models.Model):
      father_name=models.CharField(max_length=50,verbose_name="Father's Name",blank=False);
      birthdate=models.DateField(null=False,verbose_name='Your BirthDate',blank=False);
      areasofinterest=models.CharField(max_length=100,null=True,verbose_name='Areas of Interest', help_text='Enter areas of interest seperated by commas',blank=False);
-     mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation");
-     father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation");
+     mother_occupation=models.CharField(max_length=50,verbose_name="Mother's Occupation",blank=True,null=True);
+     father_occupation=models.CharField(max_length=50,verbose_name="Father's Occupation",blank=True,null=True);
      languages=models.CharField(max_length=200,verbose_name="Languages Known",help_text='Enter languages seperated by commas',blank=False);
      hobbies=models.CharField(max_length=200,help_text='Enter hobbies seperated by commas',blank=False);
-     strength=models.CharField(max_length=200,verbose_name='Strengths',help_text='Enter strengths seperated by commas',blank=False);
-     weakness=models.CharField(max_length=200,verbose_name='Weaknesses',help_text='Enter weaknesses seperated by commas',blank=False);
+     strength=models.CharField(max_length=200,verbose_name='Strengths',help_text='Enter strengths seperated by commas',blank=True,null=True);
+     weakness=models.CharField(max_length=200,verbose_name='Weaknesses',help_text='Enter weaknesses seperated by commas',blank=True,null=True);
      per_address=models.TextField(max_length=200,verbose_name='Permanent Address',blank=False);
      corr_address=models.TextField(max_length=200, verbose_name='Correspondence Address',blank=False);
      
@@ -118,6 +122,7 @@ class personal(models.Model):
         '''returns age'''
         age=date.today()-self.birthdate
         return (age.days /365)
+
      def __str__(self):
         return "Personal details about %s (%s)" % (self.primary_table.fullname, self.primary_table.prn);
 
@@ -126,11 +131,11 @@ class personal(models.Model):
 
 class swExposure(models.Model):
     primary_table=models.ForeignKey('student', null=False);
-    programming = models.CharField(max_length=100,verbose_name='Programming Languages',help_text='Enter Programming Languages that you know seperated by commas',blank=True);
-    databases = models.CharField(max_length=100,verbose_name='Databases',help_text='Enter Databases that you know seperated by commas',blank=True)
-    OS = models.CharField(max_length=100,verbose_name='Operating Systems',help_text='Enter Operating Systems that you know seperated by commas',blank=True)
-    swPackages = models.CharField(max_length=100,verbose_name='Software Packages',help_text='Enter Software Packages that you know seperated by commas',blank=True)
-    webTools = models.CharField(max_length=100,verbose_name='Web Tools', help_text='Enter Web Tools seperated by commas',blank=True)
+    programming = models.CharField(max_length=100,verbose_name='Programming Languages',help_text='Enter Programming Languages that you know seperated by commas',blank=True,null=True);
+    databases = models.CharField(max_length=100,verbose_name='Databases',help_text='Enter Databases that you know seperated by commas',blank=True,null=True)
+    OS = models.CharField(max_length=100,verbose_name='Operating Systems',help_text='Enter Operating Systems that you know seperated by commas',blank=True,null=True)
+    swPackages = models.CharField(max_length=100,verbose_name='Software Packages',help_text='Enter Software Packages that you know seperated by commas',blank=True,null=True)
+    webTools = models.CharField(max_length=100,verbose_name='Web Tools', help_text='Enter Web Tools seperated by commas',blank=True,null=True)
   
     formname = 'SwExposureForm'
 
@@ -142,7 +147,7 @@ class swExposure(models.Model):
 
 class ExtraField(models.Model):
     primary_table=models.ForeignKey('student',editable=False);
-    title=models.CharField(blank=False,max_length=50);
+    title=models.CharField(blank=False,max_length=100);
     desc = models.TextField(blank=False,verbose_name='Description',help_text='Describe it in brief.');
     fromDate = models.DateField(null=True,blank=True, verbose_name='From Date',help_text='Enter the Month and Year when you started this');
     endDate = models.DateField(null=True,blank=True, verbose_name='To Date',help_text='Enter the Month and Year when you completed/will complete this');
@@ -163,7 +168,7 @@ class certification(ExtraField):
         verbose_name_plural = "Certification Info of students"
 
 class project(ExtraField):
-    heading=models.CharField(max_length=50 ,blank=True);
+    heading=models.CharField(max_length=100,blank=True);
     
     formname = 'ProjectForm'
     class Meta:

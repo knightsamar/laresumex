@@ -10,7 +10,7 @@ Requirements:
   * Python Imaging Library (PIL)
   * sorl-thumbnail
   * memcached python bindings (and actual memcached instance running somewhere!)
-
+  * South (for database migrations)
 
 Setting up of laresumex environment on local instance . check out below link and read instructions.
 
