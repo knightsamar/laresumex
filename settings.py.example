@@ -115,6 +115,8 @@ INSTALLED_APPS = (
     'laresumex.ldap_login', #for logging in using ldap
     'social_auth', #for integrating with social media 
     'sorl.thumbnail', #for doing thumbnails of photos
+    'south', #for migrations! ref: http://south.readthedocs.org/en/latest/whataremigrations.html
+
 )
 
 AUTHENTICATION_BACKENDS = (
