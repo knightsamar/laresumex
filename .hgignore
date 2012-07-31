@@ -32,6 +32,7 @@ STORE/photos/*.png
 STORE/photos/*.jpeg
 STORE/photos/*.jpg
 STORE/photos/*.gif
+media/cache/*
 
 syntax: regexp
 #we need the directory STORE because it is looked for when creating the subdirs 
