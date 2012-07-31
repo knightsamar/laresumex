@@ -37,14 +37,16 @@
 <div style = '{margin:3%;float:left}'>
 Hi {{session.user.fullname}}
 <BR><BR>
-{% if create_form %}
-    <input type='button' value = 'start entering your details' onclick='javascript:location.href="{% url student_info.views.nayeforms prn %}"'><br>
-    <i> You need to fill your <b>mandatory (marked with *)</b>details !</i><br/>
-{% else %}
-<input type='button' value = 'edit your details' onclick="javascript:location.href='{% url student_info.views.nayeforms prn %}'"><BR>
-    <i>You can now apply to companies! </i> <br/>
-{% if p_s_st.2 == 1 %}
-    <input type='button' value='view the companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
+{% if should_allow_form_filling %}
+    {% if create_form %}
+        <input type='button' value = 'start entering your details' onclick='javascript:location.href="{% url student_info.views.nayeforms prn %}"'><br>
+        <i> You need to fill your <b>mandatory (marked with *)</b>details !</i><br/>
+    {% else %}
+    <input type='button' value = 'edit your details' onclick="javascript:location.href='{% url student_info.views.nayeforms prn %}'"><BR>
+        <i>You can now apply to companies! </i> <br/>
+    {% if p_s_st.2 == 1 %}
+        <input type='button' value='view the companies' onclick="javascript:location.href='{{ROOT}}/company/list';"><br/><br/>
+    {% endif %}
 {% endif %}
 <input type='button' value = 'view your resume(HTML) BETA version' onclick="javascript:location.href='{{ ROOT }}/generate_resume/{{ prn }}/html';"><br>
 

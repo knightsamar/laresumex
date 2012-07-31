@@ -34,7 +34,7 @@ def login(request):
             status=False;
             message="please enter Username"
         else:    
-            print "its Not emply...its",request.POST['username']
+            print "its Not empty...its",request.POST['username']
             print 'processing login attempt';
             try:
                 #comment this line when you ARE OUTSIDE SICSR!
@@ -46,13 +46,13 @@ def login(request):
                     print "tried ldap"
    
                 if  ldap is not True or status is not True: # if ldap is false, then dont check status as this is primary mode of auth. if ldap is true, then do this only when status is false.
-                         print "authenticating via djangi auth"
+                         print "authenticating via django auth"
                          USER = authenticate(username = request.POST['username'], password = request.POST['password'])
                          if USER is not None:
                              print "django login suucess"
                              #request.session['last_login'] = USER.last_login;
                              #login(request,USER);
-                             print "Adminuser found, its groups are", user.groups;
+                             print "Admin user found, its groups are", user.groups;
                              #ldap = False
                              if USER.is_staff:
                                  request.session['role'] = 'admin'

@@ -33,7 +33,7 @@ New form(s) implemented using ModelForm and ModelFormset functionality
 Named in plural because there are actually multiple forms goin around in this view.
 '''
 
-def nayeforms(request, prn):
+def nayeforms(prn,request):
     #login checker
     if "username" not in request.session:
        print "No session found!"

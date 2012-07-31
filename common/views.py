@@ -57,12 +57,13 @@ def index(request):
         placement_staff_student[0] = 1
     else:    
         print g[0]
-        print "user ==",u,"groups", u.groups.all()
+        print "user ==",u
+        print "belonging to groups == ", u.groups.all()
         if g[0] in u.groups.all():
             print 'placement_committe'
-   
             request.session['role']='admin'
             placement_staff_student[0]=1;
+
     if placement_staff_student[0] == 1:       
         try:
             j = posting.objects.filter(posted_on__gt = ll).filter(status = 'p');
@@ -81,8 +82,10 @@ def index(request):
     else:
         print "staff"
         placement_staff_student[1]=1;
+        request.session['role']='staff'
 
     print "found prn"
+
     try:
             s=student.objects.get(pk=prn);
             #Form already exists
@@ -90,11 +93,18 @@ def index(request):
     except Exception as e:
             #it means there is no entry
             create_form=True;
-       
+    
+    #because there is a problem with nayeforms and string-logins, we will not allow non-prn users to fill forms
+    if not (request.session['role'] == 'student'):
+        should_allow_form_filling = False
+    else:
+        should_allow_form_filling = True
+
     t=loader.get_template('common/index.html')
     
     c=Context({
             'prn':request.session['username'],
+            'should_allow_form_filling': should_allow_form_filling,
             'create_form':create_form,
             'p_s_st':placement_staff_student,
             'new_posting':new_posting,
