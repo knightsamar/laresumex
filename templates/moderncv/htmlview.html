@@ -114,8 +114,9 @@
 				</br>
 				<h3>Technologies Known</h3>
 				<table cellpadding=10>
+
 					{% if sw.programming %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Programming Languages</b></td><td>:</td><td> {{sw.programming}}</td></tr>
+						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Programming Languages</b></td><td>:</td><td>{{sw.programming}}</td></tr>
 					{% endif %}
 					{% if sw.databases %}
 						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Database</b></td>  <td>           :</td><td>   {{sw.databases}}</td></tr>
@@ -156,6 +157,7 @@
 				{% for ex in e %}
 					<tr><td><li></td><td>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></td></tr>
 				{% endfor %}
+			
 				</table>
 				</ul>
 			</div>
@@ -246,11 +248,11 @@
 		</br>
 		</br>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "{float:left;}">
-			<br>Date
+		<div style = "float:left;">
+			<br>Date 
 		</div>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "{float:right;}">
+		<div style = "float:right;">
 			{{s.fullname}}<br>Pune
 		</div>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->

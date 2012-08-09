@@ -6,40 +6,45 @@
 	ul
 	{
 		margin-left: 1%;
+		font-size:10
 	}
 	table
 	{
     		margin-left: 4%;
+		font-size:10
 	}
 	pre
 	{
 		font-family:"verdana";
 		margin-left:2%;
+		font-size:10
 	}
 	element
 	{
+		font-size:10
 	}
 	h3
 	{
 		border-bottom: 2px solid; 
+		font-size:10
 	}
 	
 	div
 	{
 		border:0px;
+		font-size:10
 	}
 	#photo
 	{
 		float: left;
+		font-size:10
 	}
 </style>
 </head>
 <body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 	
-
-
-<div style = "{ padding:13px;margin-left:15%;border-style:double;}">
+<div style = "{ padding-left:13px;margin-left:15%;border-style:double;}">
 
     		 {% if s.photo %}
         <div id='photo' style="position:relative;float:left;clear:right;">
@@ -48,7 +53,7 @@
             {% endthumbnail %}
         </div>
     {% endif %}
-    		<div style="{float:'right';position:relative}">
+    		<div style="{float:right;position:relative;font-size:10}">
         		<h2> &nbsp; {{ s.fullname }}</h2>
         		&nbsp;&nbsp;&nbsp; <b> Date of birth </b>: {{ p.birthdate }}
 			</br> &nbsp;&nbsp;&nbsp; <b> Sex </b>:{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
@@ -56,16 +61,13 @@
 			</br> &nbsp;&nbsp;&nbsp; <b> Email ID </b> : {{s.email}}
 		</div>
 
-
-
-
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->		
 		</br>
 		<div>
 			</br>
 			<h3>Career Objective</h3>
 			<table cellpadding=10 >
-			<tr><td><h4><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{s.career_objective}}</i></h4></tr></td>
+			<tr><h4><i>{{s.career_objective}}</i></h4></tr>
 			</table>
 		</div>
 
@@ -78,7 +80,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for aoi in p.areasofinterest|split:',' %}
-					<tr><td><li></td><td>{{aoi}}</li></td></tr>
+					<tr><li>{{aoi}}</li></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -89,11 +91,11 @@
 			<div>
 				</br>
 				<h3> Academic Qualifications</h3>
-				<table cellpadding=10 >
+				<table cellpadding=10>
 				{% for marks in m %}
 					<tr>
-					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{marks.course}}</td><td>{{marks.uni}}</td>
-					<td>
+					<td style="width:100px">{{marks.course}}</td><td style="width:100px">{{marks.uni}}</td>
+					<td style="width:100px">
 					{% if marks.markstype == 'GPA' %}
 						{{marks.marks}} GPA out of {{marks.outof}}
 					{% else %}
@@ -108,7 +110,7 @@
 					{% endif %}
 					{% endif %}
 					</td>
-					<td>{{marks.fromDate|date:'Y'}}</td>
+					<td style="width:100px">{{marks.fromDate|date:'Y'}}</td>
 					</tr>
 				{% endfor %}
 				</table>
@@ -121,19 +123,19 @@
 				<h3>Technologies Known</h3>
 				<table cellpadding=10>
 					{% if sw.programming %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Programming Languages</b></td><td>:</td><td> {{sw.programming}}</td></tr>
+						<ul><tr><b>Programming Languages</b>&nbsp;:&nbsp; {{sw.programming}}</tr></ul>
 					{% endif %}
 					{% if sw.databases %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Database</b></td>  <td>           :</td><td>   {{sw.databases}}</td></tr>
+						<ul><tr><b>Database</b>&nbsp;:&nbsp;{{sw.databases}}</tr></ul>
 					{% endif %}
 					{% if sw.OS %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Operating systems</b></td>    <td> :</td><td>{{sw.OS}}</td></tr>
+						<ul><tr><b>Operating systems</b>&nbsp;:&nbsp;{{sw.OS}}</tr></ul>
 					{% endif %}
 					{% if sw.swPackages %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other software</b></td>       <td>:</td><td>{{sw.swPackages}}</td></tr>
+						<ul><tr><b>Other software</b>&nbsp;:&nbsp;{{sw.swPackages}}</tr></ul>
 					{% endif %}
 					{% if sw.webTools %}
-						<tr><td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web based Tools</b></td>      <td>:</td><td>{{sw.webTools}}</td></tr>
+						<ul><tr><b>Web based Tools</b>&nbsp;:&nbsp;{{sw.webTools}}</tr></ul>
 					{% endif %}
 				</table>
 			</div>
@@ -146,7 +148,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for pr in pro %}
-					<tr><td><li><td>{{pr.heading}}</td><td>{{pr.desc}}</td></tr>
+					<tr><li>{{pr.heading}}&nbsp;{{pr.desc}}</tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -160,7 +162,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for ex in e %}
-					<tr><td><li></td><td>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></td></tr>
+					<tr><li>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -174,11 +176,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for certi in c %}
-					<tr>
-					<td><li></td>
-					<td>{{ certi.desc }}</td>
-					<td>{{certi.fromDate|date:'M Y'}}</td>
-					</tr>
+					<tr><li>{{ certi.desc }}&nbsp;{{certi.fromDate|date:'M Y'}}</tr>
 				{% endfor %}   
 				</table>
 				</ul>
@@ -192,11 +190,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for wex in w %}
-					<tr>
-					<td><li></td>
-					<td>{{wex.desc}}</td>
-					<td> from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}</td>
-					</tr>
+					<tr><li>{{wex.desc}} from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}</tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -210,7 +204,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for ac in a %}
-					<tr><td><li></td><td>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</li></td></tr>
+					<tr><li>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</li></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -223,12 +217,12 @@
 			<h3>Personal dossier</h3>
 			<table cellpadding=10>
 			<ul>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Name</b></td>      <td>:</td><td>{{s.fullname}}</td></tr>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Mobile</b></td>      <td>:</td><td>{{s.phone}}</td></tr>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Email</b></td>      <td>:</td><td>{{s.email}}</td></tr>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Languages Known</b></td>      <td>:</td><td>{{p.languages}}</td></tr>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Permanent Adress</b></td>      <td>:</td><td><pre>{{p.per_address}}</pre></td></tr>
-			<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Address for correspondence</b></td>     <td>:</td><td><pre>{{p.corr_address }}</pre></td></tr>
+			<tr><b>Name</b>&nbsp;:&nbsp;{{s.fullname}}</tr></ul>
+			<ul><tr><b>Mobile</b>&nbsp;:&nbsp;{{s.phone}}</tr></ul>
+			<ul><tr><b>Email</b>&nbsp;:&nbsp;{{s.email}}</tr></ul>
+			<ul><tr><b>Languages Known</b>&nbsp;:&nbsp;{{p.languages}}</tr></ul>
+			<ul><tr><b>Permanent Adress</b>&nbsp;:&nbsp;{{p.per_address}}</tr></ul>
+			<ul><tr><b>Address for correspondence</b>&nbsp;:&nbsp;{{p.corr_address }}</tr>
 			</ul>
 			</table>
 		</div>
@@ -239,7 +233,7 @@
 			<ul>
 			<table cellpadding=10>
 			{% for h in p.hobbies|split:','%}
-				<tr><td><li></td><td>{{h}}</li></td>
+				<tr><li>{{h}}</li></tr>
 			{% endfor %}
 			</table>
 			</ul>
@@ -252,12 +246,13 @@
 		</br>
 		</br>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "{float:left;}">
-			<br>Date
+		<div style = "float:left;">
+			</br>Date
 		</div>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "{float:right;}">
-			{{s.fullname}}<br>Pune
+		</br>
+		<div style = "float:right;">
+			{{s.fullname}}</br>Pune
 		</div>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 	</br>
