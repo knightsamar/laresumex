@@ -39,27 +39,32 @@
 		float: left;
 		font-size:10
 	}
+
+.split-text { display:block;margin-left:10px;}
+
+.split-text span {display:block;float:right;margin-right:10px;}
 </style>
 </head>
 <body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-	
-<div style = "{ padding-left:13px;margin-left:15%;border-style:double;}">
 
+<div style = "padding-left:13px;margin-left:15%;border-style:double;">
+<table>
     		 {% if s.photo %}
-        <div id='photo' style="position:relative;float:left;clear:right;">
-            {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
-                <img src='{{ img.url }}'>
+      {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
+             <tr><td width="20%"><img src="{{ img.url }}"></td>
             {% endthumbnail %}
-        </div>
+   
     {% endif %}
-    		<div style="{float:right;position:relative;font-size:10}">
-        		<h2> &nbsp; {{ s.fullname }}</h2>
-        		&nbsp;&nbsp;&nbsp; <b> Date of birth </b>: {{ p.birthdate }}
-			</br> &nbsp;&nbsp;&nbsp; <b> Sex </b>:{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
-			</br> &nbsp;&nbsp;&nbsp; <b> Tel(M) </b>: +91-{{s.phone}}
-			</br> &nbsp;&nbsp;&nbsp; <b> Email ID </b> : {{s.email}}
-		</div>
+
+    		<!--	<div style="{float:right;position:relative;font-size:10}">	-->
+        		<td align="left"><b>{{ s.fullname }}</b>
+        		</br><b> Date of birth </b>: {{ p.birthdate }}
+			</br><b> Sex </b>:{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
+			</br><b> Tel(M) </b>: +91-{{s.phone}}
+			</br><b> Email ID </b> : {{s.email}}</td>
+		</tr>
+</table>
 
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->		
 		</br>
@@ -91,7 +96,13 @@
 			<div>
 				</br>
 				<h3> Academic Qualifications</h3>
-				<table cellpadding=10>
+				<table border=1 cellpadding=3>
+					<tr>
+					<th>Course</th>
+					<th>University</th>
+					<th>Marks</th>
+					<th>Year</th>
+					</tr>
 				{% for marks in m %}
 					<tr>
 					<td style="width:100px">{{marks.course}}</td><td style="width:100px">{{marks.uni}}</td>
@@ -121,7 +132,7 @@
 			<div>
 				</br>
 				<h3>Technologies Known</h3>
-				<table cellpadding=10>
+				<table border=1>
 					{% if sw.programming %}
 						<ul><tr><b>Programming Languages</b>&nbsp;:&nbsp; {{sw.programming}}</tr></ul>
 					{% endif %}
@@ -246,14 +257,8 @@
 		</br>
 		</br>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "float:left;">
-			</br>Date
-		</div>
-<!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		</br>
-		<div style = "float:right;">
-			{{s.fullname}}</br>Pune
-		</div>
+			<div>
+			Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{s.fullname}}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pune</div>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 	</br>
 	</br>

@@ -32,6 +32,9 @@
 	{
 		border:0px;
 	}
+.split-text { display:block;margin:10px;}
+
+.split-text span {display:block;float:right;margin-left:10px;}
 </style>
 </head>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -39,8 +42,8 @@
 
     		 {% if s.photo %}
         		<div id='photo' style="position:relative;float:left;clear:right;">
-		    		{% thumbnail s.photo.url "130x150" crop="30% center" as img %}
-		        		<img src='{{ img.url }}'>
+		    		{% thumbnail s.photo.url "140x162" crop="60% center" as img %}
+		        		<img src="{{ img.url }}">
 		    		{% endthumbnail %}
         		</div>
     		{% endif %}
@@ -83,7 +86,13 @@
 			<div>
 				</br>
 				<h3> Academic Qualifications</h3>
-				<table cellpadding=10 >
+				<table border="1" cellpadding=10 >
+					<tr>
+					<th>Course</th>
+					<th>University</th>
+					<th>Marks</th>
+					<th>Year</th>
+					</tr>
 				{% for marks in m %}
 					<tr>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{marks.course}}</td><td>{{marks.uni}}</td>
@@ -248,13 +257,9 @@
 		</br>
 		</br>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "float:left;">
-			<br>Date 
-		</div>
-<!---------------------------------------------------------------------------------------------------------------------------------------------------->
-		<div style = "float:right;">
-			{{s.fullname}}<br>Pune
-		</div>
+		<div>
+			<p class="split-text">Date <span>{{s.fullname}}<br>Pune</span></p>
+		</div>	
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 	</br>
 	</br>

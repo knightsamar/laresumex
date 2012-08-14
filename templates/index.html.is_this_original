@@ -6,7 +6,7 @@
 {% comment %}
     We will have the special hiya logic here soon ;)
 {% endcomment %}
-Hi!
+Hi!hjhjh
 <br><BR>
 {% if create_form %}
     <input type='button' value = 'start entering your details' onclick='javascript:location.href="{{ ROOT }}/form"'><br>
