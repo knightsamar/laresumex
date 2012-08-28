@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% block title %}
+    JobPosting
+{% endblock %}
+{% block styles %}
+.help
+{   
+  color: #999999;
+  font-size: 12px !important;
+}
+
+.error
+{
+    color: red;
+    font-size: 11px !important;
+    margin: 0 0 3px;
+    padding: 4px 5px 4px 25px;    
+}
+
+table
+{
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #CCCCCC;
+    margin-bottom: 5px;
+    width: 60%;    
+}
+
+td
+{
+    border-bottom: 2px solid #EEEEEE;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 8px 12px;
+}
+
+{% endblock %}
+{% block content %}
+
+<script>
+// This function checkes whether walkin is selected, then how to apply firld automaticalaly becomes walkin, othewise, they need to enter in the textarea...
+function makeWalkin(o)
+{
+    if (!(o.checked))
+    {
+        c=document.getElementById('id_how_to_apply')
+        c.disabled=false;
+        c.focus();
+        /*
+        This actually creates a Tr, Th, TD fo an extra how-to-apply field.. that appears on click 
+        tr=document.createElement('tr');
+        tr.id="how_to_apply"
+        alert(o)
+        th=document.createElement('th');
+        td=document.createElement('td');
+        a=document.createTextNode('how to apply')
+        textarea=document.createElement('textarea')
+        textarea.rows=5;
+        textarea.cols=30;
+        textarea.name="how_to_apply"
+        td.appendChild(textarea)
+        th.appendChild(a);
+        tr.appendChild(th);
+        tr.appendChild(td);
+        o.parentNode.parentNode.parentNode.appendChild(tr)
+        */
+    }
+   else
+   {
+       c=document.getElementById('id_how_to_apply');
+           c.value='walk-in';
+           c.disabled=true
+   }
+}
+function oncemore()
+{
+    o=document.getElementById('id_walk_in');
+    h=document.getElementById('id_how_to_apply');
+    if (h.value=='walk-in')
+        o.checked=true;
+        
+    makeWalkin(o);
+}
+
+function removeErrors(forElement)
+{
+    errormsgs = forElement.parentNode.getElementsByTagName('p')
+    for (var j=0;j<errormsgs.length;j++)
+    {
+        errormsgs[j].parentNode.removeChild(errormsgs[j])
+    }
+}
+function validate()
+{
+    // function is called on submit, enables the disabled field. and if walkin is not selected then ensures that the textaera part is filled.
+    walkin=document.getElementById('id_walk_in');
+    howto=document.getElementById('id_how_to_apply');
+    err = document.createElement('p')
+    errmsg = document.createTextNode("You can't leave this empty")
+    err.appendChild(errmsg)
+    err.setAttribute('class','error')
+    if (walkin.checked && howto.disabled)
+    {
+        //alert("enabling the 'how to apply' for submission");
+        howto.disabled=false;
+    }
+    inputs = document.getElementsByTagName('input')
+    valid = true
+    for(var i=0;i<inputs.length;i++)
+    {
+        //remove existing error msgs if any
+        removeErrors(inputs[i])
+
+        if(inputs[i].value=="" && inputs[i].id != 'id_walk_in')
+        {
+           inputs[i].parentNode.appendChild(err.cloneNode(true));
+           inputs[i].focus();
+           valid = false
+        }
+    }
+
+    textareas=document.getElementsByTagName('textarea')
+    for(var i=0;i<textareas.length;i++)
+    {
+        removeErrors(textareas[i])
+        if(textareas[i].value=="")
+        {
+          textareas[i].parentNode.appendChild(err.cloneNode(true));
+          valid = false;
+        }
+    }
+    if (!valid)
+        alert("Please correct the errors!")
+    return valid
+}
+
+</script>
+<body onload='oncemore()'>
+<i>Hi {{user.get_full_name}}! </i><br/><br/>
+<form action='{{ROOT}}/jobposting/add' method = 'post' onSubmit='return validate()'> 
+
+{% csrf_token %}
+<table>
+   <caption>Post a job for SICSR students</caption> 
+   <tr align='left'>
+        <td width='20%'><label for="id_walk_in">Is this a walk-in?</label></td>
+        <td width='50%'><input type="checkbox" name="walk_in" id="id_walk_in" onChange='makeWalkin(this)'></td>
+   </tr>
+   {% for field in form %}
+   <tr align='left'>    
+        <td width='20%'> {{ field.label_tag }} <br/>
+            <span class='help'>{{ field.help_text }}</span>
+            
+        </th>
+        
+        <td width='50%'> 
+            {{ field }}
+            {% for error in field.errors %}
+                <p class='error'>{{ error }}</p>
+            {% endfor %}
+        </td>
+   </tr>
+   {% endfor %}
+   <tr> 
+        <td colspan='2' align='center'>
+            <br/>
+            <input type= 'submit' value='Post this job'>
+        </td>
+   </tr>
+</table>
+</form>
+<br/>
+<a href='{{ROOT}}/socialauth/logout'>Logout</a>
+</body>
+{% endblock %}

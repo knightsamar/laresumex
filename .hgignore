@@ -1,0 +1,40 @@
+syntax: glob
+*~
+*.sql
+*.new
+*.old
+templates/chimpu.html
+*.egg
+
+*.pyc
+.*swp
+settings.py
+*.rej
+*.gz
+*.patch
+templates/*.zip
+templates/*.log
+templates/moderncv/*.out
+templates/moderncv/*.log
+templates/moderncv/*.aux
+apache2/django.wsgi
+*.sqlite*
+.DS_Store*
+*.orig
+*.png
+*.log
+media/*.xls
+media/jquery.tar.bz2
+media/jquery/development-bundle/*
+jquery-ui-1.8.14.custom.zip
+STORE/resumes/*.pdf
+STORE/photos/*.png
+STORE/photos/*.jpeg
+STORE/photos/*.jpg
+STORE/photos/*.gif
+media/cache/*
+
+syntax: regexp
+#we need the directory STORE because it is looked for when creating the subdirs 
+#but we don't need every individual's data in it :)
+^\STORE/[0-9]*/

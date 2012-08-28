@@ -1,0 +1,314 @@
+{% load thumbnail %}
+{% load some_tags %}
+<html>
+<head>
+<style type="text/css">
+	ul
+	{
+		margin-left: 1%;
+		font-size:10
+	}
+	table
+	{
+    		margin-left: 4%;
+		font-size:10
+	}
+	pre
+	{
+		font-family:"verdana";
+		margin-left:2%;
+		font-size:10
+	}
+	element
+	{
+		font-size:10
+	}
+	h3
+	{
+		border-bottom: 2px solid; 
+		font-size:10
+	}
+	
+	div
+	{
+		border:0px;
+		font-size:10
+	}
+	#photo
+	{
+		float: left;
+		font-size:10
+	}
+	img
+	{
+		text-align:center;
+	}
+	hr.footerline
+	{
+		text-align:center;
+		width:50%;
+		color: #f00;
+		background-color: #f00;
+		height: 3px;
+	}
+	p.footer
+	{
+		text-align:center;
+		color:red;	
+	}
+</style>
+</head>
+<body>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+<img src="symbi.png" />
+<div style = "{ padding-left:13px;margin-left:15%;border-style:double;}">
+
+    		 {% if s.photo %}
+        <div id='photo' style="position:relative;float:left;clear:right;">
+            {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
+                <img src='{{ img.url }}'>
+            {% endthumbnail %}
+        </div>
+    {% endif %}
+		 <div style="{text-align:right;font-size:10}">
+    <!--		<div style="{float:right;position:relative;font-size:10}"> -->
+        		<h2> &nbsp; {{ s.fullname }}</h2>
+        		&nbsp;&nbsp;&nbsp; <b> Date of birth </b>: {{ p.birthdate }}
+			</br> &nbsp;&nbsp;&nbsp; <b> Sex </b>:{% if s.sex == 'm' %} Male {% else %} Female {% endif %}
+			</br> &nbsp;&nbsp;&nbsp; <b> Tel(M) </b>: +91-{{s.phone}}
+			</br> &nbsp;&nbsp;&nbsp; <b> Email ID </b> : {{s.email}}
+		</div>
+
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->		
+		</br>
+		<div>
+			</br>
+			<h3>Career Objective</h3>
+			<table cellpadding=10 >
+			<tr><h4><i>{{s.career_objective}}</i></h4></tr>
+			</table>
+		</div>
+
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+
+	{% if p.areasofinterest %}
+			<div>
+				</br>
+				<h3>Areas of Interest</h3>
+				<ul>
+				<table cellpadding=10>
+				{% for aoi in p.areasofinterest|split:',' %}
+					<tr><li>{{aoi}}</li></tr>
+				{% endfor %}
+				</table>
+				</ul>
+			</div>
+		{% endif %}	
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->	
+	{% if m %}
+			<div>
+				</br>
+				<h3> Academic Qualifications</h3>
+				<table cellpadding=10>
+				{% for marks in m %}
+					<tr>
+					<td style="width:100px">{{marks.course}}</td><td style="width:100px">{{marks.uni}}</td>
+					<td style="width:100px">
+					{% if marks.markstype == 'GPA' %}
+						{{marks.marks}} GPA out of {{marks.outof}}
+					{% else %}
+					{% if not marks.marks %}
+						{{marks.markstype}}
+					{% else %}
+					{% if marks.markstype == 'Total' %}
+						{{marks.get_percentage}}
+					{% else %}
+						{{ marks.markstype}}
+					{% endif %}
+					{% endif %}
+					{% endif %}
+					</td>
+					<td style="width:100px">{{marks.fromDate|date:'Y'}}</td>
+					</tr>
+				{% endfor %}
+				</table>
+			 </div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+{% if sw %}
+			<div>
+				</br>
+				<h3>Technologies Known</h3>
+				<table cellpadding=10>
+					{% if sw.programming %}
+						<ul><tr><b>Programming Languages</b>&nbsp;:&nbsp; {{sw.programming}}</tr></ul>
+					{% endif %}
+					{% if sw.databases %}
+						<ul><tr><b>Database</b>&nbsp;:&nbsp;{{sw.databases}}</tr></ul>
+					{% endif %}
+					{% if sw.OS %}
+						<ul><tr><b>Operating systems</b>&nbsp;:&nbsp;{{sw.OS}}</tr></ul>
+					{% endif %}
+					{% if sw.swPackages %}
+						<ul><tr><b>Other software</b>&nbsp;:&nbsp;{{sw.swPackages}}</tr></ul>
+					{% endif %}
+					{% if sw.webTools %}
+						<ul><tr><b>Web based Tools</b>&nbsp;:&nbsp;{{sw.webTools}}</tr></ul>
+					{% endif %}
+				</table>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->		
+{% if pro %}
+			<div>   
+				</br>
+				<h3> Projects Undertaken</h3>
+				<ul>
+				<table cellpadding=10>
+				{% for pr in pro %}
+					<tr><li>{{pr.heading}}&nbsp;{{pr.desc}}</tr>
+				{% endfor %}
+				</table>
+				</ul>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+{% if e %}
+			<div>
+				</br>
+				<h3> Extra Curricular</h3>
+				<ul>
+				<table cellpadding=10>
+				{% for ex in e %}
+					<tr><li>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></tr>
+				{% endfor %}
+				</table>
+				</ul>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+	{% if c %}
+			<div>
+				</br>
+				<h3>Certifications</h3>
+				<ul>
+				<table cellpadding=10>
+				{% for certi in c %}
+					<tr><li>{{ certi.desc }}&nbsp;{{certi.fromDate|date:'M Y'}}</tr>
+				{% endfor %}   
+				</table>
+				</ul>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		{% if w %}
+			<div>
+				</br>
+				<h3> Work Experience </h3>
+				<ul>
+				<table cellpadding=10>
+				{% for wex in w %}
+					<tr><li>{{wex.desc}} from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}</tr>
+				{% endfor %}
+				</table>
+				</ul>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		{% if a %}
+			<div>
+				</br>
+				<h3> Academic Achievements</h3>
+				<ul>
+				<table cellpadding=10>
+				{% for ac in a %}
+					<tr><li>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</li></tr>
+				{% endfor %}
+				</table>
+				</ul>
+			</div>
+		{% endif %}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		
+		<div>
+			</br>
+			<h3>Personal dossier</h3>
+			<table cellpadding=10>
+			<ul>
+			<tr><b>Name</b>&nbsp;:&nbsp;{{s.fullname}}</tr></ul>
+			<ul><tr><b>Mobile</b>&nbsp;:&nbsp;{{s.phone}}</tr></ul>
+			<ul><tr><b>Email</b>&nbsp;:&nbsp;{{s.email}}</tr></ul>
+			<ul><tr><b>Languages Known</b>&nbsp;:&nbsp;{{p.languages}}</tr></ul>
+			<ul><tr><b>Permanent Adress</b>&nbsp;:&nbsp;{{p.per_address}}</tr></ul>
+			<ul><tr><b>Address for correspondence</b>&nbsp;:&nbsp;{{p.corr_address }}</tr>
+			</ul>
+			</table>
+		</div>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		<div>
+			</br>
+			<h3>Hobbies</h3>
+			<ul>
+			<table cellpadding=10>
+			{% for h in p.hobbies|split:','%}
+				<tr><li>{{h}}</li></tr>
+			{% endfor %}
+			</table>
+			</ul>
+		</div>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		</br>
+		</br>
+		<p>I hereby declare that the above-mentioned information is correct up to my knowledge and I bear the responsibility for the correctness of the above-mentioned particulars.</p>
+		</br>
+		</br>
+		</br>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		<div style = "{text-align:left;}">
+		<br>Date
+		</div>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+		<div style = "{text-align:right;}">
+			{{s.fullname}}<br>Pune
+		</div>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+	</br>
+	</br>
+	</div>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
+</body>
+</html>
+
+
+
+
+
+
+<br><BR>
+<p>I hereby declare that the above-mentioned information is correct up to my knowledge and I bear the responsibility for the correctness of the above-mentioned particulars.
+</p><br><br><BR>
+
+<div style = "{text-align:left;}">
+<br>Date
+</div>
+<div style = "{text-align:right;}">
+{{s.fullname}}<br>Pune
+</div>
+</div>
+<hr class= "footerline">
+<p class= "footer"> Symbiosis Institute of Computer Studies & Research, Pune </p> 
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

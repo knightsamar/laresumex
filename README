@@ -1,0 +1,17 @@
+LaResume-X -- the placement software for SICSR
+
+Requirements:
+  * Django 1.2.5
+  * pyExcelerator
+  * pisapdf
+  * django-social-auth (requires python-openid and python-oauth2)
+  * pygooglecharts
+  * xhtml2pdf
+  * Python Imaging Library (PIL)
+  * sorl-thumbnail
+  * memcached python bindings (and actual memcached instance running somewhere!)
+  * South (for database migrations)
+
+Setting up of laresumex environment on local instance . check out below link and read instructions.
+
+http://redwine.sdrclabs.in/projects/sdrc-laresumex/wiki/Setting_up_the_development_environment

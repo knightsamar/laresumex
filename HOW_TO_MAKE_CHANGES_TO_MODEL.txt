@@ -1,0 +1,31 @@
+We are the people of South -- the people who change models using South.
+
+Ok, plainspeak - any changes that you want to make to the models in LaResume-X requires you to manage them using South.
+Why ? Well, go read the benefits of South(http://south.aeracode.org/) OR simply give a free wadapav treat to Samar ;)
+
+How to do that ?
+
+On your dev machine:
+--------------------
+1. Make SURE :
+	a) you have South installed and 'south' as an app in your settings.py
+	b) you have a table south_migrationhistory created in your database (if not run 'python manage.py syncdb')
+	c) you have the initial migration done -- if not, run 'python manage.py migrate student_info --fake 0001'
+2. Make changes to your models.
+3. Run 'python manage.py schemamigration <app_name> --auto'
+	This will create a migration for the change you made inside <app_name>/migrations.
+4. Apply the migration to your database and see whether all's fine.
+	'python manage.py migrate <app_name>'
+5. Double check whether your data is ok and the change in the DB structure is actually desirable.
+6. Checkin your migration inside mercurial.
+7. Push the changes.
+
+On the production/staging:
+--------------------------
+1. (Same as that for dev machine above)
+2. Pull in your changes from the repository.
+3. Take a backup of your database. HOWEVER STUPID THIS SEEMS, YOU S-H-O-U-L-D do it if on PRODUCTION. OKAY ?
+4. Ensure you actually have taken a backup. Yes ? Good.
+5. python manage.py migrate <app_name> 
+6. Check your database and check whether changes were applied rightly. If not use the backup from step 3.
+7. Remember that 7 is the most magical number according to Harry Potter books :P
