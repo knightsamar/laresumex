@@ -1,5 +1,7 @@
 from django.db import models
 from student_info.models import student
+from generate_resume.models import resume
+from ldap_login.models import user
 
 # Create your models here.
 
@@ -22,6 +24,24 @@ class company(models.Model):
 
     class Meta:
          verbose_name_plural = "companies"
+
+    def get_interested_students(self):
+        '''Returns a data structure of interested students for this company
+
+           This data structure is a dictionary of dictionaries which contain various informations about the interested student
+        '''
+        student_list = self.students_applied.values()
+
+        interested_students = {}
+
+        for s in student_list:
+            interested_students[str(s['prn'])] = {
+                    'has_resume': resume.can_resume_be_generated(s['prn']),
+                    'name' : user.objects.get(username=s['prn']).fullname,
+                    }
+
+        print "List of interested students is ", interested_students
+        return interested_students
 
 class placement_in(models.Model):
     jobtype=(('i',"Internship"),('p',"Placement"),('ip','Internship+Placement'))
