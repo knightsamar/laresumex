@@ -112,17 +112,6 @@ function onSubmitValidator()
 
     $(function() 
             {
-                   $('.extracurricular_table').formset({
-                    prefix: 'extracurricular',
-                    addText: 'Add another ExtraCurricular Achievements section',
-                    deleteText: 'Remove this ExtraCurricular Achievements section',
-                    addCssClass: 'add_link',
-                    deleteCssClass: 'remove_link'
-                    });
-             })
-
-    $(function() 
-            {
                    $('.project_table').formset({
                     prefix: 'project',
                     addText: 'Add another Project section',
@@ -132,6 +121,17 @@ function onSubmitValidator()
                     });
              })
 
+
+    $(function() 
+            {
+                   $('.extracurricular_table').formset({
+                    prefix: 'extracurricular',
+                    addText: 'Add another ExtraCurricular Achievements section',
+                    deleteText: 'Remove this ExtraCurricular Achievements section',
+                    addCssClass: 'add_link',
+                    deleteCssClass: 'remove_link'
+                    });
+             })
     $(function() 
             {
                    $('.additionalInfo_table').formset({
@@ -451,41 +451,38 @@ function onSubmitValidator()
                 </div>
 			</div>
 
-			<div>
+		<div>
                 <h3><a href='#'>Projects Undertaken</a></h3>
                 <div>
-				<!-- project information form -->
-				{{ project_formset.management_form }}
-				{% for form in project_formset.forms %}
-				<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
-                <table class='project_table'>
-                   {% for field in form %}
-                   <tr align='left'>    
-                       <td width='20%'>
-                            {% comment %}
-                              This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
-                            {% endcomment %}
-                            {% if not field.is_hidden and 'DELETE' not in field.label_tag %}
-                                {{ field.label_tag }} <br/>
-                                <span class='help'>{{ field.help_text }}</span>
-    							{% for error in field.errors %}
-	    							<p class='error'>{{ error }}</p>
-		    					{% endfor %}
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
-                        </td>
-						
-						<td width='50%'> 
-							{{ field }}
-						</td>
-                    </tr>
-				   {% endfor %}
-				</table>
-				</div>
+		<!-- project information form -->
+		{{ project_formset.management_form }}
+		{% for form in project_formset.forms %}
+		<div id="formset_project_{{ forloop.counter0 }}" class="increaseable">
+		    <table class='project_table'>
+		    {% for field in form %}
+			<tr align='left'>    
+			    <td width='20%'>
+				{% comment %}
+				  This is for hiding LABELS for id and primary_key and DELETE fields (Ref #154)
+				{% endcomment %}
+				{% if not field.is_hidden and 'DELETE' not in field.label_tag %}
+				    {{ field.label_tag }} <br/>
+				    <span class='help'>{{ field.help_text }}</span>
+							    {% for error in field.errors %}
+								    <p class='error'>{{ error }}</p>
+							    {% endfor %}
+				{% else %}
+				    &nbsp;
+				{% endif %}
+			    </td>
+			    <td width='50%'> {{ field }}</td>
+			</tr>
+		  {% endfor %}
+		    </table>
+		</div>
                 {% endfor %}
                 </div>
-			</div>
+		</div>
 
 			<div>
 				<h3><a href='#'>ExtraCurricular Achievements</a></h3>

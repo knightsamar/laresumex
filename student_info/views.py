@@ -45,7 +45,7 @@ def nayeforms(request,prn):
        return HttpResponse('<b>Please edit your own form! :@</b>')
 
     from student_info.forms import PersonalForm,MarksForm,SwExposureForm,CertificationForm,WorkexForm,AcademicAchievementsForm, ProjectForm, ExtraCurricularForm, StudentForm, AdditionalInfoForm
-    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,student,AdditionalInfo, companySpecific, companySpecificData
+    from student_info.models import student,personal,swExposure,marks,certification,workex,academic,project,extracurricular,AdditionalInfo,companySpecific, companySpecificData
     from django.forms.models import modelformset_factory
 
     print "Doing everything for prn", prn
@@ -84,8 +84,8 @@ def nayeforms(request,prn):
             formset_factories['certification'] = modelformset_factory(certification, form=CertificationForm, extra=0,can_delete=True)
             formset_factories['workex'] = modelformset_factory(workex, form=WorkexForm, extra=0,can_delete=True)
             formset_factories['academic'] = modelformset_factory(academic, form=AcademicAchievementsForm, extra=0,can_delete=True)
-            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
             formset_factories['project'] = modelformset_factory(project, form=ProjectForm, extra=0,can_delete=True)
+            formset_factories['extracurricular'] = modelformset_factory(extracurricular, form=ExtraCurricularForm, extra=0,can_delete=True)
             formset_factories['additionalInfo'] = modelformset_factory(AdditionalInfo, form=AdditionalInfoForm, extra=0,can_delete=True)
 
             #generate a formset -- collection of forms for editing/creating new data
@@ -95,8 +95,8 @@ def nayeforms(request,prn):
             formsets['certification'] = formset_factories['certification'](request.POST,prefix='certification')
             formsets['workex'] = formset_factories['workex'](request.POST,prefix='workex')
             formsets['academic'] = formset_factories['academic'](request.POST,prefix='academic')
-            formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
             formsets['project'] = formset_factories['project'](request.POST,prefix='project')
+            formsets['extracurricular'] = formset_factories['extracurricular'](request.POST,prefix='extracurricular')
             formsets['additionalInfo'] = formset_factories['additionalInfo'](request.POST,prefix='additionalInfo')
 
             sf = StudentForm(request.POST,request.FILES,prefix='student',instance=s)
