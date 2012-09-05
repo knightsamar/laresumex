@@ -3,6 +3,15 @@
 <html>
 <head>
 <style type="text/css">
+	@page {
+	  @frame footer {
+    		-pdf-frame-content: footerContent;
+		 bottom: 0cm;
+		 margin-left: 1cm;
+		 margin-right: 1cm;
+		 height: 1cm;
+		}
+	} 
 	ul
 	{
 		margin-left: 1%;
@@ -48,14 +57,22 @@
 <body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/home/ramesh/Desktop/SICSR.png" align="middle"/>   
+	<div id="footerContent">
+	<hr color="brown" size="2px">
+    Symbiosis Institute of Computer Studies & Research, Pune
+  </div>
+
 <div style = "padding-left:13px;margin-left:15%;border-style:double;">
 <table>
-    		 {% if s.photo %}
-      {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
-             <tr><td width="20%"><img src="{{ img.url }}"></td>
-            {% endthumbnail %}
-   
-    {% endif %}
+    		  {% if s.photo %}
+                <div id='photo' style="position:relative;float:left;clear:right;">
+                                {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
+                                        <img src='{{ img.url }}'>
+                                {% endthumbnail %}
+                        </div>
+                {% endif %}
+
 
     		<!--	<div style="{float:right;position:relative;font-size:10}">	-->
         		<td align="left"><b>{{ s.fullname }}</b>
