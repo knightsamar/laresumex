@@ -6,16 +6,16 @@ Students who have applied for Company
 
 {% for company,students in appliedStudents.items %}
    <h4>---- {{ company }} ----</h4>
-   <!-- <a href='generate_resume/company/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
+	<!-- <a href='generate_resume/company/{{jp.id}}/getallResumes'>Get all Resumes (ZIP)</a> -->
    <ul>
        {% for prn, details in students.items %}
        {% if details.has_resume %}
-           <li>{{prn}} -- <a href="{% url generate_resume.views.pisapdf prn %}">Get Resume (PDF)</a></li>
+           <li>({{prn}}) {{details.name}} -- <a href="{% url generate_resume.views.pisapdf prn %}">Get Resume (PDF)</a></li>
        {% else %}
-           <li>{{prn}} -- <i>No details available!</i></li>
+           <li>({{prn}}) {{details.name}} -- <i>No details available!</i></li>
        {% endif %}
        {% empty %}
-             <li><i>No Students have yet shown interest in this Job Posting!</i></li> 
+             <li><i>No Students have shown interest in this company</i></li> 
    {% endfor %}
    </ul>
 {% endfor %}

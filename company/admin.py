@@ -1,4 +1,3 @@
-# File : admin.py  Edited by : sachin
 from company.models import *
 from django.contrib import admin
 from student_info.models import student; #for mailing the student on his personal mail address.
@@ -95,13 +94,16 @@ class companyAdmin(admin.ModelAdmin):
 			#pratyek company saathi
 			interested_students = company.get_interested_students()
 			#jya students ne apply kela tyancha obejct store kara
-			StudentDict['%s : %d students' % (str(company.name),len(interested_students))] = interested_students;
+			if len(interested_students) == 1:
+		            	StudentDict['%s : %d student' % (str(company.name),len(interested_students))] = interested_students;
+			if len(interested_students) != 1:
+			     StudentDict['%s : %d students' % (str(company.name),len(interested_students))] = interested_students;
 
 		print StudentDict;
 		t = loader.get_template("company/interested_students_list.html");
 		c = Context ({ 'appliedStudents' : StudentDict });
 		return HttpResponse(t.render(c));
-    list_interested_students.short_description="List interested students!";
+    list_interested_students.short_description="List interested students !";
 
 class placement_inAdmin(admin.ModelAdmin):
     list_filter = ['company']
