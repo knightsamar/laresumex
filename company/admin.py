@@ -1,9 +1,11 @@
+# File : admin.py  Edited by : sachin
 from company.models import *
 from django.contrib import admin
 from student_info.models import student; #for mailing the student on his personal mail address.
 from django.core.mail import EmailMessage,get_connection #because this one actually let's use BCC and all.
 from django.template import Context, loader
 from laresumex.settings import MANAGERS;
+from django.http import HttpResponse
 from datetime import datetime
 '''
 class membershipInline(admin.TabularInline):
@@ -24,7 +26,7 @@ class companyAdmin(admin.ModelAdmin):
     #    ]
     
     #add a set of actions
-    actions = ['informStudents'];
+    actions = ['informStudents','list_interested_students'];
 
     def informStudents(self, request, selectedCompanies):
         print "Informing students about ",selectedCompanies;
@@ -83,6 +85,23 @@ class companyAdmin(admin.ModelAdmin):
 
         self.message_user(request,"Successfully informd students");    
     informStudents.short_description = "Inform students about companies"
+
+    def list_interested_students(self , request , selectedCompanies):
+		print "Listing students who are interested ",selectedCompanies;
+		StudentDict = {}
+		#saglaya selectedCompanies tun
+		
+		for company in selectedCompanies:
+			#pratyek company saathi
+			interested_students = company.get_interested_students()
+			#jya students ne apply kela tyancha obejct store kara
+			StudentDict['%s : %d students' % (str(company.name),len(interested_students))] = interested_students;
+
+		print StudentDict;
+		t = loader.get_template("company/interested_students_list.html");
+		c = Context ({ 'appliedStudents' : StudentDict });
+		return HttpResponse(t.render(c));
+    list_interested_students.short_description="List interested students!";
 
 class placement_inAdmin(admin.ModelAdmin):
     list_filter = ['company']

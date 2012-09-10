@@ -58,7 +58,7 @@
 <body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/home/ramesh/Desktop/SICSR.png" align="middle"/>   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{MEDIA_URL}}/SICSR.png" align="middle"/>   
 	<div id="footerContent">
 	<hr color="brown" size="2px">
     Symbiosis Institute of Computer Studies & Research, Pune
@@ -68,7 +68,7 @@
 <table>
     		  {% if s.photo %}
                <tr> <div id='photo' style="position:relative;float:left;clear:right;">
-                                {% thumbnail s.photo.url "130x150" crop="30% center" as img %}
+                                {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
                                  <td width="24%">       <img src='{{ img.url }}'></td>
                                 {% endthumbnail %}
                         </div>

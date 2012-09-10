@@ -37,16 +37,19 @@
 .split-text span {display:block;float:right;margin-left:10px;}
 </style>
 </head>
+<body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-	<div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}">
 
-    		 {% if s.photo %}
-        		<div id='photo' style="position:relative;float:left;clear:right;">
-		    		{% thumbnail s.photo.url "140x162" crop="60% center" as img %}
-		        		<img src="{{ img.url }}">
-		    		{% endthumbnail %}
-        		</div>
-    		{% endif %}
+<div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}"> 
+    		
+{% if s.photo %}
+                <div id='photo' style="position:relative;float:left;clear:right;">
+                                {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
+                                        <img src='{{ img.url }}'>
+                                {% endthumbnail %}
+                        </div>
+{% endif %}
+ 
     		<div style="{float:'right';position:relative}">
         		<h2> &nbsp; {{ s.fullname }}</h2>
         		&nbsp;&nbsp;&nbsp; <b> Date of birth </b>: {{ p.birthdate }}
@@ -267,7 +270,7 @@
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 <input type = 'button' onclick="javascript:location.href='{{ROOT}}/home'" value='Home'>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-
+</body>
 </html>
 
 
