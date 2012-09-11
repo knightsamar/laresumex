@@ -4,7 +4,7 @@
 <head>
 <style type="text/css">
 	@page {
-	margin: 2cm;
+	margin: 1cm;
 	  @frame footer {
     		-pdf-frame-content: footerContent;
 		 bottom: 0cm;
@@ -58,21 +58,26 @@
 <body>
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{MEDIA_URL}}/SICSR.png" align="middle"/>   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{{MEDIA_URL}}/sicsr.png" align="middle"/>
+<br/>
+<br/>
+<br/>
 	<div id="footerContent">
 	<hr color="brown" size="2px">
-    Symbiosis Institute of Computer Studies & Research, Pune
+    Symbiosis Institute of Computer Studies Research, Pune
   </div>
 
 <div style = "padding-left:13px;margin-left:15%;border-style:double;">
 <table>
     		  {% if s.photo %}
-               <tr> <div id='photo' style="position:relative;float:left;clear:right;">
+               <tr> 
+               <td width="24%"><div id='photo' style="position:relative;float:left;clear:right;">
                                 {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
-                                 <td width="24%">       <img src='{{ img.url }}'></td>
+                                 <img src='{{ img.url }}'>
                                 {% endthumbnail %}
-                        </div>
-                {% endif %}
+                   </div>
+               </td>
+             {% endif %}
 
 
     		<!--	<div style="{float:right;position:relative;font-size:10}">	-->
@@ -90,7 +95,7 @@
 			</br>
 			<h3>Career Objective</h3>
 			<table cellpadding=10 >
-			<tr><h4><i>{{s.career_objective}}</i></h4></tr>
+			<tr><td><h4><i>{{s.career_objective}}</i></h4></td></tr>
 			</table>
 		</div>
 
@@ -103,7 +108,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for aoi in p.areasofinterest|split:',' %}
-					<tr><li>{{aoi}}</li></tr>
+					<tr><td><li>{{aoi}}</li></td></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -114,7 +119,7 @@
 			<div>
 				</br>
 				<h3> Academic Qualifications</h3>
-				<table border=1 cellpadding=3>
+				<table border=1 cellpadding=3 bgcolor=#FFFFFF>
 					<tr>
 					<th>Course</th>
 					<th>University</th>
@@ -146,29 +151,29 @@
 			 </div>
 		{% endif %}
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
-{% if sw %}
+{%if sw.programming or sw.databases or sw.OS or sw.swPackages or sw.webTools %}
 			<div>
 				</br>
 				<h3>Technologies Known</h3>
-				<table border=1>
+				<table>
 					{% if sw.programming %}
-						<ul><tr><b>Programming Languages</b>&nbsp;:&nbsp; {{sw.programming}}</tr></ul>
+						<ul><tr><td><b>Programming Languages</b>&nbsp;:&nbsp; {{sw.programming}}</td></tr></ul>
 					{% endif %}
 					{% if sw.databases %}
-						<ul><tr><b>Database</b>&nbsp;:&nbsp;{{sw.databases}}</tr></ul>
+						<ul><tr><td><b>Database</b>&nbsp;:&nbsp;{{sw.databases}}</td></tr></ul>
 					{% endif %}
 					{% if sw.OS %}
-						<ul><tr><b>Operating systems</b>&nbsp;:&nbsp;{{sw.OS}}</tr></ul>
+						<ul><tr><td><b>Operating systems</b>&nbsp;:&nbsp;{{sw.OS}}</td></tr></ul>
 					{% endif %}
 					{% if sw.swPackages %}
-						<ul><tr><b>Other software</b>&nbsp;:&nbsp;{{sw.swPackages}}</tr></ul>
+						<ul><tr><td><b>Other software</b>&nbsp;:&nbsp;{{sw.swPackages}}</td></tr></ul>
 					{% endif %}
 					{% if sw.webTools %}
-						<ul><tr><b>Web based Tools</b>&nbsp;:&nbsp;{{sw.webTools}}</tr></ul>
+						<ul><tr><td><b>Web based Tools</b>&nbsp;:&nbsp;{{sw.webTools}}</td></tr></ul>
 					{% endif %}
 				</table>
 			</div>
-		{% endif %}
+{% endif %}
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->		
 {% if pro %}
 			<div>   
@@ -177,7 +182,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for pr in pro %}
-					<tr><li>{{pr.heading}}&nbsp;{{pr.desc}}</tr>
+					<tr><td><li>{{pr.heading}}&nbsp;{{pr.desc}}</li></td></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -191,7 +196,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for ex in e %}
-					<tr><li>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></tr>
+					<tr><td><li>{{ex.desc}} in the year {{ex.fromDate|date:'Y'}}</li></td></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -205,7 +210,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for certi in c %}
-					<tr><li>{{ certi.desc }}&nbsp;{{certi.fromDate|date:'M Y'}}</tr>
+					<tr><td><li>{{ certi.desc }}&nbsp;{{certi.fromDate|date:'M Y'}}</li></td></tr>
 				{% endfor %}   
 				</table>
 				</ul>
@@ -219,7 +224,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for wex in w %}
-					<tr><li>{{wex.desc}} from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}</tr>
+					<tr><td><li>{{wex.desc}} from {{wex.fromDate|date:'M Y'}} to {{wex.endDate|date:'M Y'}}</li></td></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -233,7 +238,7 @@
 				<ul>
 				<table cellpadding=10>
 				{% for ac in a %}
-					<tr><li>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</li></tr>
+					<tr><td><li>{{ac.desc}} in the year {{ac.fromDate|date:'Y'}}</li></td></tr>
 				{% endfor %}
 				</table>
 				</ul>
@@ -246,12 +251,12 @@
 			<h3>Personal dossier</h3>
 			<table cellpadding=10>
 			<ul>
-			<tr><b>Name</b>&nbsp;:&nbsp;{{s.fullname}}</tr></ul>
-			<ul><tr><b>Mobile</b>&nbsp;:&nbsp;{{s.phone}}</tr></ul>
-			<ul><tr><b>Email</b>&nbsp;:&nbsp;{{s.email}}</tr></ul>
-			<ul><tr><b>Languages Known</b>&nbsp;:&nbsp;{{p.languages}}</tr></ul>
-			<ul><tr><b>Permanent Adress</b>&nbsp;:&nbsp;{{p.per_address}}</tr></ul>
-			<ul><tr><b>Address for correspondence</b>&nbsp;:&nbsp;{{p.corr_address }}</tr>
+			<tr><td><b>Name</b>&nbsp;:&nbsp;{{s.fullname}}</td></tr></ul>
+			<ul><tr><td><b>Mobile</b>&nbsp;:&nbsp;{{s.phone}}</td></tr></ul>
+			<ul><tr><td><b>Email</b>&nbsp;:&nbsp;{{s.email}}</td></tr></ul>
+			<ul><tr><td><b>Languages Known</b>&nbsp;:&nbsp;{{p.languages}}</td></tr></ul>
+			<ul><tr><td><b>Permanent Adress</b>&nbsp;:&nbsp;{{p.per_address}}</td></tr></ul>
+			<ul><tr><td><b>Address for correspondence</b>&nbsp;:&nbsp;{{p.corr_address }}</td></tr>
 			</ul>
 			</table>
 		</div>
@@ -262,7 +267,7 @@
 			<ul>
 			<table cellpadding=10>
 			{% for h in p.hobbies|split:','%}
-				<tr><li>{{h}}</li></tr>
+				<tr><td><li>{{h}}</li></td></tr>
 			{% endfor %}
 			</table>
 			</ul>
@@ -284,22 +289,3 @@
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
