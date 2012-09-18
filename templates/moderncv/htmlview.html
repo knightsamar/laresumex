@@ -42,14 +42,6 @@
 
 <div style = "{width: 70%; margin-left:15%; border-style:double; padding:13px}"> 
     		
-{% if s.photo %}
-                <div id='photo' style="position:relative;float:left;clear:right;">
-                                {% thumbnail s.photo.url "140x162" crop="60% center" as img %}
-                                        <img src='{{ img.url }}'>
-                                {% endthumbnail %}
-                        </div>
-{% endif %}
- 
     		<div style="{float:'right';position:relative}">
         		<h2> &nbsp; {{ s.fullname }}</h2>
         		&nbsp;&nbsp;&nbsp; <b> Date of birth </b>: {{ p.birthdate }}
@@ -153,7 +145,33 @@
 				<ul>
 				<table cellpadding=10>
 				{% for pr in pro %}
-					<tr><td><li><td>{{pr.title}}</td><td>{{pr.desc}}</td><td>{{pr.fromDate|date:'M Y'}}</td><td>{{pr.endDate|date:'M Y'}}</td></tr>
+					   <tr>
+						<td>
+						 <li>
+						   <b>{{pr.title}}</b>
+						 </li>
+						</td>
+					   </tr>
+						<tr>
+						      <td align="left">
+							<b>
+							     From :
+							</b>
+						      	  {{pr.fromDate|date:'M Y'}}
+							<b>-</b>
+						     	<b>
+							   To :
+							</b>
+						      	  {{pr.endDate|date:'M Y'}}</td>
+						</tr>
+					<tr>
+					    <td align="left">
+						<b>
+						     Description :
+						</b>
+					    	   {{pr.desc}}
+					    </td>
+					</tr>
 				{% endfor %}
 				</table>
 				</ul>

@@ -229,13 +229,7 @@ function onSubmitValidator()
 	   {% endfor %}
 	</table>
     </div>
-    {% if s.photo %}
-        <div id='photo'>
-            {% thumbnail s.photo.url "180x150" crop="50% center" as img %}
-                <img src='{{ img.url }}'>
-            {% endthumbnail %}
-        </div>
-    {% endif %}
+   
 	</div>
 
 	<div id='tabs-2'>
