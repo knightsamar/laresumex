@@ -182,7 +182,33 @@
 				<ul>
 				<table cellpadding=10>
 				{% for pr in pro %}
-					<tr><td><li>{{pr.heading}}&nbsp;{{pr.desc}}</li></td></tr>
+					   <tr>
+						<td>
+						 <li>
+						   <b>{{pr.title}}</b>
+						 </li>
+						</td>
+					   </tr>
+						<tr>
+						      <td align="left">
+							<b>
+							     From :
+							</b>
+						      	  {{pr.fromDate|date:'M Y'}}
+							<b>-</b>
+						     	<b>
+							   To :
+							</b>
+						      	  {{pr.endDate|date:'M Y'}}</td>
+						</tr>
+					<tr>
+					    <td align="left">
+						<b>
+						     Description :
+						</b>
+					    	   {{pr.desc}}
+					    </td>
+					</tr>
 				{% endfor %}
 				</table>
 				</ul>
