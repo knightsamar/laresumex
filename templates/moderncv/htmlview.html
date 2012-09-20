@@ -142,23 +142,21 @@
 			<div>   
 				</br>
 				<h3> Projects Undertaken</h3>
-				<ul>
 				<table cellpadding=10>
 				{% for pr in pro %}
-					   <tr>
+  					<tr>
+					<ul>
 						<td>
-						 <li>
-						   <b>{{pr.title}}</b>
-						 </li>
+						<li>   <b>{{pr.title}}</b> </li>
 						</td>
-					   </tr>
+					<ul>
+					</tr>
 						<tr>
 						      <td align="left">
 							<b>
-							     From :
+							   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  From :
 							</b>
-						      	  {{pr.fromDate|date:'M Y'}}
-							<b>-</b>
+						      	  {{pr.fromDate|date:'M Y'}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						     	<b>
 							   To :
 							</b>
@@ -166,15 +164,12 @@
 						</tr>
 					<tr>
 					    <td align="left">
-						<b>
-						     Description :
-						</b>
-					    	   {{pr.desc}}
+					    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{pr.desc}}
 					    </td>
+					
 					</tr>
 				{% endfor %}
 				</table>
-				</ul>
 			</div>
 		{% endif %}
 <!---------------------------------------------------------------------------------------------------------------------------------------------------->

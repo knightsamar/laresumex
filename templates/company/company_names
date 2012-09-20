@@ -52,9 +52,9 @@ function checkThree()
              }
     }
     //alert(count)
-    if (count>3) 
+    if (count>5) 
     {
-        alert('You can only apply for 3 companies')
+        alert('You can only apply for 5 companies')
         return false;
     }
     return true;
@@ -79,7 +79,7 @@ Following is the list of companies visiting our college.
         {% else %}
         <pre>   Company is already gone! </pre>
         {% endif %}
-       
+       </span>
        </company>
     </li>
 {% empty %}
