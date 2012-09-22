@@ -71,7 +71,7 @@ Following is the list of companies visiting our college.
 {% csrf_token %}
 {% for k in companies %}
     <li>
-        <span class='company'> 
+     <span class='company'>
         <a class = 'tooltip' href ='#'>{{ k.name }}<span class='tooltip'> <em>{{k.name}}</em>{{ k.info }}</span></a>
         <input type='checkbox' title="{{k.name }}" id="{{ k.name }}" onclick="selected(this);" {{ k.gone }} {{k.Checked}}>
         {% if k.gone == "" %}
@@ -81,6 +81,7 @@ Following is the list of companies visiting our college.
         {% endif %}
        </span>
        </company>
+
     </li>
 {% empty %}
     <i> no companies </i>
